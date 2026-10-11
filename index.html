@@ -361,7 +361,7 @@ const DEF={cur:null,log:{},sessions:[],textRead:{},readDone:{},readSkip:{},revie
 let S={...DEF};
 try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j)S={...DEF,...j}}catch(e){}
 ['d3','d7','d14'].forEach(k=>delete S.badges[k]); // retired streak badges
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(silent){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(!silent)try{syncDirty()}catch(e){}}
 
 /* ---------- schedule ---------- */
 function autoLesson(){const t=today(),sc=D.schedule;for(const s of sc)if(t>=s.from&&t<=s.to)return s.n;
@@ -529,6 +529,7 @@ $('#sStar').onclick=()=>{if(view.run||view.game||view.mrun)return;if(view.sub===
 $('#sWeek').onclick=()=>{if(view.run||view.game||view.mrun)return;if(view.sub==='math')return toast(S.m.daily[today()]?'今天的口算练过啦 👍':`每天练 ${S.m.mins} 分钟口算`);toast(thisWeekCount()?`这周已经学了 ${thisWeekCount()} 次 👍`:'每周至少学一次中文哦')};
 $$('.subj button').forEach(b=>b.onclick=()=>{if(view.run||view.game||view.mrun)return;view.sub=b.dataset.sub;S.lastSub=view.sub;save();render()});
 function render(){
+  try{if(SY.later&&!isBusy()){SY.later=false;setTimeout(syncNow,50)}}catch(e){}
   paintScore();
   $$('.subj button').forEach(b=>b.classList.toggle('on',(view.sub||'zh')===b.dataset.sub));
   const busy=!!(view.run||view.game||view.mrun),math=view.sub==='math';
@@ -1006,11 +1007,13 @@ function renderParent(){
     <div class="switch"><span class="small">答对、敲地鼠的音效</span><button class="toggle ${S.sfx?'on':''}" id="sfxT"></button></div>
     <div class="row"><button class="btn grow" id="tts">🔊 测试朗读</button><span class="small muted" id="vname"></span></div>
   </section>
+  ${syncCard()}
   <section class="card">
     <h3>数据</h3>
-    <p class="small muted">记录只存在这台设备上（中文和数学一起）。换设备或清缓存前先导出备份。「清空中文记录」不会动数学、星星和贴纸。</p>
+    <p class="small muted">记录存在这台设备上（中文和数学一起）。换设备或清缓存前先导出备份。「清空中文记录」不会动数学、星星和贴纸。</p>
     <div class="row"><button class="btn grow" id="exp">导出备份</button><button class="btn grow" id="imp">导入备份</button><button class="btn bad grow" id="rst">清空中文记录</button></div>
   </section>`;
+  bindSync();
   $('#curSel').onchange=e=>{S.cur=e.target.value?+e.target.value:null;save();view.n=curLesson();render()};
   if($('#toW'))$('#toW').onclick=()=>{view.tab='wrong';render()};
   $('#rwS').onclick=()=>{S.reward={text:$('#rwT').value.trim(),target:Math.max(10,+$('#rwN').value||100)};save();toast('保存好了');render()};
@@ -1389,11 +1392,13 @@ function renderMParent(){const on=new Set(S.m.on),mis=S.m.mis.slice(0,100),cats=
     <h3>最近练习</h3>
     ${ms.length?`<table><tr><th>日期</th><th>内容</th><th>结果</th></tr>${ms.slice(0,14).map(s=>`<tr><td>${md(s.d)}</td><td>${MN[s.mode]||''}${s.sk&&MSK[s.sk]?` · ${MSK[s.sk].name}`:''}</td><td>${s.ok}/${s.items} · ${fmt(s.act||s.secs)}${s.stars?` · +${s.stars}⭐`:''}</td></tr>`).join('')}</table>`:'<p class="muted">还没有记录。</p>'}
   </section>
+  ${syncCard()}
   <section class="card">
     <h3>数据</h3>
     <p class="small muted">数学和中文的记录一起存在这台设备上，备份在中文「家长」页导出。</p>
     <button class="btn bad" style="width:100%" id="mrst">清空数学记录</button>
   </section>`;
+  bindSync();
   $$('#mins button').forEach(b=>b.onclick=()=>{S.m.mins=+b.dataset.v;save();render()});
   $$('[data-on]').forEach(b=>b.onclick=()=>{const id=b.dataset.on,i=S.m.on.indexOf(id);if(i>=0)S.m.on.splice(i,1);else S.m.on.push(id);save();render()});
   if($('#toMw'))$('#toMw').onclick=()=>{view.mtab='wb';render()};
@@ -1401,8 +1406,87 @@ function renderMParent(){const on=new Set(S.m.on),mis=S.m.mis.slice(0,100),cats=
     const keep={on:S.m.on,mins:S.m.mins};S.m=null;mInit();Object.assign(S.m,keep);S.sessions=S.sessions.filter(s=>s.kind!=='math');save();toast('已清空数学记录');render()};
 }
 
+/* ====================== 多设备同步（存在 Wendi 的 Google Drive） ====================== */
+const SYNC_URL='https://script.google.com/macros/s/AKfycbwxFxHEbEV2Y_l72QCt7Imk9198Sza_zPMrmnKoCgwexwKdTVpjFJKpvebSnzMlqPD-/exec';
+const SK=KEY+'.sync',BK=KEY+'.base',KID=(D.kid||'eric').toLowerCase();
+let SY={};try{SY=JSON.parse(localStorage.getItem(SK)||'null')||{}}catch(e){}
+const syncUrl=()=>SY.url||SYNC_URL;
+const syncOn=()=>!!(syncUrl()&&SY.code&&SY.linked);
+const sySave=()=>{try{localStorage.setItem(SK,JSON.stringify(SY))}catch(e){}};
+const getBase=()=>{try{return JSON.parse(localStorage.getItem(BK)||'null')}catch(e){return null}};
+const setBase=d=>{try{localStorage.setItem(BK,JSON.stringify(d))}catch(e){}};
+const J=x=>JSON.stringify(x);
+// 三方合并：b=上次同步时的版本，l=这台设备，s=云端。星星这类计数两边的增量相加，最好成绩取大，其他以这台设备为准
+const COUNTERS=new Set(['stars','spent','draws','m.cleared']),MAXK=/^(best2|best3|moleBest|m\.best)\./;
+function m3(b,l,s,path){
+  if(J(l)===J(b))return s;if(J(s)===J(b))return l;
+  if(typeof l==='number'&&typeof s==='number'){if(COUNTERS.has(path)||path.startsWith('cnt.'))return s+l-(typeof b==='number'?b:0);if(MAXK.test(path))return Math.max(l,s);return l}
+  if(Array.isArray(l)&&Array.isArray(s)){const seen=new Set(s.map(J)),out=[...s];l.forEach(x=>{const k=J(x);if(!seen.has(k)){seen.add(k);out.push(x)}});
+    if(path==='sessions')out.sort((x,y)=>String(y.d).localeCompare(String(x.d)));return out}
+  if(l&&s&&typeof l==='object'&&typeof s==='object'&&!Array.isArray(l)&&!Array.isArray(s)){const o={},bb=b&&typeof b==='object'?b:{};
+    new Set([...Object.keys(l),...Object.keys(s)]).forEach(k=>{const v=m3(bb[k],l[k],s[k],path?path+'.'+k:k);if(v!==undefined)o[k]=v});return o}
+  return l}
+const isBusy=()=>!!(view.run||view.game||view.mrun);
+const fresh=()=>!S.sessions.length&&!S.stars;
+function syAdopt(data,rev){S={...DEF,...data};mInit();SY.rev=rev;SY.dirty=false;setBase(data);save(true)}
+async function syReq(body){const u=syncUrl();
+  const r=body?await fetch(u,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:J(body)})
+    :await fetch(u+(u.includes('?')?'&':'?')+'key='+encodeURIComponent(SY.code)+'&kid='+KID+'&t='+Date.now());
+  if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+let syT=null,syBusy=false;
+function syncDirty(){if(!syncOn())return;SY.dirty=true;sySave();clearTimeout(syT);syT=setTimeout(()=>syncNow(),2500)}
+async function syncNow(){if(!syncOn()||syBusy||!navigator.onLine)return;syBusy=true;let changed=false;
+  try{let r=await syReq();if(!r.ok)throw new Error(r.err==='key'?'同步码不对':r.err||'云端出错');
+    for(let tries=0;;tries++){
+      if(r.rev!==SY.rev&&r.data){
+        if(isBusy()){SY.later=true;break}
+        if(!SY.dirty){syAdopt(r.data,r.rev);changed=true;break}
+        const m=m3(getBase()||{},JSON.parse(J(S)),r.data,'');S={...DEF,...m};mInit();SY.rev=r.rev;save(true);changed=true}
+      else if(!SY.dirty){SY.rev=r.rev;break}
+      const data=JSON.parse(J(S)),p=await syReq({key:SY.code,kid:KID,baseRev:SY.rev||0,data});
+      if(p.ok){SY.rev=p.rev;SY.dirty=false;setBase(data);break}
+      if(p.conflict&&tries<3){r=p;continue}
+      throw new Error(p.err==='key'?'同步码不对':'上传失败')}
+    SY.last=Date.now();SY.err=''}
+  catch(e){SY.err=e instanceof TypeError?'暂时连不上网，联网后会自动补传':String(e&&e.message||e)}
+  finally{syBusy=false;sySave();paintSync();if(changed&&!isBusy()&&!$('#modal').innerHTML)render()}}
+function paintSync(){const el=$('#syncSt');if(!el)return;
+  el.innerHTML=SY.err?`<span style="color:var(--bad)">⚠️ ${esc(SY.err)}</span>`:SY.last?`✓ 上次同步 ${md(dstr(new Date(SY.last)))} ${new Date(SY.last).toTimeString().slice(0,5)}${SY.dirty?' · 有新记录等上传':''}`:'连接中…'}
+async function syncLink(code){code=code.trim().toLowerCase();if(!code)return toast('请输入同步码');if(!syncUrl())return toast('云端还没设置好');
+  SY.code=code;let r;try{r=await syReq()}catch(e){return toast('连不上云端，检查一下网络')}
+  if(!r.ok){SY.code='';return toast(r.err==='key'?'同步码不对':'云端出错')}
+  const go=mode=>{$('#modal').innerHTML='';SY.linked=true;
+    if(mode==='cloud')syAdopt(r.data,r.rev);
+    else{SY.rev=r.data?r.rev:(r.rev||0);setBase({});SY.dirty=true;if(r.data){const m=m3({},JSON.parse(J(S)),r.data,'');S={...DEF,...m};mInit();save(true)}}
+    sySave();toast('已连接，开始同步');render();syncNow()};
+  if(!r.data||fresh())return go(r.data?'cloud':'mine');
+  $('#modal').innerHTML=`<div class="modal"><div class="box"><div class="ic" style="font-size:56px">☁️</div><h2>云端已经有记录了</h2>
+    <p class="muted small">这台设备上也有记录（⭐ ${S.stars}，${S.sessions.length} 次练习）。云端是别的设备上传的。</p>
+    <button class="big-btn" id="syM">合并两边（推荐）</button><p class="small muted">星星、贴纸、徽章、错题都合在一起。</p>
+    <button class="btn" style="width:100%;margin-top:6px" id="syC">只用云端的，这台的不要了</button>
+    <button class="btn ghost" style="width:100%;margin-top:6px" id="syX">先不连</button></div></div>`;
+  $('#syM').onclick=()=>go('mine');$('#syC').onclick=()=>go('cloud');$('#syX').onclick=()=>{SY.code='';$('#modal').innerHTML=''}}
+function syncCard(){
+  return`<section class="card"><h3>☁️ 多设备同步</h3>
+    ${syncOn()?`<p class="small muted">这台设备已经连上，记录会自动和其他设备互通（存在妈妈的 Google Drive，每天自动另存一份备份）。</p>
+      <div class="small" id="syncSt"></div>
+      <div class="row" style="margin-top:8px"><button class="btn grow" id="syNow">立即同步</button><button class="btn ghost grow" id="syOff">这台设备断开</button></div>`
+    :syncUrl()?`<p class="small muted">在每台设备上输一次同步码，星星、徽章、错题就会自动互通。</p>
+      <div class="row"><input class="in" id="syCode" placeholder="同步码" autocapitalize="off" autocomplete="off" style="flex:1"><button class="btn pri" id="syGo">连接</button></div>`
+    :`<p class="small muted">云端还没设置好。</p>`}
+    <details class="more"><summary>高级</summary><input class="in" id="syUrl" placeholder="同步网址（一般不用填）" value="${esc(SY.url||'')}" style="margin-top:8px"><button class="btn" style="margin-top:6px" id="syUrlS">保存网址</button></details>
+  </section>`}
+function bindSync(){paintSync();
+  if($('#syGo'))$('#syGo').onclick=()=>syncLink($('#syCode').value);
+  if($('#syNow'))$('#syNow').onclick=async()=>{SY.err='';paintSync();await syncNow();toast(SY.err?'同步失败：'+SY.err:'同步好了')};
+  if($('#syOff'))$('#syOff').onclick=()=>{SY={url:SY.url};sySave();toast('这台设备已断开，记录还在本机');render()};
+  $('#syUrlS').onclick=()=>{SY.url=$('#syUrl').value.trim();SY.linked=false;sySave();render()}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')syncNow();else if(SY.dirty)syncNow()});
+window.addEventListener('online',()=>syncNow());
+
 
 render();
+syncNow();
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
