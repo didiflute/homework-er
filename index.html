@@ -1432,10 +1432,25 @@ function m3(b,l,s,path){
 const isBusy=()=>!!(view.run||view.game||view.mrun);
 const fresh=()=>!S.sessions.length&&!S.stars;
 function syAdopt(data,rev){S={...DEF,...data};mInit();SY.rev=rev;SY.dirty=false;setBase(data);save(true)}
-async function syReq(body){const u=syncUrl();
-  const r=body?await fetch(u,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:J(body)})
-    :await fetch(u+(u.includes('?')?'&':'?')+'key='+encodeURIComponent(SY.code)+'&kid='+KID+'&t='+Date.now());
-  if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+const syQ=()=>{const u=syncUrl();return u+(u.includes('?')?'&':'?')+'key='+encodeURIComponent(SY.code)+'&kid='+KID+'&t='+Date.now()};
+async function syFetch(body){const o={cache:'no-store',credentials:'omit',redirect:'follow'};
+  const r=body?await fetch(syncUrl(),{...o,method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:J(body)}):await fetch(syQ(),o);
+  if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();try{return JSON.parse(t)}catch(e){throw new Error('回应不是数据：'+t.slice(0,40))}}
+// 备用通道：有的设备/网络挡了跨域 fetch，就用 <script> 读（JSONP），写的时候用 no-cors POST 再读回来确认
+function syJsonp(){return new Promise((res,rej)=>{const cb='__sy'+Date.now()+(Math.random()*1e4|0),s=document.createElement('script');let done=false;
+  const end=e=>{if(done)return;done=true;clearTimeout(t);delete window[cb];s.remove();e?rej(e):0};
+  window[cb]=d=>{end();res(d)};s.onerror=()=>end(new Error('备用通道也连不上'));const t=setTimeout(()=>end(new Error('备用通道超时')),20000);
+  s.src=syQ()+'&callback='+cb;document.head.appendChild(s)})}
+async function syReqAlt(body){if(!body)return syJsonp();
+  await fetch(syncUrl(),{method:'POST',mode:'no-cors',cache:'no-store',credentials:'omit',body:J(body)});
+  const s=await syJsonp();if(!s.ok)return s;
+  if(s.rev===body.baseRev+1&&J(s.data)===J(body.data))return{ok:true,rev:s.rev};
+  if(s.rev!==body.baseRev)return{ok:false,conflict:true,rev:s.rev,data:s.data};
+  throw new Error('上传没成功')}
+async function syReq(body){
+  if(SY.alt)return syReqAlt(body);
+  try{return await syFetch(body)}catch(e){SY.fetchErr=String(e&&e.message||e);
+    const r=await syReqAlt(body);SY.alt=true;sySave();return r}}
 let syT=null,syBusy=false;
 function syncDirty(){if(!syncOn())return;SY.dirty=true;sySave();clearTimeout(syT);syT=setTimeout(()=>syncNow(),2500)}
 async function syncNow(){if(!syncOn()||syBusy||!navigator.onLine)return;syBusy=true;let changed=false;
@@ -1451,12 +1466,12 @@ async function syncNow(){if(!syncOn()||syBusy||!navigator.onLine)return;syBusy=t
       if(p.conflict&&tries<3){r=p;continue}
       throw new Error(p.err==='key'?'同步码不对':'上传失败')}
     SY.last=Date.now();SY.err=''}
-  catch(e){SY.err=e instanceof TypeError?'暂时连不上网，联网后会自动补传':String(e&&e.message||e)}
+  catch(e){SY.err=(e instanceof TypeError?'暂时连不上网，联网后会自动补传':String(e&&e.message||e))+(SY.fetchErr?'（'+SY.fetchErr+'）':'')}
   finally{syBusy=false;sySave();paintSync();if(changed&&!isBusy()&&!$('#modal').innerHTML)render()}}
 function paintSync(){const el=$('#syncSt');if(!el)return;
   el.innerHTML=SY.err?`<span style="color:var(--bad)">⚠️ ${esc(SY.err)}</span>`:SY.last?`✓ 上次同步 ${md(dstr(new Date(SY.last)))} ${new Date(SY.last).toTimeString().slice(0,5)}${SY.dirty?' · 有新记录等上传':''}`:'连接中…'}
 async function syncLink(code){code=code.trim().toLowerCase();if(!code)return toast('请输入同步码');if(!syncUrl())return toast('云端还没设置好');
-  SY.code=code;let r;try{r=await syReq()}catch(e){return toast('连不上云端，检查一下网络')}
+  SY.code=code;let r;try{r=await syReq()}catch(e){return toast('连不上云端：'+(e&&e.message||e)+(SY.fetchErr?' / '+SY.fetchErr:''))}
   if(!r.ok){SY.code='';return toast(r.err==='key'?'同步码不对':'云端出错')}
   const go=mode=>{$('#modal').innerHTML='';SY.linked=true;
     if(mode==='cloud')syAdopt(r.data,r.rev);
