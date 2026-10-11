@@ -280,6 +280,8 @@ input.in{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backg
 .kp button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
 .kp .ok{background:var(--ok);color:#fff;border-color:transparent;box-shadow:0 4px 0 #2d7543}
 .kp .del{font-size:24px;color:var(--muted)}
+.kp .ok.dim{opacity:.45}
+.kp.cmp button.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .kp.cmp button{height:86px;font-size:46px}
 .mbar{position:relative;flex:1;height:12px;border-radius:99px;background:var(--line);margin:0 4px 0 16px}
 .mbar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width .3s}
@@ -304,6 +306,7 @@ input.in{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backg
 .mtbl td{padding:7px 4px}.mtbl .num{white-space:nowrap;font-size:13px}.mtbl .toggle{transform:scale(.8);transform-origin:left center}
 @media (max-width:520px){.mtbl .eg2{display:none}.mtbl b{font-size:14px}.mtbl .pill{font-size:11px;padding:2px 6px;white-space:nowrap}}
 @media (max-height:780px) and (max-width:520px){.kp button{height:50px!important;font-size:26px}.kp{gap:8px}.mq{margin:6px 0 2px}.fix{min-height:44px}.lane{height:32px;margin-top:4px}.lane span{top:3px;font-size:21px}}
+@media (max-width:520px){.kp.cmp button{height:72px!important;font-size:40px;line-height:1}}
 @media (max-width:520px){.kp button{height:58px}.errbar span{width:7.5em}.tip{margin-left:7.5em}.sk-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:520px){.hz{font-size:100px}.opt{font-size:44px}.ctx{font-size:28px}.ln .tx{font-size:24px}nav.tabs button{flex:1;padding:10px 2px;font-size:15px}nav.tabs .em{display:none}
   .hole{height:100px}.mole{width:70px;height:84px;margin-left:-35px}.mole b{width:52px;height:48px;line-height:48px;font-size:34px;margin-top:20px}}
@@ -1255,21 +1258,21 @@ function renderMRun(){const R=view.mrun,M=$('#main');if(R.done)return renderMDon
     <div class="mq">${qHTML(it,R.inp)}</div>
     <div class="fix" id="mfix"></div>
     <div class="combo2" id="mcombo">${R.combo>=3?`🔥 连对 ${R.combo}`:''}</div>
-    ${it.cmp?`<div class="kp cmp">${['>','=','<'].map(k=>`<button data-k="${k}">${k}</button>`).join('')}</div>`
+    ${it.cmp?`<div class="kp cmp">${['>','=','<'].map(k=>`<button data-k="${k}">${k}</button>`).join('')}</div><div class="kp" style="margin-top:10px"><button class="del" data-k="del" aria-label="删除">⌫</button><span></span><button class="ok" data-k="ok" id="kok" aria-label="确定">✓</button></div>`
       :`<div class="kp">${[1,2,3,4,5,6,7,8,9].map(k=>`<button data-k="${k}">${k}</button>`).join('')}<button class="del" data-k="del" aria-label="删除">⌫</button><button data-k="0">0</button><button class="ok" data-k="ok" id="kok" aria-label="确定">✓</button></div>`}
   </section>`;
   $('#mq').onclick=()=>mQuit();
   $$('.kp button').forEach(b=>b.onclick=()=>mKey(b.dataset.k));
-  mTick()}
-function mPaint(){const R=view.mrun,sl=$('#slot');if(!sl)return;sl.textContent=R.inp||(R.cur.cmp?'○':'?');sl.classList.toggle('empty',!R.inp)}
+  mPaint();mTick()}
+function mPaint(){const R=view.mrun,sl=$('#slot');if(!sl)return;sl.textContent=R.inp||(R.cur.cmp?'○':'?');sl.classList.toggle('empty',!R.inp);
+  const o=$('#kok');if(o)o.classList.toggle('dim',!R.inp);$$('.kp.cmp button').forEach(b=>b.classList.toggle('sel',b.dataset.k===R.inp))}
 function mKey(k){const R=view.mrun;if(!R||R.done||R.phase==='ready'||!R.cur)return;
   if(R.lock){if(R.wait&&(k==='ok'||k==='go'))R.wait();return}
   const it=R.cur;
-  if(it.cmp){if('<>='.includes(k)){R.inp=k;mPaint();mSubmit()}return}
+  if(k==='ok'){if(R.inp)mSubmit();else{const o=$('#kok');if(o)shake(o)}return}
+  if(it.cmp){if('<>='.includes(k)){R.inp=k;mPaint()}else if(k==='del'){R.inp='';mPaint()}return}
   if(k==='del'){R.inp=R.inp.slice(0,-1);return mPaint()}
-  if(k==='ok'){if(R.inp)mSubmit();return}
-  if(/^\d$/.test(k)&&R.inp.length<4){R.inp+=k;mPaint();
-    if(R.inp.length===it.ans.length){const snap=R.inp;setTimeout(()=>{if(view.mrun===R&&R.cur===it&&!R.lock&&R.inp===snap)mSubmit()},150)}}}
+  if(/^\d$/.test(k)&&R.inp.length<4){R.inp+=k;mPaint()}}
 document.addEventListener('keydown',e=>{const R=view.mrun;if(!R||R.done||e.metaKey||e.ctrlKey||e.altKey)return;const k=e.key;
   if(/^\d$/.test(k))mKey(k);else if(k==='Backspace')mKey('del');else if(k==='Enter'||k===' ')mKey(R.phase==='ready'?'x':'ok');else if('<>='.includes(k))mKey(k);else return;e.preventDefault()});
 function mSubmit(){const R=view.mrun,it=R.cur;if(!R||R.lock)return;R.lock=true;
