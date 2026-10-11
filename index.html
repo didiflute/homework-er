@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Eric学习">
+<meta name="theme-color" content="#e0703a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Eric 的学习小站</title>
+<style>
+:root{
+  --bg:#fbf7f1;--card:#fff;--ink:#2a2622;--muted:#7a716a;--line:#ece4d9;--soft:#f6f0e7;
+  --accent:#e0703a;--accent-soft:#fdeadf;--ok:#3f9a5b;--ok-soft:#e3f3e7;--warn:#c98a12;--warn-soft:#fbf0d6;--bad:#cf4b45;--bad-soft:#fbe3e1;--gold:#e8a417;
+  --sea1:#e3f4fb;--sea2:#c9e8f4;--grass:#a9d88c;--grass2:#8cc56c;
+  --hz:"Kaiti SC","STKaiti","KaiTi","Noto Serif SC","Songti SC",serif;
+  --ui:-apple-system,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1916;--card:#262320;--ink:#f1ebe3;--muted:#a89f95;--line:#3a3530;--soft:#2f2b27;
+  --accent-soft:#4a2f22;--ok-soft:#1f3a28;--warn-soft:#3d321a;--bad-soft:#40211f;--sea1:#14303a;--sea2:#0f2630;--grass:#3e5f2e;--grass2:#2f4c22}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;touch-action:manipulation}
+.wrap{max-width:820px;margin:0 auto;padding:max(10px,env(safe-area-inset-top)) 16px 56px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0 10px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:19px;display:flex;align-items:center;gap:8px}
+.brand .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:var(--accent-soft)}
+.subj{display:flex;gap:3px;background:var(--soft);border-radius:999px;padding:3px;width:100%}
+.subj button{padding:5px 14px;border-radius:999px;font-weight:700;font-size:14px;color:var(--muted)}
+.subj button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #0002}
+.score{display:flex;gap:6px}
+.score button{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:800;font-size:15px}
+.score .wk.done{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+nav.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px}
+nav.tabs button{padding:10px 12px;color:var(--muted);font-weight:700;border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap;position:relative}
+nav.tabs button.on{color:var(--ink);border-color:var(--accent)}
+nav.tabs i.em{font-style:normal}
+nav.tabs .dot{position:absolute;top:2px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;display:grid;place-items:center;padding:0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+.card+.card{margin-top:12px}
+.eyebrow{font-size:13px;color:var(--muted);font-weight:600}
+h2{margin:2px 0 6px;font-size:22px}
+h3{margin:0 0 6px;font-size:17px;display:flex;align-items:center;gap:8px}
+p{margin:6px 0}
+.muted{color:var(--muted)}.small{font-size:13px}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.grey{background:var(--soft);color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{padding:11px 16px;border-radius:12px;background:var(--soft);border:1px solid var(--line);font-weight:600}
+.btn.pri{background:var(--accent);color:#fff;border-color:transparent}
+.btn.ok{background:var(--ok);color:#fff;border-color:transparent}
+.btn.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.btn.ghost{background:none;border-color:transparent;color:var(--muted)}
+.btn.grow{flex:1}
+.btn:disabled{opacity:.35}
+.big-btn{display:block;width:100%;margin-top:14px;padding:15px;border-radius:14px;background:var(--accent);color:#fff;font-size:18px;font-weight:700}
+.big-btn:disabled{opacity:.4}
+.lessons{display:flex;gap:6px;flex-wrap:wrap;padding:2px 0 10px}
+.lchip{flex:none;min-width:44px;height:44px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:700}
+.lchip.sel{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chip{font-family:var(--hz);font-size:24px;width:46px;height:46px;border-radius:11px;display:grid;place-items:center;background:var(--soft)}
+.chip.sm{width:34px;height:34px;font-size:19px;border-radius:9px}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}.chip.mid{background:var(--warn-soft);color:var(--warn)}.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;padding:9px 8px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #0002}
+.types{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:8px;margin-top:10px}
+.type{text-align:left;padding:11px 12px;border-radius:14px;border:2px solid var(--line);background:var(--card);position:relative}
+.type b{display:block;font-size:16px}
+.type span{font-size:12px;color:var(--muted)}
+.type .tag{position:absolute;right:10px;top:10px;font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;background:var(--soft);color:var(--muted)}
+.type.on{border-color:var(--accent);background:var(--accent-soft)}
+.type.on::after{content:"✓";position:absolute;right:12px;bottom:8px;color:var(--accent);font-weight:800}
+.type:disabled{opacity:.4}
+details.more summary{cursor:pointer;color:var(--muted);font-size:14px;font-weight:600;margin-top:10px;list-style:none}
+details.more summary::before{content:"⚙️ "}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0}
+.toggle{width:50px;height:30px;border-radius:99px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.toggle::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px #0003}
+.toggle.on{background:var(--ok)}.toggle.on::after{left:23px}
+/* ---------- map ---------- */
+.map{position:relative;background:linear-gradient(var(--sea1),var(--sea2));border-radius:24px;overflow:hidden;border:1px solid var(--line)}
+.map svg.path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.isl{position:absolute;width:150px;margin-left:-75px;text-align:center}
+.isl .disc{position:relative;width:86px;height:86px;border-radius:50%;margin:0 auto;display:grid;place-items:center;font-size:30px;font-weight:900;color:#fff;
+  background:radial-gradient(circle at 35% 30%,#ffd28a,#e0703a 70%);box-shadow:0 7px 0 #b4542a,0 12px 18px #0002;transition:transform .15s}
+.isl .disc:active{transform:translateY(4px);box-shadow:0 3px 0 #b4542a}
+.isl.done .disc{background:radial-gradient(circle at 35% 30%,#b9f0a8,#3f9a5b 70%);box-shadow:0 7px 0 #2d7543,0 12px 18px #0002}
+.isl.future .disc{background:radial-gradient(circle at 35% 30%,#f2eee8,#b8b0a6 70%);box-shadow:0 7px 0 #8f877d,0 12px 18px #0002}
+.isl.cur .disc::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:4px solid #e0703a88;animation:ring 1.8s ease-out infinite}
+.isl .crown{position:absolute;top:-16px;right:-6px;font-size:26px}
+.isl .nm{display:inline-block;margin-top:10px;font-size:13px;font-weight:800;background:var(--card);border-radius:99px;padding:2px 10px;box-shadow:0 1px 3px #0002}
+.isl .st{font-size:12px;margin-top:3px;letter-spacing:1px}
+.isl .st b{color:var(--gold)}
+.panda{position:absolute;font-size:40px;animation:bob 1.6s ease-in-out infinite;pointer-events:none;z-index:2}
+.deco{position:absolute;font-size:26px;opacity:.85;pointer-events:none}
+.wave{position:absolute;font-size:18px;opacity:.5;animation:drift 6s ease-in-out infinite;pointer-events:none}
+@keyframes ring{from{transform:scale(.9);opacity:1}to{transform:scale(1.35);opacity:0}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
+@keyframes drift{0%,100%{transform:translateX(0)}50%{transform:translateX(14px)}}
+/* levels */
+.lvl{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:var(--soft);margin-top:10px}
+.lvl .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:26px;background:var(--card);flex:none}
+.lvl .tx{flex:1;min-width:0}
+.lvl .tx b{display:block}
+.lvl .tx span{font-size:12px;color:var(--muted)}
+.stars3{font-size:18px;letter-spacing:2px;white-space:nowrap}
+.stars3 .off{filter:grayscale(1);opacity:.25}
+.lvl .go{padding:10px 16px;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;flex:none}
+.lvl.lock{opacity:.6}.lvl.lock .go{background:var(--line);color:var(--muted)}
+/* runner */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.x{width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:18px;flex:none}
+.bar{flex:1;height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width .4s}
+.clock{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+.done-btn{padding:7px 12px;border-radius:10px;background:var(--ok-soft);color:var(--ok);font-weight:700;font-size:14px}
+.stepnav{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.stepnav::-webkit-scrollbar{display:none}
+.stepnav button{flex:none;padding:7px 11px;border-radius:10px;background:var(--soft);font-weight:600;font-size:13px;color:var(--muted);border:2px solid transparent}
+.stepnav button.on{border-color:var(--accent);color:var(--ink);background:var(--card)}
+.stepnav button.fin{color:var(--ok)}
+.stage{text-align:center}
+.label{font-size:13px;color:var(--muted);font-weight:600}
+.hz{font-family:var(--hz);font-size:128px;line-height:1.1;margin:4px 0}
+.py{font-size:26px;color:var(--accent);font-weight:600;min-height:38px}
+.meta{font-size:15px;color:var(--muted);min-height:24px}
+.spk{width:88px;height:88px;border-radius:50%;background:var(--accent);color:#fff;font-size:38px;margin:12px auto;display:grid;place-items:center;box-shadow:0 6px 0 #b4542a;transition:transform .1s}
+.spk:active{transform:translateY(4px);box-shadow:0 2px 0 #b4542a}
+.spk.sm{width:58px;height:58px;font-size:24px;margin:8px auto;box-shadow:0 4px 0 #b4542a}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:12px auto 0;max-width:430px}
+.opt{font-family:var(--hz);font-size:54px;padding:12px 0;border-radius:18px;background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);transition:transform .1s}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt.pyo{font-family:var(--ui);font-size:30px;padding:18px 0}
+.opt.right{border-color:var(--ok);background:var(--ok-soft);box-shadow:0 4px 0 var(--ok);animation:pop .35s}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft);opacity:.7}
+.bigpy{font-size:46px;font-weight:700;color:var(--accent);margin:10px 0 0}
+.ctx{font-family:var(--hz);font-size:34px;margin:6px 0;line-height:1.5}
+.ctx u{text-decoration:none;display:inline-block;min-width:1.1em;border-bottom:3px solid var(--accent);color:var(--accent)}
+.ctx em{font-style:normal;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:0 4px}
+.hint{background:var(--soft);border-radius:12px;padding:12px;margin-top:10px;text-align:left}
+.dn{font-size:66px;font-weight:800;color:var(--accent);line-height:1}
+.grid-rv{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;margin-top:12px}
+.rv{border-radius:14px;padding:8px 4px;background:var(--card);border:2px solid var(--line);text-align:center}
+.rv .n{font-size:12px;color:var(--muted)}.rv .c{font-family:var(--hz);font-size:32px;line-height:1.2}
+.rv.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.qnav{display:flex;gap:10px;margin-top:16px;padding-top:12px;border-top:1px dashed var(--line)}
+.qnav button{flex:1;padding:10px;border-radius:12px;font-weight:600;color:var(--muted);background:var(--soft)}
+.answered{margin-top:8px;font-weight:700}
+.lines{text-align:left;margin-top:8px}
+.ln{display:flex;align-items:flex-start;gap:6px;padding:4px 6px;border-radius:10px}
+.ln.on{background:var(--accent-soft)}
+.ln .tx{flex:1;font-family:var(--hz);font-size:28px;line-height:1.65}
+.ln .tx span{border-radius:5px;cursor:pointer}
+.ln .tx span.hl{background:var(--gold);color:#fff}
+.ln .ls{flex:none;width:36px;height:36px;border-radius:50%;background:var(--soft);font-size:16px;margin-top:6px}
+.wordpop{position:sticky;bottom:10px;margin-top:10px;background:var(--ink);color:var(--bg);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:12px;min-height:56px;animation:pop .25s}
+.wordpop b{font-family:var(--hz);font-size:30px;font-weight:400}
+.wordpop .p{font-size:18px;color:var(--gold);font-weight:700}
+.wordpop button{margin-left:auto;width:40px;height:40px;border-radius:50%;background:#ffffff22;color:inherit;font-size:18px}
+.words{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
+.word{padding:8px 14px;border-radius:14px;background:var(--soft);text-align:center;border:2px solid transparent}
+.word small{display:block;font-size:13px;color:var(--accent)}
+.word b{font-family:var(--hz);font-size:30px;font-weight:400}
+.word.on{border-color:var(--accent);background:var(--accent-soft)}
+.rad{display:inline-block;margin-top:4px;font-size:13px;background:#3e5d86;color:#fff;border-radius:6px;padding:1px 8px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--muted);font-weight:600;font-size:12px}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.stat div{background:var(--soft);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:26px}.stat span{font-size:12px;color:var(--muted)}
+.earn{display:inline-flex;align-items:center;gap:6px;font-size:22px;font-weight:800;color:var(--gold);background:var(--warn-soft);border-radius:99px;padding:4px 16px;margin-top:8px;animation:pop .5s .2s both}
+.bigemoji{font-size:64px;line-height:1.1;animation:jump .9s ease-out}
+/* mole game */
+.field{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;max-width:440px;margin:12px auto 0;padding:14px 12px 6px;border-radius:24px;background:radial-gradient(circle at 30% 20%,var(--grass),var(--grass2))}
+.hole{position:relative;height:118px;overflow:hidden}
+.hole .pit{position:absolute;left:6%;right:6%;bottom:6px;height:36px;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,#2c1c0f,#5a3b22 70%)}
+.hole .lip{position:absolute;left:2%;right:2%;bottom:0;height:22px;border-radius:0 0 50% 50%/0 0 100% 100%;background:var(--grass2);z-index:3}
+.mole{position:absolute;left:50%;bottom:-110px;width:82px;height:96px;margin-left:-41px;border-radius:41px 41px 16px 16px;background:linear-gradient(#b98552,#8a5a32);z-index:2;transition:bottom .22s cubic-bezier(.2,1.4,.5,1);padding:0}
+.mole::before{content:"";position:absolute;left:18px;right:18px;top:12px;height:8px;background:radial-gradient(circle,#2a1a0d 3px,transparent 4px) 0 0/22px 8px repeat-x}
+.mole b{display:block;margin:22px auto 0;width:60px;height:56px;border-radius:50%;background:#fff3e2;font-family:var(--hz);font-size:40px;line-height:56px;color:#3b2614;font-weight:400}
+.mole.up{bottom:12px}
+.mole.hit{animation:squash .35s forwards}
+.mole.bad{animation:shake .4s}
+.mole.bad b{background:#ffd9d6}
+.hammer{position:fixed;font-size:46px;pointer-events:none;z-index:40;animation:hammer .35s forwards;transform-origin:80% 80%}
+.gamebar{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.gamebar .sc{color:var(--gold);font-size:24px}
+.combo{font-size:14px;color:var(--accent);font-weight:800;min-height:20px;text-align:center}
+@keyframes squash{0%{transform:scale(1)}40%{transform:scale(1.25,.6)}100%{transform:scale(1,.4);bottom:-110px}}
+@keyframes hammer{0%{transform:rotate(-50deg) translate(-10px,-30px)}60%{transform:rotate(10deg)}100%{transform:rotate(0);opacity:0}}
+/* stickers */
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px;margin-top:10px}
+.stk{border-radius:16px;padding:8px 4px 6px;text-align:center;background:var(--soft);border:2px dashed var(--line);min-height:100px}
+.stk .e{font-size:42px;line-height:1.2}
+.stk b{display:block;font-family:var(--hz);font-size:17px;font-weight:400}
+.stk small{display:block;font-size:11px;color:var(--muted)}
+.stk.got{background:var(--card);border:2px solid var(--line);box-shadow:0 2px 6px #0001}
+.stk.rare.got{border-color:var(--gold);background:linear-gradient(160deg,#fff8e1,#ffe7b8)}
+@media (prefers-color-scheme:dark){.stk.rare.got{background:linear-gradient(160deg,#4a3a17,#3d2b12)}}
+.stk:not(.got) .e{filter:brightness(0);opacity:.12}
+.flip{width:220px;height:260px;margin:10px auto;perspective:900px;cursor:pointer}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.3,1.4,.5,1);transform-style:preserve-3d}
+.flip.open .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-items:center;align-content:center}
+.flip .f{background:repeating-linear-gradient(45deg,#e0703a,#e0703a 14px,#e8a417 14px,#e8a417 28px);color:#fff;font-size:80px;box-shadow:0 10px 24px #0003}
+.flip .b{background:var(--card);border:3px solid var(--line);transform:rotateY(180deg)}
+.flip .b.rare{border-color:var(--gold);background:linear-gradient(160deg,#fff8e1,#ffe2a6)}
+.flip .b .e{font-size:110px;line-height:1.1}
+.flip .b b{font-family:var(--hz);font-size:32px;font-weight:400}
+.flip .b small{color:var(--accent);font-size:16px;font-weight:700}
+/* badges */
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;margin-top:10px}
+.bdg{border-radius:16px;padding:12px 8px;text-align:center;background:var(--soft)}
+.bdg .ic{font-size:40px;line-height:1.2}
+.bdg b{display:block;font-size:14px;margin-top:2px}
+.bdg span{display:block;font-size:11px;color:var(--muted);line-height:1.35;margin-top:2px}
+.bdg.got{background:linear-gradient(160deg,#fff6dc,#fde7c2);box-shadow:0 2px 8px #e8a41733}
+@media (prefers-color-scheme:dark){.bdg.got{background:linear-gradient(160deg,#4a3a17,#3d2b12)}}
+.bdg:not(.got) .ic{filter:grayscale(1);opacity:.4}
+.bdg .pg{height:5px;border-radius:9px;background:var(--line);margin:6px 8px 0;overflow:hidden}.bdg .pg i{display:block;height:100%;background:var(--gold)}
+.bigstar{font-size:40px;font-weight:900;color:var(--gold)}
+.goal{height:14px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:8px}.goal i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--accent))}
+.weeks{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.weeks span{width:46px;text-align:center;font-size:11px;color:var(--muted)}
+.weeks span b{display:grid;place-items:center;height:30px;border-radius:9px;background:var(--soft);font-size:15px;margin-bottom:2px}
+.weeks span.y b{background:var(--ok-soft);color:var(--ok)}
+/* modal & fx */
+.modal{position:fixed;inset:0;background:#0007;display:grid;place-items:center;z-index:20;padding:20px;animation:fade .2s}
+.modal .box{background:var(--card);border-radius:24px;padding:24px 22px;text-align:center;max-width:360px;width:100%;animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+.modal .ic{font-size:84px;line-height:1.1;animation:jump 1s ease-out}
+.fly{position:fixed;z-index:50;font-size:30px;pointer-events:none;will-change:transform}
+.bump{animation:bump .35s}
+.shake{animation:shake .4s}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:45;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}}
+@keyframes bump{50%{transform:scale(1.25)}}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+@keyframes jump{0%{transform:scale(.3) translateY(30px)}50%{transform:scale(1.15) translateY(-12px)}100%{transform:none}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center;z-index:60}
+.toast.on{opacity:.95}
+input.in{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);width:100%}
+@media (max-width:520px){.hz{font-size:100px}.opt{font-size:44px}.ctx{font-size:28px}.ln .tx{font-size:24px}nav.tabs button{flex:1;padding:10px 2px;font-size:15px}nav.tabs .em{display:none}
+  .hole{height:100px}.mole{width:70px;height:84px;margin-left:-35px}.mole b{width:52px;height:48px;line-height:48px;font-size:34px;margin-top:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><span class="av">🐯</span>Eric 的学习小站</div>
+    <div class="score"><button id="sStar" aria-label="星星">⭐ <span id="nStar">0</span></button><button id="sWeek" class="wk" aria-label="本周">📅 <span id="nWeek"></span></button></div>
+    <div class="subj"><button class="on" data-sub="zh">中文</button><button data-sub="math">数学</button></div>
+  </header>
+  <nav class="tabs" id="tabs">
+    <button data-t="learn"><i class="em">🗺️ </i>闯关</button><button data-t="review"><i class="em">🔁 </i>复习</button><button data-t="wrong"><i class="em">📕 </i>错字本</button><button data-t="badge"><i class="em">🎁 </i>收藏</button><button data-t="parent"><i class="em">👪 </i>家长</button>
+  </nav>
+  <main id="main"></main>
+</div>
+<div id="modal"></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="file" accept="application/json" hidden>
+<script>
+const D={"kid": "Eric", "book": "暨南大学《中文》第二册（2023年第1版）", "lessons": [{"n": 1, "t": "在中文学校", "en": "At a Chinese School", "text": ["我在中文学校学习。", "老师教我们说汉语、写汉字、唱歌、画画儿。", "我喜欢学中文。"], "sent": "我在中文学校学习。", "chars": [["在", "zài", "在中文学校", ""], ["教", "jiāo", "老师教我们", "攵"], ["汉", "hàn", "汉字", ""], ["语", "yǔ", "汉语", ""], ["写", "xiě", "写汉字", "冖"], ["歌", "gē", "唱歌", ""], ["画", "huà", "画画儿", ""]], "words": [["我们", "wǒmen"], ["汉语", "hànyǔ"], ["汉字", "hànzì"], ["唱歌", "chànggē"]], "reading": {"title": "笔顺歌", "text": ["先横后竖，先撇后捺，", "从上到下，从左到右，从外到内。", "先里头后封口，先中间后两边。"]}, "song": ""}, {"n": 2, "t": "我们的教室", "en": "Our Classroom", "text": ["这是我们的教室。", "教室又大又干净，桌椅很整齐，", "前面是讲台，两边的墙上贴着同学们的作品。", "教室后边有一个图书角，有很多好看的中文书。"], "sent": "这是我们的教室。", "chars": [["这", "zhè", "这是", "辶"], ["又", "yòu", "又大又干净", ""], ["桌", "zhuō", "桌椅", "木"], ["椅", "yǐ", "桌椅", ""], ["很", "hěn", "很整齐", ""], ["讲", "jiǎng", "讲台", ""], ["两", "liǎng", "两边", ""], ["边", "biān", "后边", ""], ["墙", "qiáng", "墙上", ""], ["着", "zhe", "贴着", ""], ["图", "tú", "图书角", ""], ["书", "shū", "中文书", ""], ["角", "jiǎo", "图书角", ""], ["看", "kàn", "好看", ""]], "words": [["教室", "jiàoshì"], ["干净", "gānjìng"], ["整齐", "zhěngqí"], ["作品", "zuòpǐn"], ["后边", "hòubian"], ["好看", "hǎokàn"]], "reading": {"title": "我长大了", "text": ["小蝌蚪长大了，变成了可爱的青蛙，田里捉虫是行家。", "毛毛虫长大了，变成了美丽的蝴蝶，花间飞舞人人夸。", "我长大了，变成了懂事的孩子，学习知识本领大。"]}, "song": ""}, {"n": 3, "t": "开心的一天", "en": "A Happy Day", "text": ["今天是星期六，我的好朋友云云来我家做客。", "上午，我们一起看绘本、玩游戏、画画儿。", "下午，妈妈教我们烤饼干，", "云云做的是方形的，我做的是圆形的，都很漂亮。", "这一天，我真开心！"], "sent": "上午，我们一起看绘本、玩游戏、画画儿。", "chars": [["星", "xīng", "星期", ""], ["期", "qī", "星期六", "月"], ["朋", "péng", "朋友", ""], ["友", "yǒu", "朋友", ""], ["做", "zuò", "做客", ""], ["客", "kè", "做客", ""], ["午", "wǔ", "上午", ""], ["本", "běn", "绘本", ""], ["玩", "wán", "玩游戏", "王"], ["形", "xíng", "方形", ""], ["都", "dōu", "都很漂亮", ""]], "words": [["开心", "kāixīn"], ["今天", "jīntiān"], ["朋友", "péngyou"], ["上午", "shàngwǔ"], ["一起", "yìqǐ"], ["游戏", "yóuxì"], ["饼干", "bǐnggān"], ["漂亮", "piàoliang"]], "reading": {"title": "云云画画儿", "text": ["云云放学回到家，拿起笔来学画画儿。", "先画鸡，再画鸭，画牛画马还画花儿。", "小小画笔真听话，云云像个小画家。"]}, "song": ""}, {"n": 4, "t": "讲礼貌", "en": "Being Polite", "text": ["小朋友，讲礼貌，", "礼貌用语记心里。", "“你好！”", "“请坐。”“谢谢！”", "“对不起。”“没关系。”", "“再见！”", "做个有礼貌的好孩子。"], "sent": "做个有礼貌的好孩子。", "chars": [["用", "yòng", "礼貌用语", ""], ["记", "jì", "记心里", ""], ["里", "lǐ", "心里", ""], ["请", "qǐng", "请坐", ""], ["谢", "xiè", "谢谢", ""], ["对", "duì", "对不起", ""], ["不", "bù", "不要", ""], ["没", "méi", "没关系", "氵"], ["关", "guān", "没关系", ""], ["系", "xì", "关系", ""], ["再", "zài", "再见", ""], ["孩", "hái", "孩子", "子"]], "words": [["心里", "xīnli"], ["请坐", "qǐngzuò"], ["谢谢", "xièxie"], ["对不起", "duìbuqǐ"], ["没关系", "méiguānxi"], ["再见", "zàijiàn"], ["孩子", "háizi"]], "reading": {"title": "拍手歌 / 找朋友", "text": ["小朋友，拍拍手，唱着歌儿一起走。", "小朋友，拉拉手，我们都是好朋友。", "找呀找呀找朋友，找到一个好朋友。", "敬个礼呀握握手，你是我的好朋友。再见！"]}, "song": ""}, {"n": 5, "t": "过生日", "en": "Birthday", "text": ["昨天是九月十五日，我七岁生日，", "全家人为我准备了一个热闹的生日会。", "妈妈为我做了一桌子好吃的菜，", "爸爸给我买了一个水果蛋糕，", "哥哥和姐姐送给我一个可爱的玩具龙，因为我属龙。", "我们一起唱生日歌，开心极了！"], "sent": "爸爸给我买了一个水果蛋糕。", "chars": [["过", "guò", "过生日", ""], ["昨", "zuó", "昨天", ""], ["全", "quán", "全家", "人"], ["会", "huì", "生日会", ""], ["吃", "chī", "好吃", ""], ["菜", "cài", "好吃的菜", ""], ["给", "gěi", "给我", "纟"], ["买", "mǎi", "买蛋糕", ""], ["蛋", "dàn", "蛋糕", ""], ["送", "sòng", "送给我", ""], ["具", "jù", "玩具", ""], ["龙", "lóng", "玩具龙", ""]], "words": [["生日", "shēngrì"], ["昨天", "zuótiān"], ["准备", "zhǔnbèi"], ["好吃", "hǎochī"], ["水果", "shuǐguǒ"], ["可爱", "kě'ài"], ["玩具", "wánjù"], ["因为", "yīnwèi"]], "reading": {"title": "加横歌", "text": ["一加横变成二，二加横变成三，", "大字加横变成天，十字加横变成干，", "帅字加横变成师，坏字加横变成环。"]}, "song": ""}, {"n": 6, "t": "我会做的事", "en": "Things I Can Do", "text": ["我是一个小学生，", "可是你别说我小。", "我会洗澡和洗衣，", "还会收拾和打扫。", "小猫饿了我会喂，", "我会做的事真不少。"], "sent": "我会洗澡和洗衣，还会收拾和打扫。", "chars": [["事", "shì", "做的事", ""], ["可", "kě", "可是", ""], ["别", "bié", "别说", ""], ["洗", "xǐ", "洗澡", ""], ["澡", "zǎo", "洗澡", ""], ["还", "hái", "还会", ""], ["收", "shōu", "收拾", ""], ["拾", "shí", "收拾", "扌"], ["打", "dǎ", "打扫", ""], ["扫", "sǎo", "打扫", ""], ["猫", "māo", "小猫", "犭"], ["饿", "è", "饿了", ""], ["喂", "wèi", "我会喂", ""]], "words": [["可是", "kěshì"], ["洗澡", "xǐzǎo"], ["收拾", "shōushi"], ["打扫", "dǎsǎo"], ["不少", "bùshǎo"]], "reading": {"title": "绕口令", "text": ["毛毛抱花猫，苗苗戴花帽。", "毛毛的猫抓破苗苗的帽，苗苗赶跑毛毛的猫。", "毛毛买帽还苗苗，苗苗捉猫还毛毛。"]}, "song": ""}, {"n": 7, "t": "红绿灯", "en": "Traffic Light", "text": ["街道宽，街道长，", "街道交通真是忙。", "好在有了红绿灯，", "人来车往很通畅。", "弟弟妹妹手拉手，", "上学走到街道口。", "看见红灯停一停，", "看见绿灯快快走。"], "sent": "街道交通真是忙。", "chars": [["红", "hóng", "红灯", ""], ["绿", "lǜ", "绿灯", ""], ["灯", "dēng", "红绿灯", ""], ["街", "jiē", "街道", "彳"], ["道", "dào", "街道", ""], ["长", "cháng", "长短", ""], ["交", "jiāo", "交通", ""], ["通", "tōng", "交通", ""], ["忙", "máng", "真是忙", "忄"], ["往", "wǎng", "人来车往", ""], ["弟", "dì", "弟弟", ""], ["拉", "lā", "拉手", ""], ["停", "tíng", "停一停", ""], ["快", "kuài", "快快走", ""]], "words": [["红绿灯", "hónglǜdēng"], ["街道", "jiēdào"], ["交通", "jiāotōng"], ["通畅", "tōngchàng"], ["弟弟", "dìdi"], ["拉手", "lāshǒu"], ["上学", "shàngxué"], ["看见", "kànjiàn"]], "reading": {"title": "交通歌", "text": ["大马路，宽又宽，大小汽车走中间。", "过马路，左右看，一定要走斑马线。", "绿灯行，红灯停，黄灯亮了不抢行。"]}, "song": ""}, {"n": 8, "t": "去书店", "en": "Going to the Bookstore", "text": ["星期天，爸爸带我去书店。", "书店的书可真多！", "爸爸去看大人的书，我去了儿童区。", "那儿有故事书、漫画书，还有很多科学书和历史书。", "我拿了一本《神奇校车》看了起来。", "后来，爸爸来叫我。", "他说：“快十二点了，该回家吃饭了。”", "我说：“爸爸，这本书很有意思！买一本吧！”", "爸爸同意了。他付了钱，", "我拿着新买的书，高高兴兴地回家了。"], "sent": "我拿着新买的书，高高兴兴地回家了。", "chars": [["店", "diàn", "书店", ""], ["带", "dài", "带我去", ""], ["区", "qū", "儿童区", ""], ["那", "nà", "那儿", "阝"], ["拿", "ná", "拿着", ""], ["奇", "qí", "神奇", ""], ["他", "tā", "他说", ""], ["点", "diǎn", "十二点", ""], ["该", "gāi", "该回家了", ""], ["回", "huí", "回家", ""], ["饭", "fàn", "吃饭", "饣"], ["吧", "ba", "买一本吧", ""], ["付", "fù", "付钱", ""], ["钱", "qián", "付钱", ""]], "words": [["书店", "shūdiàn"], ["故事", "gùshi"], ["还有", "háiyǒu"], ["科学", "kēxué"], ["后来", "hòulái"], ["回家", "huíjiā"], ["吃饭", "chīfàn"], ["有意思", "yǒuyìsi"]], "reading": {"title": "“一”和“万”", "text": ["有个孩子学写汉字。", "老师先写了个“一”字，说：“这是一。”", "老师接着写了个“二”字，说：“这是二。”", "老师又写了个“三”字，说：“这是三。”", "听到这里，这个孩子高兴极了。他扔下笔说：“我已经学会了，不用再学了。”", "过了几天，有个姓万的叔叔来了。", "这个孩子说：“叔叔，我会写汉字了。”", "叔叔说：“好啊，你写写我的名字吧。”", "他听了以后马上就进书房去写了。", "过了很久，他还没有写好。叔叔走进书房，想看看是怎么回事。", "只见他满头大汗，边写边说：“都是叔叔不好，你为什么要姓万呢？我写了这么久，才写了五百多画！”"]}, "song": "读书郎"}, {"n": 9, "t": "在医院里", "en": "In the Hospital", "text": ["我发烧了，烧得很厉害，", "爸爸妈妈很着急，急忙带我去看病。", "到了医院，护士给我量了体温，", "医生给我做完检查，说：", "“只是感冒了，不要紧，好好儿休息，吃点儿药就会好的。”", "听了医生的话，爸爸妈妈都放心了。", "爸爸付完钱，我们一起去拿药。", "回家后，我吃完药睡了一觉，出了一身汗，觉得好多了。"], "sent": "我发烧了，烧得很厉害……（照片截断，待确认）", "chars": [["医", "yī", "医生", "匚"], ["院", "yuàn", "医院", ""], ["得", "de", "烧得很厉害", ""], ["急", "jí", "着急", ""], ["病", "bìng", "看病", "疒"], ["要", "yào", "不要紧", ""], ["药", "yào", "吃药", ""], ["就", "jiù", "就会好", ""], ["听", "tīng", "听话", ""], ["话", "huà", "听话", ""], ["放", "fàng", "放心", ""], ["完", "wán", "做完", ""], ["睡", "shuì", "睡觉", ""], ["觉", "jiào", "睡觉", ""]], "words": [["发烧", "fāshāo"], ["体温", "tǐwēn"], ["医生", "yīshēng"], ["检查", "jiǎnchá"], ["感冒", "gǎnmào"], ["休息", "xiūxi"], ["放心", "fàngxīn"], ["觉得", "juéde"]], "reading": {"title": "虚惊一场", "text": ["“小华快开门。”这是妈妈第三次来叫小华了。", "今天早上医生走后，小华就把自己关在房间里，谁都不想见。", "“我这么小就要死了吗？”想到这里小华难过得流下了眼泪。", "“小华，你怎么了，我进去行吗？”妈妈敲了敲门说。", "“不行，我快要死了，就让我一个人安静一会儿吧。”小华哭着说。", "“谁说你要死了？”妈妈推开门说，“你只是感冒发烧，很快就会好的。”", "“您骗人，医生说我烧到了一百零二度。老师说过，人的体温最高是四十四度，一般超过这个度数，人就会死的。我已经烧到了一百零二度，还不会死吗？”", "妈妈听后笑了起来：“傻孩子，老师说的是摄氏度，医生说的是华氏度。摄氏度和华氏度是不同的。华氏一百零二度只有摄氏三十八度多，你怎么会死呢？”", "“这是真的吗？”小华惊喜地问妈妈。", "“当然是真的啦！我还会骗你吗？”妈妈说。", "“太好了！我不会死了！”小华开心地扑进妈妈的怀里，紧紧地抱着妈妈。真是虚惊一场啊！"]}, "song": ""}, {"n": 10, "t": "春雨", "en": "Spring Rain", "text": ["滴答，滴答，下雨了，下雨了。", "种子说：“下吧，下吧，我要发芽。”", "禾苗说：“下吧，下吧，我要长大。”", "果树说：“下吧，下吧，我要开花。”", "小朋友说：“下吧，下吧，我要种瓜。”", "滴答，滴答，下雨了，下雨了。"], "sent": "下吧，下吧，我要种瓜。", "chars": [["滴", "dī", "滴答", ""], ["答", "dā", "滴答", ""], ["发", "fā", "发芽", "又"], ["芽", "yá", "发芽", ""], ["苗", "miáo", "禾苗", ""], ["种", "zhòng", "种瓜", "禾"]], "words": [["下雨", "xiàyǔ"], ["种子", "zhǒngzi"], ["发芽", "fāyá"], ["长大", "zhǎngdà"], ["开花", "kāihuā"]], "reading": {"title": "种子", "text": ["小小种子，发出小芽。", "伸了伸腰，钻出泥巴。", "不怕风吹，不怕雨打。", "长成苗苗，开出小花。", "小花结种，种子发芽。", "小小种子，功劳真大。"]}, "song": ""}, {"n": 11, "t": "青蛙写诗", "en": "The Frog Writes Poems", "text": ["下雨了，", "雨点儿淅沥沥，沙啦啦。", "青蛙说：“我要写诗啦！”", "水草中的小蝌蚪说：“我来当个小逗号。”", "池塘里的小水泡说：“我能当个小句号。”", "荷叶上的一串水珠说：“我们可以当省略号。”", "青蛙的诗写成了：", "“呱呱，呱呱，呱呱呱。呱呱，呱呱，呱呱呱……”"], "sent": "我能当个小句号。", "chars": [["青", "qīng", "青蛙", ""], ["诗", "shī", "写诗", ""], ["沙", "shā", "沙啦啦", ""], ["草", "cǎo", "水草", ""], ["当", "dāng", "当个小逗号", ""], ["号", "hào", "句号", ""], ["能", "néng", "我能", "厶"], ["句", "jù", "句号", "勹"], ["串", "chuàn", "一串", ""], ["以", "yǐ", "可以", ""], ["省", "shěng", "省略号", ""], ["成", "chéng", "写成", ""]], "words": [["青蛙", "qīngwā"], ["雨点儿", "yǔdiǎnr"], ["水草", "shuǐcǎo"], ["逗号", "dòuhào"], ["句号", "jùhào"], ["水珠", "shuǐzhū"], ["可以", "kěyǐ"]], "reading": {"title": "小画家", "text": ["下雪了，下雪了，", "雪地里来了群小画家。", "小鸡画竹叶，小狗画梅花，", "小鸭画枫叶，小马画月牙。", "大家画得真漂亮，", "我来做个雪娃娃。"]}, "song": ""}, {"n": 12, "t": "江河", "en": "Rivers", "text": ["古老的中国有一条江，", "它的名字叫长江。", "古老的中国有一条河，", "它的名字叫黄河。", "长江是中国最长的江，", "黄河是中国的母亲河。", "它们从西流到东，", "哺育着中华大地。", "我们爱长江，", "我们爱黄河。"], "sent": "长江从西流到东。", "chars": [["江", "jiāng", "长江", ""], ["河", "hé", "黄河", ""], ["古", "gǔ", "古老", ""], ["国", "guó", "中国", "口"], ["条", "tiáo", "一条", ""], ["它", "tā", "它们", ""], ["名", "míng", "名字", "夕"], ["最", "zuì", "最长", ""], ["亲", "qīn", "母亲", ""], ["从", "cóng", "从西", ""], ["流", "liú", "流到东", ""], ["华", "huá", "中华", ""]], "words": [["古老", "gǔlǎo"], ["中国", "zhōngguó"], ["名字", "míngzi"], ["它们", "tāmen"], ["中华", "zhōnghuá"], ["大地", "dàdì"]], "reading": {"title": "泉水和大海", "text": ["泉水泉水你往哪里去？", "泉水说：我要流进小溪里。", "小溪小溪你到哪里去？", "小溪说：我要流进江河里。", "江河江河你到哪里去？", "江河说：我要流进大海里。"]}, "song": ""}], "poly": [["教", [["老师教我们", "jiāo", 1], ["我们的教室", "jiào", 2]]], ["着", [["墙上贴着作品", "zhe", 2], ["爸爸妈妈很着急", "zháo", 9]]], ["还", [["还会收拾和打扫", "hái", 6], ["毛毛买帽还苗苗", "huán", 6]]], ["长", [["街道宽，街道长", "cháng", 7], ["我要长大", "zhǎng", 10], ["它的名字叫长江", "cháng", 12]]], ["觉", [["睡了一觉", "jiào", 9], ["觉得好多了", "jué", 9]]], ["种", [["我要种瓜", "zhòng", 10], ["种子说", "zhǒng", 10]]]], "schedule": [{"n": 3, "from": "2026-09-21", "to": "2026-10-02", "test": "2026-10-02"}, {"n": 4, "from": "2026-10-03", "to": "2026-10-16", "test": "2026-10-16"}, {"n": 5, "from": "2026-10-17", "to": "2026-10-30", "test": "2026-10-30"}]};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pad=n=>String(n).padStart(2,'0');
+const dstr=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today=()=>dstr(new Date());
+const md=s=>s?`${+s.slice(5,7)}/${+s.slice(8,10)}`:'';
+const fmt=s=>`${Math.floor(s/60)}:${pad(s%60)}`;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2200)}
+
+/* ---------- data ---------- */
+const L={};D.lessons.forEach(l=>L[l.n]=l);
+const CH={};D.lessons.forEach(l=>l.chars.forEach(([c,py,h,r])=>CH[c]={c,py,h,r,n:l.n}));
+const LN=D.lessons.map(l=>l.n);
+// sticker album: [emoji, 名字, 拼音, rare]
+const STK=[
+ ['动物',[['🐼','熊猫','xióngmāo'],['🐯','老虎','lǎohǔ'],['🦊','狐狸','húli'],['🐨','考拉','kǎolā'],['🐸','青蛙','qīngwā'],['🐵','猴子','hóuzi'],['🦁','狮子','shīzi'],['🐰','兔子','tùzi'],['🐧','企鹅','qǐ\'é'],['🦉','猫头鹰','māotóuyīng'],['🦒','长颈鹿','chángjǐnglù'],['🐳','鲸鱼','jīngyú',1]]],
+ ['太空',[['🚀','火箭','huǒjiàn'],['🛸','飞碟','fēidié'],['🌍','地球','dìqiú'],['🪐','土星','tǔxīng'],['🌙','月亮','yuèliang'],['⭐','星星','xīngxing'],['☄️','彗星','huìxīng'],['🛰️','卫星','wèixīng'],['🌌','银河','yínhé'],['🔭','望远镜','wàngyuǎnjìng'],['👽','外星人','wàixīngrén'],['🧑‍🚀','宇航员','yǔhángyuán',1]]],
+ ['美食',[['🍉','西瓜','xīguā'],['🍓','草莓','cǎoméi'],['🍦','冰淇淋','bīngqílín'],['🍩','甜甜圈','tiántiánquān'],['🥟','饺子','jiǎozi'],['🍜','面条','miàntiáo'],['🍕','披萨','pīsà'],['🍪','饼干','bǐnggān'],['🎂','蛋糕','dàngāo'],['🍭','棒棒糖','bàngbàngtáng'],['🍡','丸子','wánzi'],['🥮','月饼','yuèbing',1]]],
+ ['交通',[['🚒','消防车','xiāofángchē'],['🚓','警车','jǐngchē'],['🚑','救护车','jiùhùchē'],['🚜','拖拉机','tuōlājī'],['🚂','火车','huǒchē'],['🚁','直升机','zhíshēngjī'],['⛵','帆船','fānchuán'],['🚲','自行车','zìxíngchē'],['🚌','公共汽车','gōnggòng qìchē'],['🛴','滑板车','huábǎnchē'],['✈️','飞机','fēijī'],['🏎️','赛车','sàichē',1]]],
+];
+const STICKERS=STK.flatMap(([page,list])=>list.map(([e,name,py,rare])=>({id:name,e,name,py,rare:!!rare,page})));
+
+/* ---------- storage ---------- */
+const KEY='zwzj.eric.v1';
+const DEF={cur:null,log:{},sessions:[],textRead:{},readDone:{},readSkip:{},review:{on:true,n:8},types:['pick','pyc','fill'],scope:'mix',
+  rtypes:['pyc','pick'],rlessons:null,rn:8,stars:0,spent:0,days:[],badges:{},cleared:[],cnt:{},starDay:{},reward:{text:'',target:100},
+  learnDone:{},best2:{},best3:{},moleBest:{},stickers:{},draws:0,drawDay:'',examBonus:{},sfx:true};
+let S={...DEF};
+try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j)S={...DEF,...j}}catch(e){}
+['d3','d7','d14'].forEach(k=>delete S.badges[k]); // retired streak badges
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- schedule ---------- */
+function autoLesson(){const t=today(),sc=D.schedule;for(const s of sc)if(t>=s.from&&t<=s.to)return s.n;
+  if(t>sc[sc.length-1].to)return sc[sc.length-1].n;return sc[0].n}
+const curLesson=()=>S.cur||autoLesson();
+const testOf=n=>(D.schedule.find(s=>s.n===n)||{}).test;
+let view={tab:'learn',n:curLesson(),open:false,run:null,game:null};
+
+/* ---------- mastery ---------- */
+function rec(c,ok,type){if(!CH[c])return;(S.log[c]=S.log[c]||[]).push([today(),ok?1:0,type])}
+function status(c){const g=S.log[c];if(!g||!g.length)return'new';if(!g[g.length-1][1])return'bad';
+  return new Set(g.filter(x=>x[1]).map(x=>x[0])).size>=2?'ok':'mid'}
+const lastSeen=c=>{const g=S.log[c];return g&&g.length?g[g.length-1][0]:''};
+const wrongList=()=>Object.keys(CH).filter(c=>status(c)==='bad').sort((a,b)=>CH[a].n-CH[b].n);
+const lastWrongType=c=>{const g=S.log[c]||[];for(let i=g.length-1;i>=0;i--)if(!g[i][1])return g[i][2];return'pyc'};
+const wrongTimes=c=>(S.log[c]||[]).filter(x=>!x[1]).length;
+function reviewPick(lessons,k){const pool=Object.keys(CH).filter(c=>lessons.includes(CH[c].n));if(!pool.length)return[];
+  const rank={bad:0,mid:1,new:2,ok:3};
+  return shuffle(pool).sort((a,b)=>rank[status(a)]-rank[status(b)]||lastSeen(a).localeCompare(lastSeen(b))).slice(0,k||pool.length)}
+const before=n=>LN.filter(k=>k<n);
+
+/* ---------- weeks (目标：每周至少学 1 次) ---------- */
+function weekOf(s){const d=new Date(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10));d.setDate(d.getDate()-((d.getDay()+6)%7));return dstr(d)}
+const weeksActive=()=>new Set(S.days.map(weekOf));
+const thisWeekCount=()=>S.sessions.filter(s=>weekOf(s.d)===weekOf(today())).length;
+function touchDay(){const t=today();if(!S.days.includes(t)){S.days.push(t);S.days=S.days.slice(-500);return true}return false}
+
+/* ---------- levels (闯关) ---------- */
+const accStars=a=>a>=1?3:a>=.8?2:a>=.6?1:0;
+function levels(n){const l=L[n];let a=0;if(S.learnDone[n]){a=1;if(S.textRead[n]&&S.textRead[n].ok){a=2;if(!l.reading||S.readDone[n]||S.readSkip[n])a=3}}
+  return[a,S.best2[n]||0,S.best3[n]||0]}
+const lessonStars=n=>levels(n).reduce((x,y)=>x+y,0);
+const st3=k=>`<span class="stars3">${[0,1,2].map(i=>`<span class="${i<k?'':'off'}">⭐</span>`).join('')}</span>`;
+
+/* ---------- fx: sound, stars flying, confetti ---------- */
+let AC=null,lastTap=null;
+document.addEventListener('pointerdown',e=>{lastTap=e.target;
+  if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}else if(AC.state==='suspended')AC.resume();
+  if(!window._ttsUnlocked&&'speechSynthesis' in window){window._ttsUnlocked=true;try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}catch(_){}}},{capture:true});
+function tone(f,t,d,type='sine',v=.18){if(!AC||!S.sfx)return;const o=AC.createOscillator(),g=AC.createGain(),t0=AC.currentTime+t;
+  o.type=type;o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.01);g.gain.exponentialRampToValueAtTime(.001,t0+d);
+  o.connect(g).connect(AC.destination);o.start(t0);o.stop(t0+d+.02)}
+const SFX={ok:()=>{tone(880,0,.12);tone(1320,.09,.2)},no:()=>{tone(260,0,.16,'triangle',.14);tone(200,.12,.2,'triangle',.12)},
+  coin:()=>{tone(1320,0,.06,'square',.06);tone(1760,.05,.12,'square',.06)},pop:()=>{tone(500,0,.05,'square',.08);tone(900,.04,.08,'sine',.12)},
+  whack:()=>{tone(140,0,.09,'square',.22);tone(90,.03,.12,'triangle',.2)},
+  fan:()=>[523,659,784,1047].forEach((f,i)=>tone(f,i*.12,i===3?.5:.18,'triangle',.16)),
+  tick:()=>tone(1000,0,.03,'square',.05)};
+const sfx=k=>{try{SFX[k]&&SFX[k]()}catch(e){}};
+function flyStars(k,from){const tgt=$('#sStar');if(!tgt)return;const el=from&&from.getBoundingClientRect?from:null;
+  const a=el?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0},b=tgt.getBoundingClientRect();
+  for(let i=0;i<Math.min(k,6);i++){const s=document.createElement('span');s.className='fly';s.textContent='⭐';
+    const x0=a.left+a.width/2-15+(Math.random()*30-15),y0=a.top+a.height/2-15;s.style.left=x0+'px';s.style.top=y0+'px';document.body.appendChild(s);
+    const dx=b.left+12-x0,dy=b.top+2-y0;
+    if(!s.animate){s.remove();continue}
+    const an=s.animate([{transform:'translate(0,0) scale(1.4)'},{transform:`translate(${dx*.3}px,${dy*.3-60}px) scale(1.2)`,offset:.35},{transform:`translate(${dx}px,${dy}px) scale(.6)`}],
+      {duration:750,delay:i*90,easing:'cubic-bezier(.5,0,.6,1)',fill:'forwards'});
+    an.onfinish=()=>{s.remove();tgt.classList.remove('bump');void tgt.offsetWidth;tgt.classList.add('bump');sfx('coin')}}}
+function confetti(n=70){const c=document.createElement('div');c.className='confetti';const cols=['#e0703a','#e8a417','#3f9a5b','#4a90d9','#d9488f','#8e6bd8'];
+  for(let i=0;i<n;i++){const p=document.createElement('i');p.style.left=Math.random()*100+'%';p.style.background=cols[i%cols.length];
+    p.style.animationDuration=(1.6+Math.random()*1.6)+'s';p.style.animationDelay=Math.random()*.5+'s';p.style.transform=`rotate(${Math.random()*360}deg)`;c.appendChild(p)}
+  document.body.appendChild(c);setTimeout(()=>c.remove(),3800)}
+function shake(el){if(!el||!el.classList)return;el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+
+/* ---------- stars & badges ---------- */
+function addStars(k,from){S.stars+=k;if(view.run)view.run.stars=(view.run.stars||0)+k;if(view.game)view.game.stars=(view.game.stars||0)+k;
+  flyStars(k,from||lastTap);setTimeout(paintScore,700)}
+const cnt=k=>S.cnt[k]||0, inc=(k,v=1)=>S.cnt[k]=cnt(k)+v;
+const pageDone=()=>STK.filter(([p,list])=>list.every(x=>S.stickers[x[1]])).length;
+const BADGES=[
+  {id:'first',ic:'🌱',name:'第一步',desc:'完成第一次练习',p:()=>[S.sessions.filter(s=>s.items).length,1]},
+  {id:'read1',ic:'📖',name:'小小朗读者',desc:'读完 1 篇课文',p:()=>[Object.keys(S.textRead).length,1]},
+  {id:'read5',ic:'📚',name:'朗读达人',desc:'读完 5 篇不同的课文',p:()=>[Object.keys(S.textRead).length,5]},
+  {id:'yd3',ic:'🔍',name:'阅读小能手',desc:'读完 3 篇阅读',p:()=>[Object.keys(S.readDone).length,3]},
+  {id:'w4',ic:'📅',name:'学满 4 周',desc:'有 4 个星期学过中文',p:()=>[weeksActive().size,4]},
+  {id:'w8',ic:'🚀',name:'学满 8 周',desc:'有 8 个星期学过中文',p:()=>[weeksActive().size,8]},
+  {id:'w16',ic:'🏔️',name:'学满 16 周',desc:'有 16 个星期学过中文',p:()=>[weeksActive().size,16]},
+  {id:'s50',ic:'⭐',name:'50 颗星',desc:'一共拿到 50 颗星',p:()=>[S.stars,50]},
+  {id:'s200',ic:'🌟',name:'200 颗星',desc:'一共拿到 200 颗星',p:()=>[S.stars,200]},
+  {id:'s500',ic:'💫',name:'500 颗星',desc:'一共拿到 500 颗星',p:()=>[S.stars,500]},
+  {id:'full',ic:'🎯',name:'全对王',desc:'一次练习 10 题以上全对',p:()=>[cnt('full'),1]},
+  {id:'dict',ic:'✍️',name:'听写满分',desc:'一次听写全部写对',p:()=>[cnt('dictFull'),1]},
+  {id:'poly',ic:'🕵️',name:'多音字侦探',desc:'多音字答对 10 次',p:()=>[cnt('poly'),10]},
+  {id:'say',ic:'🗣️',name:'小老师',desc:'组词说句子说好 10 次',p:()=>[cnt('say'),10]},
+  {id:'clr10',ic:'🧹',name:'错字克星',desc:'从错字本消灭 10 个字',p:()=>[S.cleared.length,10]},
+  {id:'clr30',ic:'🦸',name:'错字终结者',desc:'从错字本消灭 30 个字',p:()=>[S.cleared.length,30]},
+  {id:'mole',ic:'🔨',name:'打地鼠高手',desc:'挑战模式 1 分钟打中 15 只',p:()=>[Math.max(0,...Object.values(S.moleBest)),15]},
+  {id:'exam',ic:'🛡️',name:'通关小勇士',desc:'任意一课通关考试拿 3 星',p:()=>[Math.max(0,...Object.values(S.best3)),3]},
+  {id:'album',ic:'📒',name:'贴纸收藏家',desc:'集齐一整页贴纸',p:()=>[pageDone(),1]},
+  ...LN.map(n=>({id:'L'+n,ic:'🏆',name:`第${n}课全掌握`,desc:`《${L[n].t}》的字全部掌握`,lesson:n,p:()=>[L[n].chars.filter(([c])=>status(c)==='ok').length,L[n].chars.length]})),
+];
+function checkBadges(){const got=[];BADGES.forEach(b=>{if(S.badges[b.id])return;const[a,t]=b.p();if(a>=t){S.badges[b.id]=today();got.push(b)}});save();return got}
+function showBadges(list,then){if(!list||!list.length)return then&&then();const b=list[0];
+  $('#modal').innerHTML=`<div class="modal"><div class="box"><div class="label">获得新徽章！</div><div class="ic">${b.ic}</div><h2>${esc(b.name)}</h2><p class="muted">${esc(b.desc)}</p><button class="big-btn" id="mok">太棒了！</button></div></div>`;
+  confetti();sfx('fan');speak('获得新徽章，'+b.name);$('#mok').onclick=()=>{$('#modal').innerHTML='';showBadges(list.slice(1),then)}}
+function paintScore(){$('#nStar').textContent=S.stars;const w=thisWeekCount();$('#nWeek').textContent=w?`本周 ✓`:'本周还没学';$('#sWeek').classList.toggle('done',w>0)}
+
+/* ---------- stickers ---------- */
+function drawSticker(){const left=STICKERS.filter(s=>!S.stickers[s.id]);if(!left.length){S.draws=Math.max(0,S.draws-1);S.stars+=10;save();return null}
+  const bag=left.flatMap(s=>Array(s.rare?1:4).fill(s)),s=bag[Math.random()*bag.length|0];S.stickers[s.id]=today();S.draws=Math.max(0,S.draws-1);save();return s}
+function openSticker(then){const s=drawSticker();
+  if(!s){toast('贴纸册集满啦！换成 10⭐');paintScore();return then&&then()}
+  $('#modal').innerHTML=`<div class="modal"><div class="box"><div class="label">点一下卡片，看看是什么贴纸！</div>
+    <div class="flip" id="flip"><div class="in"><div class="f">？</div><div class="b ${s.rare?'rare':''}"><div class="e">${s.e}</div><b>${esc(s.name)}</b><small>${esc(s.py)}</small>${s.rare?'<div class="small" style="color:var(--gold);font-weight:800">✨ 稀有贴纸 ✨</div>':''}</div></div></div>
+    <button class="big-btn" id="sok" style="visibility:hidden">贴进贴纸册</button></div></div>`;
+  $('#flip').onclick=()=>{if($('#flip').classList.contains('open'))return speak(s.name);$('#flip').classList.add('open');sfx('pop');setTimeout(()=>{sfx(s.rare?'fan':'ok');if(s.rare)confetti(90);speak(s.name)},450);$('#sok').style.visibility='visible'};
+  $('#sok').onclick=()=>{$('#modal').innerHTML='';paintScore();if(view.tab==='badge'&&!view.run&&!view.game)render();then&&then()}}
+
+/* ---------- speech ---------- */
+let zh=null;
+function pickVoice(){try{const v=speechSynthesis.getVoices();zh=v.find(x=>/zh[-_]CN/i.test(x.lang)&&/Tingting|婷婷|Xiaoxiao|Meijia/i.test(x.name))||v.find(x=>/zh[-_]CN/i.test(x.lang))||v.find(x=>/^zh/i.test(x.lang))||null}catch(e){}}
+try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
+function speak(t,onend,rate){
+  if(!('speechSynthesis' in window)){onend&&setTimeout(onend,900);return}
+  const ss=speechSynthesis;
+  const go=()=>{const u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=rate||.8;if(zh)u.voice=zh;
+    let fin=false;const end=()=>{if(fin)return;fin=true;clearTimeout(u._t);onend&&onend()};
+    u.onend=end;u.onerror=end;u._t=setTimeout(end,1800+t.length*420);window._u=u;try{ss.resume()}catch(e){}ss.speak(u)};
+  if(ss.speaking||ss.pending){ss.cancel();setTimeout(go,90)}else go()}
+function stopSpeak(){view.seq=null;clearTimeout(view.seqT);try{speechSynthesis.cancel()}catch(e){}}
+const sayChar=c=>`${c}，${CH[c].h}的${c}`;
+function playSeq(items,onItem,onDone){stopSpeak();const id={};view.seq=id;let i=0;
+  const next=()=>{if(view.seq!==id)return;if(i>=items.length){view.seq=null;onDone&&onDone();return}
+    onItem&&onItem(i);speak(items[i],()=>{if(view.seq!==id)return;i++;view.seqT=setTimeout(next,700)})};setTimeout(next,120)}
+
+/* ---------- practice types ---------- */
+const TYPES={
+  pick:{name:'听音找字',tip:'听读音，点出对的字',tag:'自动',min:3,k:8},
+  pyc:{name:'看拼音找字',tip:'不用听，看拼音和提示选字',tag:'自动',min:3,k:8},
+  fill:{name:'课文填空',tip:'课文里的句子缺一个字',tag:'自动',min:3,k:6},
+  poly:{name:'多音字',tip:'同一个字在这里读什么',tag:'自动',min:2,k:6},
+  read:{name:'看字读一读',tip:'大声读，家长判对错',tag:'家长听',min:2,k:10},
+  dict:{name:'听写',tip:'写在纸上，写完一起对',tag:'纸笔',min:5,k:6},
+  say:{name:'组词说句子',tip:'用字组词，再说一句话',tag:'家长听',min:2,k:3},
+};
+const TNAME={...Object.fromEntries(Object.entries(TYPES).map(([k,v])=>[k,v.name])),mole:'打地鼠'};
+const ORDER=Object.keys(TYPES);
+function polyItems(chars){const set=chars?new Set(chars):null,out=[];
+  D.poly.forEach(([c,ctxs])=>{if(!CH[c]||(set&&!set.has(c)))return;const reads=[...new Set(ctxs.map(x=>x[1]))];
+    ctxs.forEach(([ctx,py,n])=>{if(n<=Math.max(curLesson(),CH[c].n))out.push({c,ctx,py,reads})})});return out}
+function distractors(c,k){const py=CH[c].py,top=Math.max(curLesson(),CH[c].n);
+  const near=shuffle(Object.keys(CH).filter(x=>x!==c&&CH[x].py!==py&&CH[x].n===CH[c].n));
+  const far=shuffle(Object.keys(CH).filter(x=>x!==c&&CH[x].py!==py&&CH[x].n!==CH[c].n&&CH[x].n<=top));
+  return[...near,...far].slice(0,k)}
+function ctxFor(c){const l=L[CH[c].n],lines=[...l.text,l.sent,l.t].filter(Boolean);
+  let cl=lines.flatMap(s=>s.replace(/[“”]/g,'').split(/[，。！？：；…]/)).map(s=>s.trim()).filter(s=>s.includes(c)&&s.length>=4);
+  if(!cl.length)cl=lines.map(s=>s.replace(/[“”]/g,'').replace(/[。！，]+$/,'')).filter(s=>s.includes(c));
+  cl.sort((a,b)=>Math.abs(a.length-8)-Math.abs(b.length-8));return cl[0]||CH[c].h}
+function mkItems(type,chars){
+  if(type==='poly')return shuffle(polyItems(chars.length?chars:null)).slice(0,TYPES.poly.k).map(q=>({...q,opts:shuffle(q.reads)}));
+  return chars.map(c=>{const it={c};
+    if(type==='pick'||type==='pyc')it.opts=shuffle([c,...distractors(c,3)]);
+    if(type==='fill'){it.s=ctxFor(c);it.opts=shuffle([c,...distractors(c,8).filter(x=>!it.s.includes(x)).slice(0,2)])}
+    return it})}
+function pickItems(pool,k,n){const own=shuffle(pool.filter(c=>CH[c].n===n)),oth=shuffle(pool.filter(c=>CH[c].n!==n));
+  if(!own.length||!oth.length)return shuffle(pool).slice(0,k);
+  const ko=Math.min(oth.length,Math.max(1,Math.round(k*oth.length/pool.length)));
+  return shuffle([...own.slice(0,k-ko),...oth.slice(0,ko)])}
+function examSteps(n){const cs=shuffle(L[n].chars.map(x=>x[0])),pc=new Set(polyItems(cs).map(p=>p.c)),g={},base=['pick','pyc','fill'];let polyUsed=0;
+  cs.forEach((c,i)=>{let t=base[i%3];if(pc.has(c)&&polyUsed<2){t='poly';polyUsed++}(g[t]=g[t]||[]).push(c)});
+  return ORDER.filter(t=>g[t]).map(t=>({type:t,items:t==='poly'?g.poly.map(c=>{const q=shuffle(polyItems([c]))[0];return{...q,opts:shuffle(q.reads)}}):mkItems(t,g[t])}))}
+
+/* ---------- shell ---------- */
+$$('#tabs button').forEach(b=>b.onclick=()=>{stopSpeak();view.run=null;view.game=null;view.tab=b.dataset.t;if(b.dataset.t==='learn')view.open=false;render()});
+$('#sStar').onclick=()=>{if(view.run||view.game)return;view.tab='badge';render()};
+$('#sWeek').onclick=()=>{if(view.run||view.game)return;toast(thisWeekCount()?`这周已经学了 ${thisWeekCount()} 次 👍`:'每周至少学一次中文哦')};
+$$('.subj button').forEach(b=>b.onclick=()=>{if(view.run||view.game)return;view.sub=b.dataset.sub;render()});
+function render(){
+  paintScore();
+  $$('.subj button').forEach(b=>b.classList.toggle('on',(view.sub||'zh')===b.dataset.sub));
+  const busy=!!(view.run||view.game),math=view.sub==='math';
+  $('#tabs').style.display=busy||math?'none':'flex';$('.subj').style.display=busy?'none':'flex';
+  const w=wrongList().length;$('#tabs [data-t=wrong]').innerHTML=`<i class="em">📕 </i>错字本${w?`<span class="dot">${w}</span>`:''}`;
+  $$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===view.tab));
+  if(math)return renderMath();
+  if(view.game)return renderGame();
+  if(view.run)return renderRun();
+  window.scrollTo(0,0);
+  if(view.tab==='learn')return view.open?renderLesson():renderMap();
+  ({review:renderReview,wrong:renderWrong,badge:renderCollect,parent:renderParent})[view.tab]();
+}
+function renderMath(){$('#main').innerHTML=`<section class="card" style="text-align:center;padding:40px 18px"><div class="bigemoji">🧮</div><h2>数学马上来</h2><p class="muted">等妈妈把数学的内容发过来，这里就会有 Eric 的数学练习。星星、徽章和贴纸都会跟中文一起算。</p></section>`}
+
+/* ---------- 闯关地图 ---------- */
+function renderMap(){
+  const cur=curLesson(),H=150,top=60,xs=[24,52,78,52],pos=LN.map((n,i)=>({n,x:xs[i%4],y:top+i*H}));
+  const height=top+(LN.length-1)*H+110;
+  const path=pos.map((p,i)=>i?`C ${pos[i-1].x} ${pos[i-1].y+H*.55}, ${p.x} ${p.y-H*.55}, ${p.x} ${p.y}`:`M ${p.x} ${p.y}`).join(' ');
+  const deco=['🌴','🐚','🐠','⛵','🌺','🦀','🐢','🐬'];
+  $('#main').innerHTML=`
+  <section class="card" style="padding:12px 16px;margin-bottom:12px"><div class="row" style="justify-content:space-between">
+    <div><div class="eyebrow">本周在学</div><b style="font-size:18px">第${cur}课《${esc(L[cur].t)}》</b>${testOf(cur)?` <span class="pill">📅 ${md(testOf(cur))} 考试</span>`:''}</div>
+    <button class="btn pri" id="goCur">出发 →</button></div></section>
+  <div class="map" style="height:${height}px">
+    <svg class="path" viewBox="0 0 100 ${height}" preserveAspectRatio="none"><path d="${path}" fill="none" stroke="#ffffffcc" stroke-dasharray="10 10" vector-effect="non-scaling-stroke" stroke-width="6" stroke-linecap="round"/></svg>
+    ${pos.map((p,i)=>`<span class="wave" style="left:${(p.x+40)%90+3}%;top:${p.y+20}px;animation-delay:${i*.4}s">〰️</span><span class="deco" style="left:${p.x>50?p.x-34:p.x+24}%;top:${p.y+30}px">${deco[i%deco.length]}</span>`).join('')}
+    ${pos.map(p=>{const s=lessonStars(p.n),st=p.n===cur?'cur':p.n>cur?'future':s>=6||S.badges['L'+p.n]?'done':'';
+      return`<div class="isl ${st}" style="left:${p.x}%;top:${p.y-43}px"><button class="disc" data-isl="${p.n}" aria-label="第${p.n}课">${p.n>cur&&!s?'☁️':p.n}${S.badges['L'+p.n]?'<span class="crown">👑</span>':''}</button>
+        <div class="nm">${esc(L[p.n].t)}</div><div class="st"><b>⭐</b> ${s}/9</div></div>`}).join('')}
+    ${(()=>{const p=pos.find(x=>x.n===cur);return p?`<span class="panda" style="left:calc(${p.x}% + 22px);top:${p.y-84}px">🐼</span>`:''})()}
+  </div>`;
+  $$('[data-isl]').forEach(b=>b.onclick=()=>{sfx('pop');view.n=+b.dataset.isl;view.open=true;render()});
+  $('#goCur').onclick=()=>{view.n=cur;view.open=true;render()};
+  const c=$('.isl.cur');if(c&&cur>2)setTimeout(()=>c.scrollIntoView({block:'center',behavior:'smooth'}),80);
+}
+
+/* ---------- 一课：三关 ---------- */
+function typeGrid(sel,key,polyOk){return`<div class="types">${ORDER.map(k=>{const t=TYPES[k],dis=k==='poly'&&!polyOk;
+  return`<button class="type ${sel.includes(k)&&!dis?'on':''}" data-${key}="${k}" ${dis?'disabled':''}><span class="tag">${t.tag}</span><b>${t.name}</b><span>${dis?'这些字里没有多音字':t.tip} · 约${t.min}分钟</span></button>`}).join('')}</div>`}
+function learnPool(){const n=view.n,own=L[n].chars.map(x=>x[0]);
+  if(S.scope==='mix'&&n>1){const key=n+':'+S.review.n;if(view._rvKey!==key){view._rv=reviewPick(before(n),S.review.n);view._rvKey=key}return[...own,...view._rv]}
+  return own}
+function renderLesson(){
+  const cur=curLesson(),n=view.n,l=L[n],test=testOf(n),[a,b,c]=levels(n);
+  const st=l.chars.map(([x])=>status(x)),nOk=st.filter(x=>x==='ok').length;
+  const readSt=S.readSkip[n]?'skip':S.readDone[n]?'done':'',tr=S.textRead[n];
+  const pool=learnPool(),polyOk=polyItems(pool).length>0,sel=S.types.filter(t=>t!=='poly'||polyOk),est=sel.reduce((x,t)=>x+TYPES[t].min,0);
+  const lock3=b<1;
+  $('#main').innerHTML=`
+  <button class="btn ghost" id="toMap" style="padding:4px 0 10px">← 回到地图</button>
+  <section class="card">
+    <div class="eyebrow">${n===cur?'本周在学':n<cur?'学过的课':'还没学到'} · 第${n}课 · ⭐ ${a+b+c}/9</div>
+    <h2>${esc(l.t)}</h2>
+    <div class="row" style="gap:6px">${test?`<span class="pill">📅 ${md(test)} 考这一课</span>`:''}<span class="pill ${nOk===l.chars.length?'ok':'grey'}">掌握 ${nOk}/${l.chars.length}</span></div>
+    <div class="chips">${l.chars.map(([x],i)=>`<span class="chip ${st[i]==='new'?'':st[i]}">${x}</span>`).join('')}</div>
+  </section>
+  <section class="card">
+    <h3>🏝️ 三关</h3>
+    <div class="lvl"><div class="ic">📢</div><div class="tx"><b>第 1 关 · 跟读</b><span>跟读生字、词语，再读课文${tr?` · 上次 ${md(tr.d)} ${tr.ok?'😀':'🙂'}`:''}</span><div>${st3(a)}</div></div><button class="go" data-go="learn">${a?'再读':'开始'}</button></div>
+    <div class="row" style="margin:6px 0 0 60px;gap:6px"><button class="btn ghost small" data-go="learn:0" style="padding:4px 8px">只读生字</button><button class="btn ghost small" data-go="learn:1" style="padding:4px 8px">只读词语</button><button class="btn ghost small" data-go="learn:2" style="padding:4px 8px">只读课文</button></div>
+    <div class="lvl"><div class="ic">✏️</div><div class="tx"><b>第 2 关 · 练习</b><span>约 ${est} 分钟 · 对 60% 一星，80% 两星，全对三星</span><div>${st3(b)}</div></div><button class="go" data-go="practice" ${sel.length?'':'disabled'}>开始</button></div>
+    <details class="more"><summary>换题型 / 加复习（家长设置）</summary>
+      ${n>1?`<div class="seg" style="margin-top:8px"><button class="${S.scope==='lesson'?'on':''}" data-sc="lesson">只练本课</button><button class="${S.scope==='mix'?'on':''}" data-sc="mix">本课＋前面的 ${S.review.n} 个</button></div>`:''}
+      ${typeGrid(S.types,'ty',polyOk)}</details>
+    <div class="lvl ${lock3?'lock':''}"><div class="ic">${lock3?'🔒':'🛡️'}</div><div class="tx"><b>第 3 关 · 通关考试</b><span>${lock3?'先在第 2 关拿到一颗星':`本课 ${l.chars.length} 个字，每个字考一次`}</span><div>${st3(c)}</div></div><button class="go" data-go="exam" ${lock3?'disabled':''}>${lock3?'未解锁':'挑战'}</button></div>
+  </section>
+  <section class="card">
+    <h3>🔨 打地鼠</h3>
+    <p class="muted small">听到哪个字，就敲哪只地鼠！${S.moleBest[n]?`挑战最高分：<b>${S.moleBest[n]}</b>`:''}</p>
+    <div class="row"><button class="btn grow" data-mole="practice">🐢 慢慢打（不计时）</button><button class="btn pri grow" data-mole="challenge">⏱️ 挑战 60 秒</button></div>
+  </section>
+  ${l.reading?`<section class="card">
+    <h3>📗 阅读《${esc(l.reading.title)}》</h3>
+    <p class="muted small">${readSt==='skip'?'已跳过（老师没教这篇）':readSt==='done'?`读过了 · ${md(S.readDone[n])}`:'老师教过就读一读；没教过可以跳过。读完或跳过，第 1 关才能拿满三星。'}${l.song?`　课本还有「唱一唱」《${esc(l.song)}》，在书上看。`:''}</p>
+    <div class="row">${readSt==='skip'?`<button class="btn grow" data-act="unskip">撤销跳过</button>`:`<button class="btn pri grow" data-go="read">读一读</button><button class="btn grow" data-act="skip">没学过，跳过</button>`}</div>
+  </section>`:''}`;
+  $('#toMap').onclick=()=>{view.open=false;render()};
+  $$('[data-go]').forEach(x=>x.onclick=()=>go(x.dataset.go));
+  $$('[data-mole]').forEach(x=>x.onclick=()=>startGame(x.dataset.mole,L[n].chars.map(y=>y[0]),n));
+  $$('[data-sc]').forEach(x=>x.onclick=()=>{S.scope=x.dataset.sc;save();render();$('details.more').open=true});
+  $$('[data-ty]').forEach(x=>x.onclick=()=>{const k=x.dataset.ty;S.types=S.types.includes(k)?S.types.filter(y=>y!==k):[...S.types,k];save();render();$('details.more').open=true});
+  $$('[data-act]').forEach(x=>x.onclick=()=>{if(x.dataset.act==='skip')S.readSkip[n]=today();else delete S.readSkip[n];save();render()});
+}
+
+/* ---------- 复习 ---------- */
+function renderReview(){
+  const cur=curLesson(),avail=LN.filter(k=>k<=cur);
+  if(!S.rlessons)S.rlessons=before(cur).length?before(cur):[cur];
+  const lessons=S.rlessons.filter(k=>avail.includes(k)),all=Object.keys(CH).filter(c=>lessons.includes(CH[c].n));
+  const k=S.rn===0?all.length:Math.min(S.rn,all.length);
+  const polyOk=polyItems(all).length>0,sel=S.rtypes.filter(t=>t!=='poly'||polyOk),est=sel.reduce((a,t)=>a+TYPES[t].min,0);
+  $('#main').innerHTML=`
+  <section class="card">
+    <h3>🔁 复习前面学过的字</h3>
+    <p class="muted small">先出错过的、还没掌握的，再出好久没练的。</p>
+    <div class="eyebrow" style="margin-top:8px">从哪几课里出（点选）</div>
+    <div class="lessons">${avail.map(x=>`<button class="lchip ${lessons.includes(x)?'sel':''}" data-rl="${x}">${x}</button>`).join('')}</div>
+    <div class="row"><span class="small muted">出几个字</span><div class="seg" style="flex:1">${[4,8,12,0].map(x=>`<button class="${S.rn===x?'on':''}" data-rn="${x}">${x||'全部'}</button>`).join('')}</div></div>
+    <div class="chips">${all.map(c=>`<span class="chip sm ${status(c)==='new'?'':status(c)}">${c}</span>`).join('')}</div>
+    <button class="big-btn" id="rgo" ${sel.length&&all.length?'':'disabled'}>开始复习 ${k} 个字（约 ${est} 分钟）</button>
+    <div class="row" style="margin-top:10px"><button class="btn grow" id="rmole" ${all.length?'':'disabled'}>🔨 用这些字打地鼠</button></div>
+    <details class="more"><summary>换题型（家长设置）</summary>${typeGrid(S.rtypes,'rt',polyOk)}</details>
+  </section>
+  <section class="card">
+    <h3>学习时自动带上复习</h3>
+    <div class="switch"><span class="small">在「第 2 关 · 练习」里加入前面的字</span><button class="toggle ${S.scope==='mix'?'on':''}" id="rvOn"></button></div>
+    <div class="row"><span class="small muted">每次加</span><div class="seg" style="flex:1">${[4,8,12].map(x=>`<button class="${S.review.n===x?'on':''}" data-rv="${x}">${x} 个</button>`).join('')}</div></div>
+  </section>`;
+  $$('[data-rl]').forEach(b=>b.onclick=()=>{const x=+b.dataset.rl;S.rlessons=lessons.includes(x)?lessons.filter(y=>y!==x):[...lessons,x].sort((a,b)=>a-b);save();render()});
+  $$('[data-rn]').forEach(b=>b.onclick=()=>{S.rn=+b.dataset.rn;save();render()});
+  $$('[data-rt]').forEach(b=>b.onclick=()=>{const t=b.dataset.rt;S.rtypes=S.rtypes.includes(t)?S.rtypes.filter(x=>x!==t):[...S.rtypes,t];save();render();$('details.more').open=true});
+  $$('[data-rv]').forEach(b=>b.onclick=()=>{S.review.n=+b.dataset.rv;save();render()});
+  $('#rvOn').onclick=()=>{S.scope=S.scope==='mix'?'lesson':'mix';save();render()};
+  $('#rgo').onclick=()=>{const chars=reviewPick(lessons,S.rn);
+    startRun('review',sel.sort((a,b)=>ORDER.indexOf(a)-ORDER.indexOf(b)).map(t=>({type:t,items:mkItems(t,t==='poly'?chars:shuffle(chars).slice(0,TYPES[t].k))})).filter(s=>s.items.length),curLesson())};
+  $('#rmole').onclick=()=>startGame('practice',reviewPick(lessons,Math.max(S.rn,8)),curLesson(),'review');
+}
+
+/* ---------- 错字本 ---------- */
+function retestSteps(chars){const g={};chars.forEach(c=>{let t=lastWrongType(c);if(t==='mole')t='pick';if(!TYPES[t]||t==='say')t='read';
+    if(t==='poly'&&!polyItems([c]).length)t='pyc';(g[t]=g[t]||[]).push(c)});
+  return ORDER.filter(t=>g[t]).map(t=>({type:t,items:mkItems(t,t==='poly'?g[t]:shuffle(g[t]))}))}
+function renderWrong(){
+  const w=wrongList(),by={};w.forEach(c=>(by[CH[c].n]=by[CH[c].n]||[]).push(c));const recent=S.cleared.slice(-12).reverse();
+  $('#main').innerHTML=`
+  <section class="card">
+    <h3>📕 错字本 <span class="pill ${w.length?'':'ok'}">${w.length} 个</span></h3>
+    <p class="muted small">做错的字都在这里。重新考对了，就把它消灭掉（+2⭐）。错在哪种题，就用哪种题再考。</p>
+    ${w.length?`<table><tr><th>字</th><th>错了几次</th><th>上次错在</th></tr>${Object.keys(by).map(n=>`<tr><td colspan="3" class="small muted" style="padding-top:12px"><b>第${n}课 ${esc(L[n].t)}</b></td></tr>`+by[n].map(c=>{const g=S.log[c],x=g[g.length-1];
+      return`<tr><td><b style="font-family:var(--hz);font-size:26px">${c}</b> <span class="muted">${CH[c].py}</span></td><td>${wrongTimes(c)} 次</td><td>${md(x[0])} · ${TNAME[x[2]]||''}</td></tr>`}).join('')).join('')}</table>
+      <button class="big-btn" id="rt">重新考一下（${w.length} 个）</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="wm">🔨 用错字打地鼠</button>`:'<div class="bigemoji" style="text-align:center;margin:16px 0 4px">🎉</div><p class="muted" style="text-align:center">错字本是空的！</p>'}
+  </section>
+  ${recent.length?`<section class="card"><h3>🧹 最近消灭的错字</h3><div class="chips">${recent.map(([c,d])=>`<span class="chip ok" title="${md(d)}">${c}</span>`).join('')}</div><p class="small muted">一共消灭了 ${S.cleared.length} 个。</p></section>`:''}`;
+  if($('#rt'))$('#rt').onclick=()=>startRun('retest',retestSteps(w),curLesson());
+  if($('#wm'))$('#wm').onclick=()=>startGame('practice',w,curLesson(),'retest');
+}
+
+/* ---------- 收藏：贴纸、徽章、奖励 ---------- */
+function renderCollect(){
+  const got=BADGES.filter(b=>S.badges[b.id]).length,avail=S.stars-S.spent,R=S.reward,nStk=Object.keys(S.stickers).length;
+  const main=BADGES.filter(b=>!b.lesson),les=BADGES.filter(b=>b.lesson);
+  const card=b=>{const[a,t]=b.p(),g=!!S.badges[b.id];return`<div class="bdg ${g?'got':''}"><div class="ic">${b.ic}</div><b>${esc(b.name)}</b><span>${g?'获得于 '+md(S.badges[b.id]):esc(b.desc)}</span>${g?'':`<div class="pg"><i style="width:${Math.min(100,a/t*100)}%"></i></div><span>${Math.min(a,t)}/${t}</span>`}</div>`};
+  $('#main').innerHTML=`
+  <section class="card"><div class="row" style="justify-content:space-around;text-align:center">
+    <div><div class="bigstar">⭐ ${S.stars}</div><div class="small muted">星星</div></div>
+    <div><div class="bigstar" style="color:var(--accent)">🎴 ${nStk}</div><div class="small muted">贴纸 / ${STICKERS.length}</div></div>
+    <div><div class="bigstar" style="color:var(--ok)">🏅 ${got}</div><div class="small muted">徽章</div></div></div>
+    ${R.text?`<div class="hint" style="margin-top:14px"><b>🎁 攒星星换：${esc(R.text)}</b><div class="goal"><i style="width:${Math.min(100,avail/R.target*100)}%"></i></div><div class="small muted" style="margin-top:4px">${Math.min(avail,R.target)} / ${R.target} ⭐${avail>=R.target?' · 可以找爸爸妈妈兑换啦！':''}</div></div>`:''}
+  </section>
+  <section class="card">
+    <h3>🎴 贴纸册</h3>
+    <p class="small muted">每天完成一次学习，就能开一张贴纸；通关考试第一次拿到三星，再送一张。点贴纸可以听它的名字。</p>
+    ${S.draws>0?`<button class="big-btn" id="openStk">🎁 有 ${S.draws} 张贴纸可以开！</button>`:''}
+    ${STK.map(([page,list])=>{const n=list.filter(x=>S.stickers[x[1]]).length;return`<div class="eyebrow" style="margin-top:14px">${page} · ${n}/${list.length}${n===list.length?' 🎉 集齐了！':''}</div>
+      <div class="album">${list.map(([e,name,py,rare])=>{const g=!!S.stickers[name];return`<button class="stk ${g?'got':''} ${rare?'rare':''}" ${g?`data-say="${esc(name)}"`:''}><div class="e">${e}</div>${g?`<b>${esc(name)}</b><small>${esc(py)}</small>`:`<small>${rare?'✨ 稀有':'？'}</small>`}</button>`}).join('')}</div>`}).join('')}
+  </section>
+  <section class="card"><h3>🏅 我的徽章</h3><div class="badges">${main.map(card).join('')}</div></section>
+  <section class="card"><h3>🏆 每课全掌握</h3><p class="small muted">一课的字，每个都在两个不同的日子做对，就拿到这一课的奖杯（地图上会戴上 👑）。</p><div class="badges">${les.map(card).join('')}</div></section>
+  <section class="card"><h3>怎么拿星星</h3><table>
+    <tr><td>每题第一次就做对 / 打中地鼠</td><td>+1 ⭐</td></tr><tr><td>错字本里重新考对</td><td>+2 ⭐</td></tr>
+    <tr><td>读完课文 / 读完阅读（每课每天一次）</td><td>+3 ⭐</td></tr><tr><td>每天第一次来学习</td><td>+2 ⭐</td></tr>
+    <tr><td>一次练习全对（10 题以上）</td><td>+5 ⭐</td></tr></table></section>`;
+  if($('#openStk'))$('#openStk').onclick=()=>openSticker();
+  $$('[data-say]').forEach(b=>b.onclick=()=>{sfx('pop');speak(b.dataset.say)});
+}
+
+/* ---------- runner ---------- */
+let clk;
+function go(kind){const n=view.n,l=L[n];
+  if(kind.startsWith('learn')){const p=kind.split(':')[1],all=[{type:'chars',items:l.chars.map(x=>({c:x[0]}))},{type:'words'},{type:'text'}];
+    return startRun('learn',p!=null?[all[+p]]:all,n)}
+  if(kind==='read')return startRun('read',[{type:'reading'}],n);
+  if(kind==='exam')return startRun('exam',examSteps(n),n);
+  if(kind==='practice'){const pool=learnPool(),sel=S.types.filter(t=>t!=='poly'||polyItems(pool).length).sort((a,b)=>ORDER.indexOf(a)-ORDER.indexOf(b));
+    startRun('practice',sel.map(t=>({type:t,items:mkItems(t,t==='poly'?pool:pickItems(pool,TYPES[t].k,n))})).filter(s=>s.items.length),n)}
+}
+function dayBonus(){if(touchDay()){addStars(2,$('#sStar'));toast('今天第一次来学习 +2⭐')}}
+function startRun(kind,steps,n){
+  stopSpeak();if(!steps.length)return toast('没有可以出的题');
+  steps.forEach(s=>{s.ans=[];s.pos=0;if(s.type==='dict')s.wrong=new Set()});
+  view.run={kind,n,steps,si:0,t0:Date.now(),stars:0,log:[]};
+  dayBonus();save();render();
+  clearInterval(clk);clk=setInterval(()=>{const c=$('#clock');if(c&&view.run)c.textContent=fmt(((Date.now()-view.run.t0)/1000)|0)},1000);
+}
+const isQ=t=>!!TYPES[t];
+const qCount=r=>r.steps.filter(s=>isQ(s.type)).reduce((a,s)=>a+s.items.length,0);
+const aCount=r=>r.steps.filter(s=>isQ(s.type)).reduce((a,s)=>a+s.ans.filter(Boolean).length,0);
+function answer(s,i,ok){if(s.ans[i])return;const it=s.items[i],r=view.run;s.ans[i]={ok};rec(it.c,ok,s.type);r.log.push({c:it.c,ok,type:s.type});
+  if(ok){sfx('ok');if(r.kind==='retest'){addStars(2);S.cleared.push([it.c,today()])}else addStars(1);
+    if(s.type==='poly')inc('poly');if(s.type==='say')inc('say')}
+  else{sfx('no');shake(lastTap)}
+  save()}
+function stepDone(s){return isQ(s.type)?s.ans.filter(Boolean).length===s.items.length:!!s.fin}
+function goStep(si,pos){stopSpeak();const r=view.run;r.si=si;if(pos!=null)r.steps[si].pos=pos;renderRun()}
+function advance(){const r=view.run;if(!r)return;const s=r.steps[r.si];stopSpeak();
+  const len=s.type==='dict'?s.items.length+1:(s.items||[0]).length;
+  if(s.items&&s.pos<len-1){s.pos++;return renderRun()}
+  if(!isQ(s.type))s.fin=true;
+  if(r.si<r.steps.length-1){r.si++;const t=r.steps[r.si];if(isQ(t.type)){const u=t.items.findIndex((_,i)=>!t.ans[i]);t.pos=u<0?0:u}return renderRun()}
+  tryFinish()}
+function tryFinish(){const r=view.run,left=qCount(r)-aCount(r);if(left>0&&!r.confirm){r.confirm=true;return renderRun()}finish()}
+function quit(){stopSpeak();clearInterval(clk);save();view.run=null;render()}
+
+function renderRun(){
+  const r=view.run;if(r.done)return renderDone();
+  const s=r.steps[r.si],M=$('#main');
+  const names={chars:'跟读生字',words:'跟读词语',text:'读课文',reading:'阅读'},tname=t=>names[t]||TYPES[t].name;
+  const tq=qCount(r),pct=tq?aCount(r)/tq*100:(r.si+(s.items?s.pos/s.items.length:0))/r.steps.length*100;
+  const top=`<div class="top"><button class="x" id="quit" aria-label="退出">✕</button><div class="bar"><i style="width:${pct.toFixed(0)}%"></i></div><span class="clock" id="clock">${fmt(((Date.now()-r.t0)/1000)|0)}</span>${tq?`<button class="done-btn" id="fin">完成</button>`:''}</div>
+    ${r.steps.length>1?`<div class="stepnav">${r.steps.map((x,i)=>`<button class="${i===r.si?'on':''} ${stepDone(x)?'fin':''}" data-si="${i}">${stepDone(x)?'✓ ':''}${tname(x.type)}${isQ(x.type)?` ${x.ans.filter(Boolean).length}/${x.items.length}`:''}</button>`).join('')}</div>`:''}`;
+  const card=b=>{M.innerHTML=`<section class="card">${top}${b}</section>`;$('#quit').onclick=quit;if($('#fin'))$('#fin').onclick=()=>{r.confirm=false;tryFinish()};
+    $$('[data-si]').forEach(b=>b.onclick=()=>goStep(+b.dataset.si));window.scrollTo(0,0)};
+  const l=L[r.n],kindTag={retest:' · 错字本',review:' · 复习',exam:' · 通关考试'}[r.kind]||'';
+  if(r.confirm){const left=qCount(r)-aCount(r);
+    card(`<div class="stage" style="padding:20px 0"><div class="bigemoji">🤔</div><h2>还有 ${left} 题没做</h2><p class="muted">可以回去做完，也可以现在就结束。</p>
+      <div class="row" style="margin-top:14px"><button class="btn grow" id="back">回去做</button><button class="btn pri grow" id="end">现在结束</button></div></div>`);
+    $('#back').onclick=()=>{r.confirm=false;const si=r.steps.findIndex(x=>isQ(x.type)&&!stepDone(x)),t=r.steps[si];goStep(si,Math.max(0,t.items.findIndex((_,i)=>!t.ans[i])))};
+    $('#end').onclick=finish;return}
+  const qnav=()=>`<div class="qnav"><button id="pv" ${s.pos>0||r.si>0?'':'disabled'}>← 上一题</button><button id="nx2">${s.ans&&s.ans[s.pos]?'下一题 →':'跳过 →'}</button></div>`;
+  const bindNav=()=>{$('#pv').onclick=()=>{if(s.pos>0){s.pos--;stopSpeak();renderRun()}else if(r.si>0){const p=r.steps[r.si-1];goStep(r.si-1,isQ(p.type)?p.items.length-1:p.pos)}};$('#nx2').onclick=advance};
+  const lab=x=>`<div class="stage"><div class="label">${x}</div></div>`;
+
+  if(s.type==='chars'){const c=s.items[s.pos].c,{py,h,r:rad}=CH[c];
+    card(`${lab(`${s.pos+1}/${s.items.length} · 听一遍，跟着大声读`)}<div class="stage"><div class="hz" style="animation:pop .3s">${c}</div><div class="py">${py}</div>
+      <div class="meta">${esc(h)}</div>${rad?`<span class="rad">课本：${rad} — ${c}</span>`:''}
+      <button class="spk sm" id="spk">🔊</button>
+      <div class="row"><button class="btn grow" id="prev" ${s.pos?'':'disabled'}>← 上一个</button><button class="btn pri grow" id="nx">${s.pos<s.items.length-1?'下一个 →':'读完了 →'}</button></div></div>`);
+    const say=()=>speak(`${c}，${h}`);$('#spk').onclick=say;setTimeout(say,200);
+    $('#prev').onclick=()=>{s.pos--;renderRun()};$('#nx').onclick=advance;return}
+  if(s.type==='words'){const ws=l.words;
+    card(`${lab('点一个词听一听；或者点「一起跟读」')}<div class="words">${ws.map(([w,p],i)=>`<button class="word" data-i="${i}"><small>${p}</small><b>${w}</b></button>`).join('')}</div>
+      <div class="row" style="margin-top:16px"><button class="btn grow" id="all">🔊 一起跟读</button><button class="btn pri grow" id="nx">${r.si<r.steps.length-1?'下一步 →':'读完了 →'}</button></div>`);
+    const hl=i=>$$('.word').forEach((b,j)=>b.classList.toggle('on',i===j));
+    $$('.word').forEach(b=>b.onclick=()=>{stopSpeak();hl(+b.dataset.i);speak(ws[+b.dataset.i][0])});
+    $('#all').onclick=()=>playSeq(ws.map(w=>w[0]),hl,()=>hl(-1));$('#nx').onclick=advance;return}
+  if(s.type==='text'||s.type==='reading'){const isT=s.type==='text',lines=isT?l.text:l.reading.text;
+    card(`${lab(`${isT?`第${r.n}课《${esc(l.t)}》`:`阅读《${esc(l.reading.title)}》`} · 自己读；不认识的字点一下，整句点右边的 🔊`)}
+      <div class="lines">${lines.map((x,i)=>`<div class="ln" data-l="${i}"><div class="tx">${tokens(x,i)}</div><button class="ls" data-ls="${i}" aria-label="听这句">🔊</button></div>`).join('')}</div>
+      <div id="wp"></div>
+      <div class="row" style="margin-top:12px"><button class="btn grow" id="all">🔊 从头听一遍</button>${!isT?`<button class="btn grow" id="skip">没学过，跳过</button>`:''}</div>
+      <p class="label" style="text-align:center;margin-top:16px">读完了吗？选一个，会记到家长看板，还能拿 3⭐</p>
+      <div class="row"><button class="btn bad grow" id="help">🙂 有几句要帮忙</button><button class="btn ok grow" id="good">😀 自己读得很顺</button></div>`);
+    const hl=i=>$$('.ln').forEach((b,j)=>b.classList.toggle('on',i===j));
+    $$('[data-ls]').forEach(b=>b.onclick=()=>{stopSpeak();const i=+b.dataset.ls;hl(i);speak(lines[i],()=>hl(-1))});
+    $$('.tx span').forEach(sp=>sp.onclick=()=>tapWord(sp,lines));
+    $('#all').onclick=()=>playSeq(lines,hl,()=>hl(-1));
+    const done=ok=>{stopSpeak();const k=(isT?'t':'r')+r.n;if(S.starDay[k]!==today()){S.starDay[k]=today();addStars(3)}else sfx('ok');
+      if(isT)S.textRead[r.n]={d:today(),ok};else{S.readDone[r.n]=today();delete S.readSkip[r.n]}
+      s.fin=true;save();setTimeout(advance,350)};
+    $('#good').onclick=()=>done(true);$('#help').onclick=()=>done(false);
+    if($('#skip'))$('#skip').onclick=()=>{S.readSkip[r.n]=today();save();toast('已跳过，以后不再提醒');quit()};return}
+
+  const it=s.items[s.pos],a=s.ans[s.pos];
+  const head=`${tname(s.type)} · ${Math.min(s.pos+1,s.items.length)}/${s.items.length}${kindTag}`;
+  const optBtns=(opts,cls,attr,right)=>`<div class="opts" ${opts.length===3?'style="grid-template-columns:repeat(3,1fr)"':''}>${opts.map(x=>`<button class="opt ${cls} ${a&&x===right?'right':''}" data-${attr}="${x}">${x}</button>`).join('')}</div>`;
+  const bindOpts=(attr,right,onRight,say)=>{let tried=!!a;const p0=s.pos;
+    $$('.opt').forEach(b=>b.onclick=()=>{if(b.classList.contains('right'))return;
+      if(b.dataset[attr]===right){b.classList.add('right');if(!tried)answer(s,s.pos,true);else sfx('ok');onRight&&onRight();setTimeout(()=>{if(view.run===r&&r.steps[r.si]===s&&s.pos===p0&&!r.done)advance()},950)}
+      else{b.classList.add('wrong');if(!tried){answer(s,s.pos,false);tried=true}else{sfx('no');shake(b)}say&&say()}})};
+  const fb=a?`<div class="answered" style="color:${a.ok?'var(--ok)':'var(--bad)'}">${a.ok?'✓ 做对了':'✗ 这题第一次做错了'}</div>`:'';
+  if(s.type==='pick'||s.type==='pyc'){const c=it.c,clue=CH[c].h.split(c).join('○');
+    card(`${lab(head)}<div class="stage">${s.type==='pick'?`<button class="spk" id="spk">🔊</button><div class="muted">听一听，是哪个字？</div>`
+      :`<div class="bigpy">${CH[c].py}</div><div class="ctx" style="font-size:26px">${esc(clue)}</div><div class="muted small">○ 里是哪个字？</div>`}
+      ${optBtns(it.opts,'','c',c)}${fb}</div>${qnav()}`);
+    if(s.type==='pick'){$('#spk').onclick=()=>speak(sayChar(c));if(!a)setTimeout(()=>speak(sayChar(c)),200)}
+    bindOpts('c',c,()=>speak(c),s.type==='pick'?()=>speak(sayChar(c)):null);bindNav();return}
+  if(s.type==='fill'){
+    card(`${lab(head)}<div class="stage"><div class="ctx">${it.s.split(it.c).map(esc).join(`<u class="bl">${a?it.c:'　'}</u>`)}</div>
+      <button class="btn" id="spk">🔊 听这句</button>${optBtns(it.opts,'','c',it.c)}${fb}</div>${qnav()}`);
+    $('#spk').onclick=()=>speak(it.s);bindOpts('c',it.c,()=>{$$('.bl').forEach(u=>u.textContent=it.c);speak(it.s)});bindNav();return}
+  if(s.type==='poly'){const i=it.ctx.indexOf(it.c);
+    card(`${lab(head)}<div class="stage"><div class="muted">句子里的 <b style="color:var(--accent)">${it.c}</b> 读什么？</div>
+      <div class="ctx">${esc(it.ctx.slice(0,i))}<em>${it.c}</em>${esc(it.ctx.slice(i+1))}</div>${optBtns(it.opts,'pyo','p',it.py)}${fb}</div>${qnav()}`);
+    bindOpts('p',it.py,()=>speak(it.ctx));bindNav();return}
+  if(s.type==='read'){const c=it.c;
+    card(`${lab(head+' · 👂 家长听')}<div class="stage"><div class="hz">${c}</div><div class="py" id="py">${a?CH[c].py:''}</div><div class="meta" id="mt">${a?esc(CH[c].h):''}</div>
+      <button class="btn" id="show">看答案 · 听一听</button>${fb}
+      ${a?'':`<div class="row" style="margin-top:14px"><button class="btn bad grow" id="no">没读对</button><button class="btn ok grow" id="yes">读对了 ✓</button></div>`}</div>${qnav()}`);
+    $('#show').onclick=()=>{$('#py').textContent=CH[c].py;$('#mt').textContent=CH[c].h;speak(sayChar(c))};
+    if(!a){$('#yes').onclick=()=>{answer(s,s.pos,true);setTimeout(advance,500)};$('#no').onclick=()=>{answer(s,s.pos,false);setTimeout(advance,500)}}bindNav();return}
+  if(s.type==='say'){const c=it.c;
+    card(`${lab(head+' · 👂 家长听')}<div class="stage"><div class="hz" style="font-size:96px">${c}</div>
+      <div style="font-size:19px;font-weight:600">用「${c}」组一个词，再说一句完整的话</div>
+      <button class="btn" id="hint" style="margin-top:8px">看课本里的例子</button><div class="hint" id="ans" hidden>${[...new Set([CH[c].h,ctxFor(c)])].map(esc).join('　｜　')}</div>${fb}
+      ${a?'':`<div class="row" style="margin-top:14px"><button class="btn bad grow" id="no">再练练</button><button class="btn ok grow" id="yes">说得好 ✓</button></div>`}</div>${qnav()}`);
+    $('#hint').onclick=()=>{$('#ans').hidden=!$('#ans').hidden};
+    if(!a){$('#yes').onclick=()=>{answer(s,s.pos,true);setTimeout(advance,500)};$('#no').onclick=()=>{answer(s,s.pos,false);setTimeout(advance,500)}}bindNav();return}
+  if(s.type==='dict'){const n=s.items.length;
+    if(s.pos<n){const c=it.c;
+      card(`${lab(`听写 · ${s.pos+1}/${n} · 📝 拿出纸和笔，听一个写一个${kindTag}`)}<div class="stage"><div class="dn" style="margin-top:8px">${s.pos+1}</div>
+        <button class="spk" id="spk">🔊</button>
+        <div class="row"><button class="btn grow" id="ag">再听一遍</button><button class="btn pri grow" id="nx">${s.pos<n-1?'写好了 →':'写完了，对答案 →'}</button></div></div>
+        <div class="qnav"><button id="pv" ${s.pos>0?'':'disabled'}>← 上一个</button><button id="nx2">直接对答案 →</button></div>`);
+      const say=()=>speak(sayChar(c));$('#spk').onclick=$('#ag').onclick=say;setTimeout(say,200);
+      $('#nx').onclick=()=>{s.pos++;renderRun()};$('#pv').onclick=()=>{s.pos--;renderRun()};$('#nx2').onclick=()=>{s.pos=n;renderRun()};
+    }else{const done=s.ans.filter(Boolean).length===n;
+      card(`${lab(done?'听写 · 已经对过答案':'听写 · 对照纸上写的，<b>点一下写错的</b>；全对就直接点「对完了」')}
+        <div class="grid-rv">${s.items.map((x,i)=>`<button class="rv ${s.wrong.has(x.c)?'wrong':''}" data-c="${x.c}" ${done?'disabled':''}><div class="n">${i+1}</div><div class="c">${x.c}</div><div class="n">${CH[x.c].py}</div></button>`).join('')}</div>
+        ${done?'':`<button class="big-btn" id="ck">对完了 →</button>`}
+        <div class="qnav"><button id="pv">← 再听一遍</button><button id="nx2">${done?'下一步 →':'跳过 →'}</button></div>`);
+      $$('.rv').forEach(b=>b.onclick=()=>{const c=b.dataset.c;s.wrong.has(c)?s.wrong.delete(c):s.wrong.add(c);b.classList.toggle('wrong')});
+      if($('#ck'))$('#ck').onclick=()=>{const ck=$('#ck');s.items.forEach((x,i)=>{lastTap=ck;answer(s,i,!s.wrong.has(x.c))});if(!s.wrong.size&&n>=4&&r.kind!=='retest')inc('dictFull');setTimeout(advance,600)};
+      $('#pv').onclick=()=>{s.pos=0;renderRun()};$('#nx2').onclick=advance}
+    return}
+}
+function tokens(line,li){return[...line].map((ch,j)=>/[一-鿿]/.test(ch)?`<span data-j="${j}" data-li="${li}">${ch}</span>`:ch).join('')}
+function tapWord(sp,lines){stopSpeak();const li=+sp.dataset.li,j=+sp.dataset.j,line=lines[li],ch=line[j],l=L[view.run.n];
+  let w=null,k=j,p='';$$('.ln').forEach(x=>x.classList.remove('on'));
+  const all=[...(l.words||[]),...D.lessons.filter(x=>x!==l).flatMap(x=>x.words||[])];
+  for(const[ww,pp]of all.sort((a,b)=>b[0].length-a[0].length)){let x=line.indexOf(ww);while(x>=0){if(x<=j&&j<x+ww.length){w=ww;k=x;p=pp;break}x=line.indexOf(ww,x+1)}if(w)break}
+  if(!w){w=ch;p=CH[ch]?CH[ch].py:'';if('的了着吗呢吧么啦呀'.includes(ch)&&j>0&&/[一-鿿]/.test(line[j-1])){w=line[j-1]+ch;k=j-1;p=''}}
+  $$('.tx span').forEach(x=>x.classList.toggle('hl',+x.dataset.li===li&&+x.dataset.j>=k&&+x.dataset.j<k+w.length));
+  $('#wp').innerHTML=`<div class="wordpop"><b>${esc(w)}</b><span class="p">${esc(p)}</span><button id="wps" aria-label="再听">🔊</button></div>`;
+  const say=()=>speak(w);$('#wps').onclick=say;say()}
+
+/* ---------- after any session: levels, sticker, badges ---------- */
+function afterSession(kind,n,g,extra){
+  const res={draw:false};
+  if(kind==='practice'&&g.length>=6)S.best2[n]=Math.max(S.best2[n]||0,accStars(g.filter(x=>x.ok).length/g.length));
+  if(kind==='exam'&&g.length){const k=accStars(g.filter(x=>x.ok).length/g.length);S.best3[n]=Math.max(S.best3[n]||0,k);
+    if(k===3&&!S.examBonus[n]){S.examBonus[n]=today();S.draws++;res.draw=true;res.examBonus=true}}
+  const meaningful=g.length>=5||kind==='learn'||kind==='read'||(extra&&extra.rounds>=5);
+  if(meaningful&&S.drawDay!==today()){S.drawDay=today();S.draws++;res.draw=true}
+  save();res.badges=checkBadges();return res}
+function finish(){
+  const r=view.run;r.done=true;r.confirm=false;clearInterval(clk);stopSpeak();r.secs=((Date.now()-r.t0)/1000)|0;const g=r.log;
+  if(r.kind==='learn'&&r.steps.some(s=>s.type==='chars'&&s.fin)&&r.steps.some(s=>s.type==='text'&&s.fin))S.learnDone[r.n]=today();
+  if(g.length>=10&&g.every(x=>x.ok)){inc('full');addStars(5,$('#sStar'));r.fullBonus=true}
+  if(g.length||r.kind==='learn'||r.kind==='read')S.sessions.unshift({d:today(),n:r.n,kind:r.kind,types:r.steps.map(s=>s.type),items:g.length,ok:g.filter(x=>x.ok).length,secs:r.secs,stars:r.stars});
+  S.sessions=S.sessions.slice(0,80);r.after=afterSession(r.kind,r.n,g);renderDone();
+  const okRate=g.length?g.filter(x=>x.ok).length/g.length:1;if(okRate>=.8){confetti();sfx('fan')}
+  setTimeout(()=>showBadges(r.after.badges),900);
+}
+function rewardBits(after){return after&&after.draw?`<button class="big-btn" id="stk" style="background:linear-gradient(90deg,var(--gold),var(--accent))">🎁 ${after.examBonus?'三星通关！':''}你有一张新贴纸，点开看看！</button>`:''}
+function bindReward(){const b=$('#stk');if(b)b.onclick=()=>openSticker(()=>{b.remove()})}
+function renderDone(){
+  const r=view.run,g=r.log,earn=`<div class="earn">+${r.stars||0} ⭐</div>`;paintScore();
+  if(!g.length){
+    $('#main').innerHTML=`<section class="card"><div class="stage"><div class="bigemoji">👏</div><h2>${r.kind==='learn'?(S.learnDone[r.n]===today()?'第 1 关完成！':'跟读完成！'):r.kind==='read'?'读完啦！':'结束啦'}</h2>
+      ${r.kind==='learn'?`<div style="margin-top:6px;font-size:26px">${st3(levels(r.n)[0])}</div>`:''}${earn}<div class="muted" style="margin-top:6px">用时 ${fmt(r.secs)}</div></div>
+      ${rewardBits(r.after)}
+      <div class="row" style="margin-top:14px"><button class="btn pri grow" id="pr">去第 2 关 →</button><button class="btn grow" id="bk">回到这一课</button></div></section>`;
+    bindReward();$('#pr').onclick=()=>{view.run=null;go('practice')};$('#bk').onclick=()=>{view.run=null;view.tab='learn';view.open=true;render()};return}
+  const by={};g.forEach(x=>(by[x.c]=by[x.c]||[]).push(x.ok));
+  const cs=Object.keys(by),cls=c=>by[c].every(Boolean)?'ok':by[c].some(Boolean)?'mid':'bad',wrong=cs.filter(c=>cls(c)!=='ok');
+  const skipped=qCount(r)-aCount(r),acc=g.filter(x=>x.ok).length/g.length,lvlK=(r.kind==='practice'&&g.length>=6)||r.kind==='exam'?accStars(acc):null;
+  $('#main').innerHTML=`<section class="card"><div class="stage"><div class="bigemoji">${acc>=.8?'🎉':'💪'}</div>
+    <h2>${{retest:'错字本考完了！',review:'复习完成！',exam:'通关考试结束！',practice:'练习完成！'}[r.kind]}</h2>
+    ${lvlK!=null?`<div style="font-size:30px">${st3(lvlK)}</div><div class="small muted">${r.kind==='exam'?'第 3 关':'第 2 关'}${lvlK?'':' · 对 60% 以上才有星，再试一次！'}</div>`:''}
+    ${earn}${r.fullBonus?'<div class="small" style="color:var(--gold);font-weight:700">全对奖励 +5⭐</div>':''}
+    <div class="muted" style="margin-top:6px">用时 ${fmt(r.secs)} · ${g.length} 题 · 对 ${g.filter(x=>x.ok).length} 题${skipped?` · 跳过 ${skipped} 题`:''}</div></div>
+    <div class="chips" style="justify-content:center;margin-top:12px">${cs.map(c=>`<span class="chip ${cls(c)}">${c}</span>`).join('')}</div>
+    ${r.kind==='retest'?`<div class="hint">🧹 消灭了 <b>${cs.filter(c=>cls(c)==='ok').length}</b> 个错字。${wrong.length?`还剩 <b style="font-family:var(--hz);font-size:20px">${wrong.join(' ')}</b> 在错字本里。`:''}</div>`
+      :wrong.length?`<div class="hint">📕 <b style="font-family:var(--hz);font-size:20px">${wrong.join(' ')}</b> 记进了错字本。<br><span class="muted small">一个字要在两个不同的日子都做对，才算真正掌握。</span></div>`:''}
+    ${rewardBits(r.after)}
+    <div class="row" style="margin-top:14px">${wrong.length?`<button class="btn pri grow" id="redo">刚才错的，马上再练一次</button>`:''}<button class="btn grow" id="bk">回去</button></div></section>`;
+  bindReward();
+  if($('#redo'))$('#redo').onclick=()=>{const w=wrong.filter(c=>status(c)==='bad');view.run=null;w.length?startRun('retest',retestSteps(w),r.n):render()};
+  $('#bk').onclick=()=>{view.run=null;if(r.kind==='retest')view.tab='wrong';else if(r.kind==='review')view.tab='review';else{view.tab='learn';view.open=true}render()};
+}
+
+/* ---------- 打地鼠 ---------- */
+function startGame(mode,pool,n,from){
+  stopSpeak();pool=[...new Set(pool)].filter(c=>CH[c]);if(pool.length<1)return toast('没有可以打的字');
+  view.game={mode,pool,n,from:from||'lesson',score:0,round:0,combo:0,maxCombo:0,stars:0,log:[],
+    total:mode==='practice'?Math.min(10,Math.max(6,pool.length)):Infinity,t0:Date.now(),left:60,phase:'ready',seen:{},rid:0};
+  dayBonus();render()}
+function renderGame(){
+  const G=view.game,M=$('#main');
+  if(G.phase==='end')return renderGameEnd();
+  M.innerHTML=`<section class="card">
+    <div class="top"><button class="x" id="gq" aria-label="退出">✕</button>
+      <div class="gamebar" style="flex:1"><span>${G.mode==='practice'?`🐢 第 <span id="gr">${Math.min(G.round+1,G.total)}</span>/${G.total} 只`:`⏱️ <span id="gt">${G.left}</span> 秒`}</span><span class="sc">🔨 <span id="gs">${G.score}</span></span></div></div>
+    <div class="stage"><button class="spk sm" id="gspk">🔊</button><div class="muted small" id="gmsg">${G.phase==='ready'?'准备好了吗？':'听一听，敲出对的字！'}</div><div class="combo" id="gcombo"></div></div>
+    <div class="field">${Array.from({length:9},(_,i)=>`<div class="hole"><div class="pit"></div><button class="mole" data-h="${i}"><b></b></button><div class="lip"></div></div>`).join('')}</div>
+    ${G.phase==='ready'?`<button class="big-btn" id="gstart">${G.mode==='practice'?'开始！':'开始挑战 60 秒！'}</button>`:''}
+  </section>`;
+  $('#gq').onclick=()=>endGame(true);
+  $('#gspk').onclick=()=>{if(G.target)speak(sayChar(G.target))};
+  $$('.mole').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();whack(b,e)}));
+  if($('#gstart'))$('#gstart').onclick=()=>{G.phase='play';$('#gstart').remove();$('#gmsg').textContent='听一听，敲出对的字！';
+    if(G.mode==='challenge'){G.tEnd=Date.now()+60000;G.tick=setInterval(()=>{G.left=Math.max(0,Math.ceil((G.tEnd-Date.now())/1000));const t=$('#gt');if(t)t.textContent=G.left;
+      if(G.left<=5&&G.left>0)sfx('tick');if(G.left<=0)endGame()},250)}
+    nextRound()};
+}
+function pickTarget(G){const rank={bad:0,new:1,mid:2,ok:3};return shuffle(G.pool).sort((a,b)=>(G.seen[a]||0)-(G.seen[b]||0)||rank[status(a)]-rank[status(b)])[0]}
+async function nextRound(){const G=view.game;if(!G||G.phase!=='play')return;
+  if(G.round>=G.total)return endGame();
+  clearTimeout(G.hideT);$$('.mole').forEach(m=>{m.classList.remove('up','hit','bad');m.dataset.c=''});
+  const gr=$('#gr');if(gr)gr.textContent=Math.min(G.round+1,G.total);
+  await sleep(380);if(view.game!==G||G.phase!=='play')return;
+  const c=pickTarget(G);G.target=c;G.seen[c]=(G.seen[c]||0)+1;G.tried=false;const rid=++G.rid;
+  const k=G.mode==='practice'?2:3,opts=shuffle([c,...distractors(c,k)]),holes=shuffle([...Array(9).keys()]).slice(0,opts.length);
+  speak(sayChar(c));
+  opts.forEach((x,i)=>{const m=$$('.mole')[holes[i]];m.dataset.c=x;m.querySelector('b').textContent=x;setTimeout(()=>{if(G.rid===rid){m.classList.add('up');sfx('pop')}},200+i*180)});
+  if(G.mode==='challenge')G.hideT=setTimeout(()=>{if(G.rid!==rid||view.game!==G)return;G.combo=0;G.round++;$('#gcombo').textContent='跑掉啦～';nextRound()},4200);
+}
+function whack(m,e){const G=view.game;if(!G||G.phase!=='play'||!m.classList.contains('up')||!m.dataset.c)return;
+  const h=document.createElement('span');h.className='hammer';h.textContent='🔨';h.style.left=(e.clientX-30)+'px';h.style.top=(e.clientY-45)+'px';document.body.appendChild(h);setTimeout(()=>h.remove(),400);
+  if(m.dataset.c===G.target){clearTimeout(G.hideT);m.classList.add('hit');sfx('whack');G.score++;const s=$('#gs');if(s){s.textContent=G.score;s.parentNode.classList.remove('bump');void s.offsetWidth;s.parentNode.classList.add('bump')}
+    if(!G.tried){rec(G.target,true,'mole');G.log.push({c:G.target,ok:true});G.combo++;G.maxCombo=Math.max(G.maxCombo,G.combo);addStars(1,m);
+      $('#gcombo').textContent=G.combo>=3?`🔥 连击 ×${G.combo}！`:'打中了！'}else $('#gcombo').textContent='打中了！';
+    G.rid++;$$('.mole').forEach(x=>{if(x!==m)x.classList.remove('up')});G.round++;save();setTimeout(nextRound,500)}
+  else{m.classList.add('bad');sfx('no');setTimeout(()=>{m.classList.remove('up');m.dataset.c=''},380);
+    if(!G.tried){G.tried=true;rec(G.target,false,'mole');G.log.push({c:G.target,ok:false});save()}G.combo=0;$('#gcombo').textContent='不是这只，再听一遍～';
+    setTimeout(()=>{if(view.game===G)speak(sayChar(G.target))},300)}}
+function endGame(quitting){const G=view.game;if(!G||G.phase==='end')return;clearInterval(G.tick);clearTimeout(G.hideT);stopSpeak();G.rid++;
+  if(quitting&&G.round===0&&!G.log.length){view.game=null;return render()}
+  G.phase='end';G.secs=((Date.now()-G.t0)/1000)|0;
+  if(G.mode==='challenge'&&G.from==='lesson'){G.best=S.moleBest[G.n]||0;if(G.score>G.best)S.moleBest[G.n]=G.score}
+  if(G.log.length)S.sessions.unshift({d:today(),n:G.n,kind:'mole',types:['mole'],items:G.log.length,ok:G.log.filter(x=>x.ok).length,secs:G.secs,stars:G.stars});
+  G.after=afterSession('mole',G.n,G.log,{rounds:G.round});renderGameEnd();
+  if(G.score>=5){confetti();sfx('fan')}setTimeout(()=>showBadges(G.after.badges),900)}
+function renderGameEnd(){const G=view.game,wr=[...new Set(G.log.filter(x=>!x.ok).map(x=>x.c))];paintScore();
+  $('#main').innerHTML=`<section class="card"><div class="stage"><div class="bigemoji">🔨</div><h2>${G.mode==='challenge'?'时间到！':'打完啦！'}</h2>
+    <div class="bigstar" style="font-size:52px">${G.score}</div><div class="muted">打中 ${G.score} 只${G.maxCombo>=3?` · 最高连击 ×${G.maxCombo}`:''}</div>
+    ${G.mode==='challenge'&&G.from==='lesson'?`<div class="small" style="margin-top:4px">${G.score>(G.best||0)?'🏅 新纪录！':`最高分 ${S.moleBest[G.n]||0}`}</div>`:''}
+    <div class="earn">+${G.stars||0} ⭐</div></div>
+    ${wr.length?`<div class="hint">📕 <b style="font-family:var(--hz);font-size:20px">${wr.join(' ')}</b> 敲错了，记进了错字本。</div>`:''}
+    ${rewardBits(G.after)}
+    <div class="row" style="margin-top:14px"><button class="btn pri grow" id="again">再玩一次</button><button class="btn grow" id="bk">回去</button></div></section>`;
+  bindReward();
+  $('#again').onclick=()=>startGame(G.mode,G.pool,G.n,G.from);
+  $('#bk').onclick=()=>{view.game=null;if(G.from==='review')view.tab='review';else if(G.from==='retest')view.tab='wrong';else{view.tab='learn';view.open=true}render()}}
+
+/* ---------- 家长 ---------- */
+function renderParent(){
+  const cur=curLesson(),auto=autoLesson(),upto=Math.max(cur,...Object.keys(S.log).filter(c=>CH[c]).map(c=>CH[c].n));
+  const w=wrongList(),cntS=k=>Object.keys(CH).filter(c=>CH[c].n<=upto&&status(c)===k).length,R=S.reward;
+  const wk=[];{const t=weekOf(today()),d=new Date(+t.slice(0,4),+t.slice(5,7)-1,+t.slice(8,10));for(let i=7;i>=0;i--){const x=new Date(d);x.setDate(d.getDate()-7*i);wk.push(dstr(x))}}
+  const act=new Map();S.sessions.forEach(s=>{const k=weekOf(s.d);act.set(k,(act.get(k)||0)+1)});
+  $('#main').innerHTML=`
+  <section class="card">
+    <div class="eyebrow">现在学到</div>
+    <div class="row" style="justify-content:space-between"><h2>第${cur}课《${esc(L[cur].t)}》</h2>${testOf(cur)?`<span class="pill">📅 ${md(testOf(cur))} 考试</span>`:''}</div>
+    <p class="small muted">${S.cur?'手动设定的。':'按老师课表自动算的。'}课表以外的日期需要手动调。</p>
+    <select id="curSel" class="btn" style="width:100%">${['<option value="">按老师课表（第'+auto+'课）</option>',...LN.map(k=>`<option value="${k}" ${S.cur===k?'selected':''}>第${k}课 ${esc(L[k].t)}</option>`)].join('')}</select>
+  </section>
+  <section class="card">
+    <h3>📅 每周至少学一次</h3>
+    <div class="weeks">${wk.map(k=>`<span class="${act.get(k)?'y':''}"><b>${act.get(k)||'·'}</b>${md(k)}</span>`).join('')}</div>
+    <p class="small muted">每格是一周（从周一开始），数字是那周练习的次数。</p>
+  </section>
+  <section class="card">
+    <h3>掌握情况</h3>
+    <div class="stat"><div><b style="color:var(--ok)">${cntS('ok')}</b><span>掌握（隔天两次对）</span></div><div><b style="color:var(--warn)">${cntS('mid')}</b><span>学习中</span></div><div><b style="color:var(--bad)">${cntS('bad')}</b><span>在错字本</span></div></div>
+    <table>${LN.filter(k=>k<=upto).map(k=>{const[a,b,c]=levels(k);return`<tr><td style="white-space:nowrap"><b>${k}</b> ${esc(L[k].t)}<div class="small muted">闯关 ${a}·${b}·${c}⭐ · ${S.textRead[k]?'课文 '+md(S.textRead[k].d)+(S.textRead[k].ok?' 😀':' 🙂'):'课文未读'} · ${S.readSkip[k]?'阅读跳过':S.readDone[k]?'阅读 '+md(S.readDone[k]):'阅读未读'}</div></td>
+      <td><div class="chips" style="margin:0;gap:4px">${L[k].chars.map(([x])=>`<span class="chip sm ${status(x)==='new'?'':status(x)}">${x}</span>`).join('')}</div></td></tr>`}).join('')}</table>
+    <div class="legend"><span><i style="background:var(--ok)"></i>掌握</span><span><i style="background:var(--warn)"></i>学习中</span><span><i style="background:var(--bad)"></i>在错字本</span><span><i style="background:var(--soft)"></i>还没练</span></div>
+  </section>
+  <section class="card">
+    <h3>📕 错字本（${w.length}）</h3>
+    ${w.length?`<div class="chips">${w.map(c=>`<span class="chip bad">${c}</span>`).join('')}</div><button class="btn" style="width:100%;margin-top:10px" id="toW">打开错字本 →</button>`:'<p class="muted">没有错字 👍</p>'}
+    <p class="small muted">已经消灭 ${S.cleared.length} 个错字。</p>
+  </section>
+  <section class="card">
+    <h3>最近练习</h3>
+    ${S.sessions.length?`<table><tr><th>日期</th><th>内容</th><th>结果</th></tr>${S.sessions.slice(0,14).map(s=>`<tr><td>${md(s.d)}</td><td>第${s.n}课 · ${({learn:'跟读',read:'阅读',review:'复习',retest:'错字本',exam:'通关考试',mole:'打地鼠'})[s.kind]||s.types.map(t=>TNAME[t]).filter(Boolean).join('、')}</td><td>${s.items?`${s.ok}/${s.items}`:'—'} · ${fmt(s.secs)}${s.stars?` · +${s.stars}⭐`:''}</td></tr>`).join('')}</table>`:'<p class="muted">还没有记录。</p>'}
+  </section>
+  <section class="card">
+    <h3>🎁 星星换奖励</h3>
+    <p class="small muted">设一个奖励，孩子在「收藏」页能看到进度。兑换后从零开始攒下一个。</p>
+    <input class="in" id="rwT" placeholder="比如：周末去吃冰淇淋" value="${esc(R.text)}">
+    <div class="row" style="margin-top:8px"><span class="small">需要</span><input class="in" id="rwN" type="number" min="10" step="10" value="${R.target}" style="width:110px"><span class="small">⭐</span><button class="btn grow" id="rwS">保存</button></div>
+    ${R.text?`<p class="small" style="margin-top:8px">现在攒了 ${S.stars-S.spent} / ${R.target} ⭐</p><button class="btn ${S.stars-S.spent>=R.target?'pri':''}" style="width:100%" id="rwX">已兑换，重新开始攒</button>`:''}
+  </section>
+  <section class="card">
+    <h3>声音</h3>
+    <p class="small muted">朗读没声音：iPad 先关掉静音开关、调大音量；再到「设置 → 辅助功能 → 朗读内容 → 声音 → 中文」下载一个中文声音（比如 Tingting）。</p>
+    <div class="switch"><span class="small">答对、敲地鼠的音效</span><button class="toggle ${S.sfx?'on':''}" id="sfxT"></button></div>
+    <div class="row"><button class="btn grow" id="tts">🔊 测试朗读</button><span class="small muted" id="vname"></span></div>
+  </section>
+  <section class="card">
+    <h3>数据</h3>
+    <p class="small muted">记录只存在这台设备上。换设备或清缓存前先导出备份。</p>
+    <div class="row"><button class="btn grow" id="exp">导出备份</button><button class="btn grow" id="imp">导入备份</button><button class="btn bad grow" id="rst">清空记录</button></div>
+  </section>`;
+  $('#curSel').onchange=e=>{S.cur=e.target.value?+e.target.value:null;save();view.n=curLesson();render()};
+  if($('#toW'))$('#toW').onclick=()=>{view.tab='wrong';render()};
+  $('#rwS').onclick=()=>{S.reward={text:$('#rwT').value.trim(),target:Math.max(10,+$('#rwN').value||100)};save();toast('保存好了');render()};
+  if($('#rwX'))$('#rwX').onclick=()=>{S.spent=S.stars;save();toast('重新开始攒啦');render()};
+  $('#sfxT').onclick=()=>{S.sfx=!S.sfx;save();render();if(S.sfx)sfx('ok')};
+  $('#tts').onclick=()=>{speak('你好，Eric！我们来学中文吧。');pickVoice();$('#vname').textContent=zh?`用的声音：${zh.name}`:'没找到中文声音，按上面的方法下载一个'};
+  $('#exp').onclick=()=>{const b=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(b);a.download=`Eric学习小站-${today()}.json`;document.body.appendChild(a);a.click();a.remove()};
+  $('#imp').onclick=()=>$('#file').click();
+  $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(!j.log)throw 0;S={...DEF,...j};save();toast('已导入');render()}catch(_){toast('文件不对，没导入')}});e.target.value=''};
+  let armed=false;$('#rst').onclick=()=>{if(!armed){armed=true;$('#rst').textContent='再点一次确认清空';setTimeout(()=>{armed=false;const b=$('#rst');if(b)b.textContent='清空记录'},3000);return}
+    S={...DEF,reward:S.reward,types:S.types,rtypes:S.rtypes,sfx:S.sfx};save();toast('已清空');render()};
+}
+
+render();
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
