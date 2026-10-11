@@ -251,6 +251,60 @@ th{color:var(--muted);font-weight:600;font-size:12px}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center;z-index:60}
 .toast.on{opacity:.95}
 input.in{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);width:100%}
+/* ---------- math ---------- */
+.mgo{background:linear-gradient(160deg,var(--card),var(--accent-soft))}
+.grp{margin-top:16px}
+.grp h3 .pill{margin-left:auto}
+.sk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:6px}
+.sk{position:relative;text-align:left;padding:10px 12px;border-radius:14px;border:2px solid var(--line);background:var(--card);min-height:84px}
+.sk b{display:block;font-size:15px;line-height:1.3;padding-right:22px}
+.sk .eg{display:block;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px}
+.sk .pl{display:block;margin-top:6px}
+.sk.ok,.sk.crown{border-color:var(--ok);background:var(--ok-soft)}
+.sk.focus{border-color:var(--accent)}
+.sk.off{opacity:.42}
+.sk .cr{position:absolute;right:8px;top:6px;font-size:20px}
+.mq{font-size:clamp(28px,8.4vw,56px);font-weight:800;text-align:center;font-variant-numeric:tabular-nums;margin:14px 0 4px;line-height:1.35;word-spacing:-2px}
+.slot{display:inline-block;min-width:1.7em;padding:0 .12em;border-radius:12px;border:3px solid var(--line);background:var(--soft);color:var(--accent);text-align:center;line-height:1.15}
+.slot.empty{color:var(--line)}
+.slot.ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok);animation:pop .3s}
+.slot.no{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.vert{display:inline-grid;grid-template-columns:auto auto;column-gap:14px;text-align:right;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;letter-spacing:4px}
+.vert .ln2{grid-column:1/3;border-top:4px solid var(--ink);margin-top:6px;padding-top:8px}
+.vert .slot{min-width:3.2em}
+.fix{text-align:center;min-height:52px;margin-top:6px}
+.fix b{color:var(--ok);font-size:24px}
+.combo2{text-align:center;font-weight:800;color:var(--accent);min-height:22px;font-size:15px}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:360px;margin:8px auto 0}
+.kp button{height:62px;border-radius:16px;background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.kp button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.kp .ok{background:var(--ok);color:#fff;border-color:transparent;box-shadow:0 4px 0 #2d7543}
+.kp .del{font-size:24px;color:var(--muted)}
+.kp.cmp button{height:86px;font-size:46px}
+.mbar{position:relative;flex:1;height:12px;border-radius:99px;background:var(--line);margin:0 4px 0 16px}
+.mbar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width .3s}
+.mbar b{position:absolute;top:-15px;font-size:24px;margin-left:-14px;transition:left .3s;line-height:1}
+.mbar.late i{background:var(--bad)}
+.lanes{margin-top:4px}
+.lane{position:relative;height:38px;border-radius:12px;background:var(--soft);margin-top:6px;overflow:hidden}
+.lane span{position:absolute;top:5px;font-size:24px;transition:left .3s;margin-left:-14px;line-height:1.1}
+.lane .fl{right:8px;left:auto!important;margin:0;font-size:20px;top:8px}
+.lane small{position:absolute;left:8px;top:10px;font-size:11px;color:var(--muted);width:46px}
+.mtitle{text-align:center;font-size:13px;color:var(--muted);font-weight:600}
+.errbar{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px}
+.errbar span{flex:none;width:9.5em}
+.errbar i{display:block;height:12px;border-radius:9px;background:var(--bad);opacity:.75}
+.errbar em{font-style:normal;color:var(--muted);font-size:12px;flex:none}
+.tip{font-size:12px;color:var(--muted);margin:2px 0 0 9.5em;padding-left:8px}
+.days14{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:8px}
+.days14 span{text-align:center;font-size:10px;color:var(--muted)}
+.days14 span b{display:grid;place-items:center;height:30px;border-radius:8px;background:var(--soft);font-size:13px;margin-bottom:1px}
+.days14 span.y b{background:var(--ok-soft);color:var(--ok)}
+.days14 span.h b{background:var(--ok);color:#fff}
+.mtbl td{padding:7px 4px}.mtbl .num{white-space:nowrap;font-size:13px}.mtbl .toggle{transform:scale(.8);transform-origin:left center}
+@media (max-width:520px){.mtbl .eg2{display:none}.mtbl b{font-size:14px}.mtbl .pill{font-size:11px;padding:2px 6px;white-space:nowrap}}
+@media (max-height:780px) and (max-width:520px){.kp button{height:50px!important;font-size:26px}.kp{gap:8px}.mq{margin:6px 0 2px}.fix{min-height:44px}.lane{height:32px;margin-top:4px}.lane span{top:3px;font-size:21px}}
+@media (max-width:520px){.kp button{height:58px}.errbar span{width:7.5em}.tip{margin-left:7.5em}.sk-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:520px){.hz{font-size:100px}.opt{font-size:44px}.ctx{font-size:28px}.ln .tx{font-size:24px}nav.tabs button{flex:1;padding:10px 2px;font-size:15px}nav.tabs .em{display:none}
   .hole{height:100px}.mole{width:70px;height:84px;margin-left:-35px}.mole b{width:52px;height:48px;line-height:48px;font-size:34px;margin-top:20px}}
 </style>
@@ -264,6 +318,9 @@ input.in{padding:10px 12px;border-radius:10px;border:1px solid var(--line);backg
   </header>
   <nav class="tabs" id="tabs">
     <button data-t="learn"><i class="em">🗺️ </i>闯关</button><button data-t="review"><i class="em">🔁 </i>复习</button><button data-t="wrong"><i class="em">📕 </i>错字本</button><button data-t="badge"><i class="em">🎁 </i>收藏</button><button data-t="parent"><i class="em">👪 </i>家长</button>
+  </nav>
+  <nav class="tabs" id="mtabs" style="display:none">
+    <button data-mt="home"><i class="em">🏁 </i>练习</button><button data-mt="wb"><i class="em">📕 </i>错题本</button><button data-mt="badge"><i class="em">🎁 </i>收藏</button><button data-mt="parent"><i class="em">👪 </i>家长</button>
   </nav>
   <main id="main"></main>
 </div>
@@ -328,8 +385,8 @@ const before=n=>LN.filter(k=>k<n);
 
 /* ---------- weeks (目标：每周至少学 1 次) ---------- */
 function weekOf(s){const d=new Date(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10));d.setDate(d.getDate()-((d.getDay()+6)%7));return dstr(d)}
-const weeksActive=()=>new Set(S.days.map(weekOf));
-const thisWeekCount=()=>S.sessions.filter(s=>weekOf(s.d)===weekOf(today())).length;
+const weeksActive=()=>new Set((S.zhDays||S.days).map(weekOf));
+const thisWeekCount=()=>S.sessions.filter(s=>s.kind!=='math'&&weekOf(s.d)===weekOf(today())).length;
 function touchDay(){const t=today();if(!S.days.includes(t)){S.days.push(t);S.days=S.days.slice(-500);return true}return false}
 
 /* ---------- levels (闯关) ---------- */
@@ -369,7 +426,7 @@ function confetti(n=70){const c=document.createElement('div');c.className='confe
 function shake(el){if(!el||!el.classList)return;el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
 
 /* ---------- stars & badges ---------- */
-function addStars(k,from){S.stars+=k;if(view.run)view.run.stars=(view.run.stars||0)+k;if(view.game)view.game.stars=(view.game.stars||0)+k;
+function addStars(k,from){S.stars+=k;if(view.run)view.run.stars=(view.run.stars||0)+k;if(view.mrun)view.mrun.stars=(view.mrun.stars||0)+k;if(view.game)view.game.stars=(view.game.stars||0)+k;
   flyStars(k,from||lastTap);setTimeout(paintScore,700)}
 const cnt=k=>S.cnt[k]||0, inc=(k,v=1)=>S.cnt[k]=cnt(k)+v;
 const pageDone=()=>STK.filter(([p,list])=>list.every(x=>S.stickers[x[1]])).length;
@@ -399,7 +456,7 @@ function checkBadges(){const got=[];BADGES.forEach(b=>{if(S.badges[b.id])return;
 function showBadges(list,then){if(!list||!list.length)return then&&then();const b=list[0];
   $('#modal').innerHTML=`<div class="modal"><div class="box"><div class="label">获得新徽章！</div><div class="ic">${b.ic}</div><h2>${esc(b.name)}</h2><p class="muted">${esc(b.desc)}</p><button class="big-btn" id="mok">太棒了！</button></div></div>`;
   confetti();sfx('fan');speak('获得新徽章，'+b.name);$('#mok').onclick=()=>{$('#modal').innerHTML='';showBadges(list.slice(1),then)}}
-function paintScore(){$('#nStar').textContent=S.stars;const w=thisWeekCount();$('#nWeek').textContent=w?`本周 ✓`:'本周还没学';$('#sWeek').classList.toggle('done',w>0)}
+function paintScore(){$('#nStar').textContent=S.stars;if(view.sub==='math'){const d=!!(S.m&&S.m.daily[today()]);$('#nWeek').textContent=d?'今天 ✓':'今天还没练';$('#sWeek').classList.toggle('done',d);return}const w=thisWeekCount();$('#nWeek').textContent=w?`本周 ✓`:'本周还没学';$('#sWeek').classList.toggle('done',w>0)}
 
 /* ---------- stickers ---------- */
 function drawSticker(){const left=STICKERS.filter(s=>!S.stickers[s.id]);if(!left.length){S.draws=Math.max(0,S.draws-1);S.stars+=10;save();return null}
@@ -410,7 +467,7 @@ function openSticker(then){const s=drawSticker();
     <div class="flip" id="flip"><div class="in"><div class="f">？</div><div class="b ${s.rare?'rare':''}"><div class="e">${s.e}</div><b>${esc(s.name)}</b><small>${esc(s.py)}</small>${s.rare?'<div class="small" style="color:var(--gold);font-weight:800">✨ 稀有贴纸 ✨</div>':''}</div></div></div>
     <button class="big-btn" id="sok" style="visibility:hidden">贴进贴纸册</button></div></div>`;
   $('#flip').onclick=()=>{if($('#flip').classList.contains('open'))return speak(s.name);$('#flip').classList.add('open');sfx('pop');setTimeout(()=>{sfx(s.rare?'fan':'ok');if(s.rare)confetti(90);speak(s.name)},450);$('#sok').style.visibility='visible'};
-  $('#sok').onclick=()=>{$('#modal').innerHTML='';paintScore();if(view.tab==='badge'&&!view.run&&!view.game)render();then&&then()}}
+  $('#sok').onclick=()=>{$('#modal').innerHTML='';paintScore();if((view.sub==='math'?view.mtab==='badge':view.tab==='badge')&&!view.run&&!view.game&&!view.mrun)render();then&&then()}}
 
 /* ---------- speech ---------- */
 let zh=null;
@@ -468,14 +525,14 @@ function examSteps(n){const cs=shuffle(L[n].chars.map(x=>x[0])),pc=new Set(polyI
 
 /* ---------- shell ---------- */
 $$('#tabs button').forEach(b=>b.onclick=()=>{stopSpeak();view.run=null;view.game=null;view.tab=b.dataset.t;if(b.dataset.t==='learn')view.open=false;render()});
-$('#sStar').onclick=()=>{if(view.run||view.game)return;view.tab='badge';render()};
-$('#sWeek').onclick=()=>{if(view.run||view.game)return;toast(thisWeekCount()?`这周已经学了 ${thisWeekCount()} 次 👍`:'每周至少学一次中文哦')};
-$$('.subj button').forEach(b=>b.onclick=()=>{if(view.run||view.game)return;view.sub=b.dataset.sub;render()});
+$('#sStar').onclick=()=>{if(view.run||view.game||view.mrun)return;if(view.sub==='math')view.mtab='badge';else view.tab='badge';render()};
+$('#sWeek').onclick=()=>{if(view.run||view.game||view.mrun)return;if(view.sub==='math')return toast(S.m.daily[today()]?'今天的口算练过啦 👍':`每天练 ${S.m.mins} 分钟口算`);toast(thisWeekCount()?`这周已经学了 ${thisWeekCount()} 次 👍`:'每周至少学一次中文哦')};
+$$('.subj button').forEach(b=>b.onclick=()=>{if(view.run||view.game||view.mrun)return;view.sub=b.dataset.sub;S.lastSub=view.sub;save();render()});
 function render(){
   paintScore();
   $$('.subj button').forEach(b=>b.classList.toggle('on',(view.sub||'zh')===b.dataset.sub));
-  const busy=!!(view.run||view.game),math=view.sub==='math';
-  $('#tabs').style.display=busy||math?'none':'flex';$('.subj').style.display=busy?'none':'flex';
+  const busy=!!(view.run||view.game||view.mrun),math=view.sub==='math';
+  $('#tabs').style.display=busy||math?'none':'flex';$('#mtabs').style.display=busy||!math?'none':'flex';$('.subj').style.display=busy?'none':'flex';
   const w=wrongList().length;$('#tabs [data-t=wrong]').innerHTML=`<i class="em">📕 </i>错字本${w?`<span class="dot">${w}</span>`:''}`;
   $$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===view.tab));
   if(math)return renderMath();
@@ -485,7 +542,6 @@ function render(){
   if(view.tab==='learn')return view.open?renderLesson():renderMap();
   ({review:renderReview,wrong:renderWrong,badge:renderCollect,parent:renderParent})[view.tab]();
 }
-function renderMath(){$('#main').innerHTML=`<section class="card" style="text-align:center;padding:40px 18px"><div class="bigemoji">🧮</div><h2>数学马上来</h2><p class="muted">等妈妈把数学的内容发过来，这里就会有 Eric 的数学练习。星星、徽章和贴纸都会跟中文一起算。</p></section>`}
 
 /* ---------- 闯关地图 ---------- */
 function renderMap(){
@@ -615,7 +671,7 @@ function renderWrong(){
 /* ---------- 收藏：贴纸、徽章、奖励 ---------- */
 function renderCollect(){
   const got=BADGES.filter(b=>S.badges[b.id]).length,avail=S.stars-S.spent,R=S.reward,nStk=Object.keys(S.stickers).length;
-  const main=BADGES.filter(b=>!b.lesson),les=BADGES.filter(b=>b.lesson);
+  const main=BADGES.filter(b=>!b.lesson&&!b.math),les=BADGES.filter(b=>b.lesson),mb=BADGES.filter(b=>b.math);
   const card=b=>{const[a,t]=b.p(),g=!!S.badges[b.id];return`<div class="bdg ${g?'got':''}"><div class="ic">${b.ic}</div><b>${esc(b.name)}</b><span>${g?'获得于 '+md(S.badges[b.id]):esc(b.desc)}</span>${g?'':`<div class="pg"><i style="width:${Math.min(100,a/t*100)}%"></i></div><span>${Math.min(a,t)}/${t}</span>`}</div>`};
   $('#main').innerHTML=`
   <section class="card"><div class="row" style="justify-content:space-around;text-align:center">
@@ -632,11 +688,13 @@ function renderCollect(){
       <div class="album">${list.map(([e,name,py,rare])=>{const g=!!S.stickers[name];return`<button class="stk ${g?'got':''} ${rare?'rare':''}" ${g?`data-say="${esc(name)}"`:''}><div class="e">${e}</div>${g?`<b>${esc(name)}</b><small>${esc(py)}</small>`:`<small>${rare?'✨ 稀有':'？'}</small>`}</button>`}).join('')}</div>`}).join('')}
   </section>
   <section class="card"><h3>🏅 我的徽章</h3><div class="badges">${main.map(card).join('')}</div></section>
+  <section class="card"><h3>🧮 数学徽章</h3><div class="badges">${mb.map(card).join('')}</div></section>
   <section class="card"><h3>🏆 每课全掌握</h3><p class="small muted">一课的字，每个都在两个不同的日子做对，就拿到这一课的奖杯（地图上会戴上 👑）。</p><div class="badges">${les.map(card).join('')}</div></section>
   <section class="card"><h3>怎么拿星星</h3><table>
     <tr><td>每题第一次就做对 / 打中地鼠</td><td>+1 ⭐</td></tr><tr><td>错字本里重新考对</td><td>+2 ⭐</td></tr>
     <tr><td>读完课文 / 读完阅读（每课每天一次）</td><td>+3 ⭐</td></tr><tr><td>每天第一次来学习</td><td>+2 ⭐</td></tr>
-    <tr><td>一次练习全对（10 题以上）</td><td>+5 ⭐</td></tr></table></section>`;
+    <tr><td>一次练习全对（10 题以上）</td><td>+5 ⭐</td></tr>
+    <tr><td colspan="2" class="small muted" style="padding-top:12px"><b>数学</b></td></tr><tr><td>每答对 5 题</td><td>+1 ⭐</td></tr><tr><td>消灭一道错题</td><td>+1 ⭐</td></tr><tr><td>完成今天的口算</td><td>+3 ⭐</td></tr><tr><td>冲刺破纪录</td><td>+3 ⭐</td></tr><tr><td>第一次打败 Boss（再送一张贴纸）</td><td>+5 ⭐</td></tr></table></section>`;
   if($('#openStk'))$('#openStk').onclick=()=>openSticker();
   $$('[data-say]').forEach(b=>b.onclick=()=>{sfx('pop');speak(b.dataset.say)});
 }
@@ -651,7 +709,8 @@ function go(kind){const n=view.n,l=L[n];
   if(kind==='practice'){const pool=learnPool(),sel=S.types.filter(t=>t!=='poly'||polyItems(pool).length).sort((a,b)=>ORDER.indexOf(a)-ORDER.indexOf(b));
     startRun('practice',sel.map(t=>({type:t,items:mkItems(t,t==='poly'?pool:pickItems(pool,TYPES[t].k,n))})).filter(s=>s.items.length),n)}
 }
-function dayBonus(){if(touchDay()){addStars(2,$('#sStar'));toast('今天第一次来学习 +2⭐')}}
+function dayBonus(sub){const t=today(),arr=sub==='m'?S.m.days:(S.zhDays=S.zhDays||[]);if(!arr.includes(t)){arr.push(t);if(arr.length>500)arr.splice(0,arr.length-500)}
+  if(touchDay()){addStars(2,$('#sStar'));toast('今天第一次来学习 +2⭐')}}
 function startRun(kind,steps,n){
   stopSpeak();if(!steps.length)return toast('没有可以出的题');
   steps.forEach(s=>{s.ans=[];s.pos=0;if(s.type==='dict')s.wrong=new Set()});
@@ -804,7 +863,7 @@ function finish(){
   if(r.kind==='learn'&&r.steps.some(s=>s.type==='chars'&&s.fin)&&r.steps.some(s=>s.type==='text'&&s.fin))S.learnDone[r.n]=today();
   if(g.length>=10&&g.every(x=>x.ok)){inc('full');addStars(5,$('#sStar'));r.fullBonus=true}
   if(g.length||r.kind==='learn'||r.kind==='read')S.sessions.unshift({d:today(),n:r.n,kind:r.kind,types:r.steps.map(s=>s.type),items:g.length,ok:g.filter(x=>x.ok).length,secs:r.secs,stars:r.stars});
-  S.sessions=S.sessions.slice(0,80);r.after=afterSession(r.kind,r.n,g);renderDone();
+  S.sessions=S.sessions.slice(0,200);r.after=afterSession(r.kind,r.n,g);renderDone();
   const okRate=g.length?g.filter(x=>x.ok).length/g.length:1;if(okRate>=.8){confetti();sfx('fan')}
   setTimeout(()=>showBadges(r.after.badges),900);
 }
@@ -905,7 +964,7 @@ function renderParent(){
   const cur=curLesson(),auto=autoLesson(),upto=Math.max(cur,...Object.keys(S.log).filter(c=>CH[c]).map(c=>CH[c].n));
   const w=wrongList(),cntS=k=>Object.keys(CH).filter(c=>CH[c].n<=upto&&status(c)===k).length,R=S.reward;
   const wk=[];{const t=weekOf(today()),d=new Date(+t.slice(0,4),+t.slice(5,7)-1,+t.slice(8,10));for(let i=7;i>=0;i--){const x=new Date(d);x.setDate(d.getDate()-7*i);wk.push(dstr(x))}}
-  const act=new Map();S.sessions.forEach(s=>{const k=weekOf(s.d);act.set(k,(act.get(k)||0)+1)});
+  const act=new Map();S.sessions.filter(s=>s.kind!=='math').forEach(s=>{const k=weekOf(s.d);act.set(k,(act.get(k)||0)+1)});
   $('#main').innerHTML=`
   <section class="card">
     <div class="eyebrow">现在学到</div>
@@ -932,7 +991,7 @@ function renderParent(){
   </section>
   <section class="card">
     <h3>最近练习</h3>
-    ${S.sessions.length?`<table><tr><th>日期</th><th>内容</th><th>结果</th></tr>${S.sessions.slice(0,14).map(s=>`<tr><td>${md(s.d)}</td><td>第${s.n}课 · ${({learn:'跟读',read:'阅读',review:'复习',retest:'错字本',exam:'通关考试',mole:'打地鼠'})[s.kind]||s.types.map(t=>TNAME[t]).filter(Boolean).join('、')}</td><td>${s.items?`${s.ok}/${s.items}`:'—'} · ${fmt(s.secs)}${s.stars?` · +${s.stars}⭐`:''}</td></tr>`).join('')}</table>`:'<p class="muted">还没有记录。</p>'}
+    ${S.sessions.some(s=>s.kind!=='math')?`<table><tr><th>日期</th><th>内容</th><th>结果</th></tr>${S.sessions.filter(s=>s.kind!=='math').slice(0,14).map(s=>`<tr><td>${md(s.d)}</td><td>第${s.n}课 · ${({learn:'跟读',read:'阅读',review:'复习',retest:'错字本',exam:'通关考试',mole:'打地鼠'})[s.kind]||s.types.map(t=>TNAME[t]).filter(Boolean).join('、')}</td><td>${s.items?`${s.ok}/${s.items}`:'—'} · ${fmt(s.secs)}${s.stars?` · +${s.stars}⭐`:''}</td></tr>`).join('')}</table>`:'<p class="muted">还没有记录。</p>'}
   </section>
   <section class="card">
     <h3>🎁 星星换奖励</h3>
@@ -949,8 +1008,8 @@ function renderParent(){
   </section>
   <section class="card">
     <h3>数据</h3>
-    <p class="small muted">记录只存在这台设备上。换设备或清缓存前先导出备份。</p>
-    <div class="row"><button class="btn grow" id="exp">导出备份</button><button class="btn grow" id="imp">导入备份</button><button class="btn bad grow" id="rst">清空记录</button></div>
+    <p class="small muted">记录只存在这台设备上（中文和数学一起）。换设备或清缓存前先导出备份。「清空中文记录」不会动数学、星星和贴纸。</p>
+    <div class="row"><button class="btn grow" id="exp">导出备份</button><button class="btn grow" id="imp">导入备份</button><button class="btn bad grow" id="rst">清空中文记录</button></div>
   </section>`;
   $('#curSel').onchange=e=>{S.cur=e.target.value?+e.target.value:null;save();view.n=curLesson();render()};
   if($('#toW'))$('#toW').onclick=()=>{view.tab='wrong';render()};
@@ -961,10 +1020,387 @@ function renderParent(){
   $('#exp').onclick=()=>{const b=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),a=document.createElement('a');
     a.href=URL.createObjectURL(b);a.download=`Eric学习小站-${today()}.json`;document.body.appendChild(a);a.click();a.remove()};
   $('#imp').onclick=()=>$('#file').click();
-  $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(!j.log)throw 0;S={...DEF,...j};save();toast('已导入');render()}catch(_){toast('文件不对，没导入')}});e.target.value=''};
-  let armed=false;$('#rst').onclick=()=>{if(!armed){armed=true;$('#rst').textContent='再点一次确认清空';setTimeout(()=>{armed=false;const b=$('#rst');if(b)b.textContent='清空记录'},3000);return}
-    S={...DEF,reward:S.reward,types:S.types,rtypes:S.rtypes,sfx:S.sfx};save();toast('已清空');render()};
+  $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(!j.log)throw 0;S={...DEF,...j};mInit();save();toast('已导入');render()}catch(_){toast('文件不对，没导入')}});e.target.value=''};
+  let armed=false;$('#rst').onclick=()=>{if(!armed){armed=true;$('#rst').textContent='再点一次确认清空';setTimeout(()=>{armed=false;const b=$('#rst');if(b)b.textContent='清空中文记录'},3000);return}
+    S={...DEF,reward:S.reward,types:S.types,rtypes:S.rtypes,sfx:S.sfx,m:S.m,lastSub:S.lastSub,stars:S.stars,spent:S.spent,stickers:S.stickers,draws:S.draws,badges:S.badges,sessions:S.sessions.filter(s=>s.kind==='math')};S.zhDays=[];mInit();save();toast('已清空中文记录');render()};
 }
+
+/* ====================== 数学：口算速度 + 准确率 ====================== */
+const RI=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.random()*a.length|0];
+const dg=(n,i)=>Math.floor(n/10**i)%10;
+const carries=(a,b)=>{let c=0,n=0;for(let i=0;i<4;i++){c=dg(a,i)+dg(b,i)+c>=10?1:0;n+=c}return n};
+const borrows=(a,b)=>{let c=0,n=0;for(let i=0;i<4;i++){c=dg(a,i)-dg(b,i)-c<0?1:0;n+=c}return n};
+const until=(f,ok)=>{for(let i=0;i<500;i++){const r=f();if(ok(r))return r}throw new Error('gen')};
+const PL=(a,b)=>({q:`${a} + ${b}`,ans:String(a+b),a,b,op:'+'});
+const MI=(a,b)=>({q:`${a} − ${b}`,ans:String(a-b),a,b,op:'−'});
+const TI=(a,b)=>({q:`${a} × ${b}`,ans:String(a*b),a,b,op:'×'});
+const VT=x=>(x.vert=1,x);
+const sw=(a,b)=>Math.random()<.5?[a,b]:[b,a];
+function exprFor(w){if(w>=20&&(Math.random()<.5||w>69)){const x=RI(10,w-10);return`${x} + ${w-x}`}const y=RI(5,29);return`${w+y} − ${y}`}
+const MG=[['A','🔢 口算基础（100 以内）'],['B','🧱 三位数加减'],['C','✖️ 乘法'],['D','🧩 拓展']];
+const MS=[
+ {id:'a1',g:'A',name:'20 以内进位加、退位减',eg:'8 + 7　15 − 9',t:3,gen(){const[a,b]=until(()=>[RI(2,9),RI(2,9)],([a,b])=>a+b>=11);return Math.random()<.5?PL(...sw(a,b)):MI(a+b,pick([a,b]))}},
+ {id:'a2',g:'A',name:'整十、整百加减',eg:'30 + 50　700 − 200',t:3,gen(){const k=RI(0,3);
+   if(k===0){const a=RI(1,9),b=RI(1,10-a);return PL(a*10,b*10)}
+   if(k===1){const a=RI(2,10),b=RI(1,a-1);return MI(a*10,b*10)}
+   if(k===2){const a=RI(1,8),b=RI(1,9-a);return Math.random()<.5?PL(a*100,b*100):MI((a+b)*100,b*100)}
+   if(Math.random()<.5){const a=until(()=>RI(11,89),x=>x%10),b=10*RI(1,Math.floor((99-a)/10));return PL(a,b)}
+   const a=until(()=>RI(21,99),x=>x%10),b=10*RI(1,Math.floor(a/10)-1);return MI(a,b)}},
+ {id:'a3',g:'A',name:'两位数加减一位数',eg:'47 + 8　53 − 7',t:4,gen(){const c=Math.random()<.7;
+   if(Math.random()<.5){const[a,b]=until(()=>[RI(11,94),RI(2,9)],([a,b])=>a+b<=100&&(a%10+b>=10)===c);return PL(a,b)}
+   const[a,b]=until(()=>[RI(20,99),RI(2,9)],([a,b])=>(a%10<b)===c);return MI(a,b)}},
+ {id:'a4',g:'A',name:'两位数加减（不进位、不退位）',eg:'34 + 25　78 − 43',t:6,gen(){
+   if(Math.random()<.5){const[a,b]=until(()=>[RI(10,88),RI(10,88)],([a,b])=>a%10+b%10<10&&a+b<=99);return PL(a,b)}
+   const[a,b]=until(()=>[RI(21,99),RI(10,89)],([a,b])=>a-b>=10&&a%10>=b%10);return MI(a,b)}},
+ {id:'a5',g:'A',name:'两位数加减（进位、退位）',eg:'38 + 47　72 − 39',t:8,gen(){
+   if(Math.random()<.5){const[a,b]=until(()=>[RI(11,89),RI(11,89)],([a,b])=>a%10+b%10>=10&&a+b<=100);return PL(a,b)}
+   const[a,b]=until(()=>[RI(21,99),RI(11,89)],([a,b])=>a-b>=5&&a%10<b%10);return MI(a,b)}},
+ {id:'a6',g:'A',name:'填空 □',eg:'27 + □ = 63',t:8,gen(){const c=Math.random()<.5;
+   if(Math.random()<.5){const[a,b]=until(()=>[RI(11,89),RI(11,89)],([a,b])=>a+b<=100&&(a%10+b%10>=10)===c),s=a+b;
+     return Math.random()<.5?{q:`${a} + □ = ${s}`,ans:String(b),inv:a+s}:{q:`□ + ${b} = ${s}`,ans:String(a),inv:b+s}}
+   const[a,b]=until(()=>[RI(21,99),RI(11,89)],([a,b])=>a>b&&(a%10<b%10)===c),d=a-b;
+   return Math.random()<.5?{q:`${a} − □ = ${d}`,ans:String(b),inv:a+d}:{q:`□ − ${b} = ${d}`,ans:String(a),inv:d-b}}},
+ {id:'b1',g:'B',name:'三位数加减（不进位、不退位）',eg:'324 + 152　685 − 243',t:10,gen(){const two=Math.random()<.25;
+   if(Math.random()<.5){const[a,b]=until(()=>[RI(100,899),two?RI(10,99):RI(100,899)],([a,b])=>a+b<=999&&!carries(a,b));return VT(PL(a,b))}
+   const[a,b]=until(()=>[RI(200,999),two?RI(10,99):RI(100,899)],([a,b])=>a-b>=20&&!borrows(a,b));return VT(MI(a,b))}},
+ {id:'b2',g:'B',name:'三位数加法（进位）',eg:'368 + 457',t:14,gen(){const two=Math.random()<.25;
+   const[a,b]=until(()=>[RI(100,899),two?RI(10,99):RI(100,899)],([a,b])=>a+b<=999&&carries(a,b)>=1);return VT(PL(a,b))}},
+ {id:'b3',g:'B',name:'三位数减法（退位）',eg:'642 − 278',t:16,gen(){const two=Math.random()<.25;
+   const[a,b]=until(()=>[RI(200,999),two?RI(10,99):RI(100,899)],([a,b])=>a-b>=10&&borrows(a,b)>=1&&dg(a,1)!==0);return VT(MI(a,b))}},
+ {id:'b4',g:'B',name:'中间有 0 的退位减',eg:'503 − 278',t:18,gen(){const h=RI(2,9),o=Math.random()<.3?0:RI(0,8),a=h*100+o;
+   const bo=RI(o+1,9),bh=RI(0,h-1),bt=bh===0?RI(1,9):RI(0,9);return VT(MI(a,bh*100+bt*10+bo))}},
+ {id:'c1',g:'C',name:'乘法口诀 ×2 ×5 ×10',eg:'5 × 7　10 × 6',t:3,gen(){return TI(...sw(pick([2,5,10]),RI(2,10)))}},
+ {id:'c2',g:'C',name:'乘法口诀 ×3 ×4',eg:'3 × 8　4 × 6',t:3,gen(){return TI(...sw(pick([3,4]),RI(2,10)))}},
+ {id:'c3',g:'C',name:'乘法口诀 ×6 ~ ×9',eg:'7 × 8　9 × 6',t:4,gen(){return TI(...sw(RI(6,9),RI(2,9)))}},
+ {id:'c4',g:'C',name:'乘法填空',eg:'□ × 6 = 42',t:5,gen(){const a=RI(2,9),b=RI(2,9),p=a*b,k=RI(0,2);
+   if(k===0)return{q:`□ × ${b} = ${p}`,ans:String(a)};if(k===1)return{q:`${a} × □ = ${p}`,ans:String(b)};
+   const n=RI(3,4);return{q:`${Array(n).fill(a).join(' + ')} = ${a} × □`,ans:String(n)}}},
+ {id:'c5',g:'C',name:'两位数 × 一位数（不进位）',eg:'23 × 3',t:8,gen(){const[a,b]=until(()=>[RI(10,49),RI(2,9)],([a,b])=>a!==10&&a!==11&&dg(a,0)*b<10&&dg(a,1)*b<10);return TI(a,b)}},
+ {id:'c6',g:'C',name:'两位数 × 一位数（进位）',eg:'47 × 6',t:12,off:1,gen(){const[a,b]=until(()=>[RI(12,49),RI(3,9)],([a,b])=>dg(a,0)*b>=10);return TI(a,b)}},
+ {id:'d1',g:'D',name:'比大小 ○',eg:'36 + 27 ○ 62',t:8,gen(){const L=MSK[pick(['a3','a4','a5'])].gen(),v=+L.ans,r=Math.random();
+   let w=r<.25?v:Math.max(0,v+pick([-1,1])*RI(1,r<.65?3:12));if(r>=.25&&w===v)w=v+1;
+   return{q:`${L.q} ○ ${Math.random()<.4?exprFor(w):w}`,ans:v>w?'>':v<w?'<':'=',cmp:1}}},
+ {id:'d2',g:'D',name:'三个数连加连减',eg:'45 + 28 − 19',t:10,gen(){const k=RI(0,3);let a,b,c;
+   if(k===0){[a,b,c]=until(()=>[RI(10,49),RI(10,39),RI(5,29)],([a,b,c])=>a+b+c<=100);return{q:`${a} + ${b} + ${c}`,ans:String(a+b+c)}}
+   if(k===1){[a,b,c]=until(()=>[RI(50,99),RI(10,39),RI(5,29)],([a,b,c])=>a-b-c>=0);return{q:`${a} − ${b} − ${c}`,ans:String(a-b-c)}}
+   if(k===2){[a,b,c]=until(()=>[RI(10,59),RI(10,49),RI(5,39)],([a,b,c])=>a+b<=100&&a+b-c>=0);return{q:`${a} + ${b} − ${c}`,ans:String(a+b-c)}}
+   [a,b,c]=until(()=>[RI(30,99),RI(10,39),RI(5,39)],([a,b,c])=>a-b>=0&&a-b+c<=100);return{q:`${a} − ${b} + ${c}`,ans:String(a-b+c)}}},
+];
+const MSK=Object.fromEntries(MS.map(s=>[s.id,s]));
+const mGen=sk=>({sk,...MSK[sk].gen()});
+const ERR={carry:['忘了进位','让他说出「满十进一」，竖式里把进上去的小 1 写出来。'],borrow:['忘了退位','个位不够减，要向十位借 1，十位记得少 1。'],
+  flip:['倒着减','个位不够减时直接「大数减小数」（比如 52−38 写成 26）。先问自己：个位够不够减？'],zero:['中间有 0 的退位','十位是 0 借不出，要先向百位借，十位变 9。'],
+  count:['差 1','多半是数手指或粗心，做完看一眼。'],digit:['有一位算错','基本口算不够熟，多做 20 以内和整十的冲刺。'],fact:['乘法口诀','把错的那几句口诀单独拿出来背。'],
+  mcarry:['乘法忘了进位','个位乘出来满十，要进到十位。'],mul2:['两位数乘一位数','拆开算：23×3 = 20×3 + 3×3。'],inverse:['填空题想反了','□ 题先想：□ 是加数还是被减数，要用加法还是减法求。'],
+  cmp:['比大小','先把两边都算出来，再比。'],chain:['连加连减','一步一步从左往右算，中间的数写下来。'],other:['其他',''],slow:['会做但太慢','对了，但用时超过目标两倍。多做这个题型的 60 秒冲刺。']};
+function diag(it,g){const v=+g,ans=+it.ans;if(it.cmp)return'cmp';if(it.inv!=null&&v===it.inv)return'inverse';
+  const{a,b,op}=it;
+  if(it.sk==='c5'||it.sk==='c6'){const nc=Math.floor(a/10)*b*10+(a%10*b)%10;return v===nc?'mcarry':'mul2'}
+  if(it.sk[0]==='c')return'fact';
+  if(Math.abs(v-ans)===1)return'count';
+  if(op==='+'&&a!=null){let nc=0;for(let i=0;i<4;i++)nc+=((dg(a,i)+dg(b,i))%10)*10**i;if(v===nc||v===ans-10||v===ans-100)return'carry'}
+  if(op==='−'&&a!=null){let fl=0;for(let i=0;i<4;i++)fl+=Math.abs(dg(a,i)-dg(b,i))*10**i;if(v===fl)return'flip';if(it.sk==='b4')return'zero';if(v===ans+10||v===ans+100)return'borrow'}
+  if(it.sk==='d2')return'chain';
+  const sa=String(ans),sv=String(g);if(sa.length===sv.length&&[...sa].filter((c,i)=>c!==sv[i]).length===1)return'digit';
+  return'other'}
+
+/* ---------- state ---------- */
+function mInit(){
+  const d={on:MS.filter(s=>!s.off).map(s=>s.id),mins:5,log:{},wb:{},mis:[],best:{},boss:{},daily:{},days:[],cleared:0};
+  S.m={...d,...(S.m||{})};if(!S.zhDays)S.zhDays=[...S.days];}
+mInit();
+view.sub=S.lastSub==='math'?'math':'zh';view.mtab='home';
+const mLast=sk=>(S.m.log[sk]||[]).slice(-20);
+function mStat(sk){const g=mLast(sk),n=g.length;if(!n)return{n:0,acc:0,med:0,days:0};const ok=g.filter(x=>x[1]),ts=ok.map(x=>x[2]).sort((a,b)=>a-b);
+  return{n,acc:ok.length/n,med:ts.length?ts[ts.length>>1]/1000:0,days:new Set(g.map(x=>x[0])).size}}
+function mLevel(sk){if(S.m.boss[sk])return'crown';const s=mStat(sk);if(!s.n)return'new';return s.n>=15&&s.acc>=.9&&s.med<=MSK[sk].t&&s.days>=2?'ok':'learn'}
+const mDone=sk=>['ok','crown'].includes(mLevel(sk));
+const LV={new:['新','grey'],learn:['练习中',''],ok:['达标 ✓','ok'],crown:['👑 Boss','ok']};
+const mOn=()=>MS.filter(s=>S.m.on.includes(s.id)).map(s=>s.id);
+function mFocus(){const on=mOn();if(!on.length)return[];const f=[];
+  MG.forEach(([g])=>{const x=on.find(id=>MSK[id].g===g&&!mDone(id));if(x)f.push(x)});
+  on.forEach(id=>{if(f.length<3&&!mDone(id)&&!f.includes(id))f.push(id)});
+  if(f.length)return f.slice(0,3);
+  return on.map(id=>[id,mStat(id)]).sort((x,y)=>y[1].med/MSK[y[0]].t-x[1].med/MSK[x[0]].t).slice(0,3).map(x=>x[0])}
+const wbOrder=()=>{const w=S.m.wb;return Object.keys(w).sort((x,y)=>(w[y].w-w[x].w)||w[x].d.localeCompare(w[y].d))};
+const wbItem=k=>{const x=S.m.wb[k];return{sk:x.sk,q:x.q,ans:x.ans,a:x.a,b:x.b,op:x.op,vert:x.vert,inv:x.inv,cmp:x.cmp,fromWb:1}};
+const mDaysCount=()=>S.m.days.length;
+const doneCount=()=>MS.filter(s=>mDone(s.id)).length;
+
+BADGES.push(
+  {id:'m1',math:1,ic:'🧮',name:'数学第一天',desc:'完成第一次数学练习',p:()=>[S.sessions.filter(s=>s.kind==='math').length?1:0,1]},
+  {id:'m10',math:1,ic:'📆',name:'口算 10 天',desc:'有 10 天练过数学',p:()=>[mDaysCount(),10]},
+  {id:'m30',math:1,ic:'🗓️',name:'口算 30 天',desc:'有 30 天练过数学',p:()=>[mDaysCount(),30]},
+  {id:'spr20',math:1,ic:'⚡',name:'闪电手',desc:'60 秒冲刺答对 20 题',p:()=>[Math.max(0,...Object.values(S.m.best)),20]},
+  {id:'sk3',math:1,ic:'💡',name:'点亮 3 个题型',desc:'3 个题型达标',p:()=>[doneCount(),3]},
+  {id:'sk10',math:1,ic:'🌈',name:'点亮 10 个题型',desc:'10 个题型达标',p:()=>[doneCount(),10]},
+  {id:'tbl',math:1,ic:'✖️',name:'乘法表全通',desc:'三个乘法口诀 Boss 都打败',p:()=>[['c1','c2','c3'].filter(k=>S.m.boss[k]).length,3]},
+  {id:'boss5',math:1,ic:'👑',name:'Boss 猎人',desc:'打败 5 个 Boss',p:()=>[Object.keys(S.m.boss).length,5]},
+  {id:'wb20',math:1,ic:'🧽',name:'错题消灭者',desc:'从错题本消灭 20 道题',p:()=>[S.m.cleared,20]},
+);
+
+/* ---------- tabs ---------- */
+$$('#mtabs button').forEach(b=>b.onclick=()=>{view.mtab=b.dataset.mt;render()});
+function renderMath(){
+  const n=Object.keys(S.m.wb).length;$('#mtabs [data-mt=wb]').innerHTML=`<i class="em">📕 </i>错题本${n?`<span class="dot">${n}</span>`:''}`;
+  $$('#mtabs button').forEach(b=>b.classList.toggle('on',b.dataset.mt===view.mtab));
+  if(view.mrun)return renderMRun();
+  window.scrollTo(0,0);
+  ({home:renderMHome,wb:renderMWrong,badge:renderCollect,parent:renderMParent})[view.mtab]()}
+
+/* ---------- home ---------- */
+function renderMHome(){
+  const td=S.m.daily[today()],focus=mFocus(),wbn=Object.keys(S.m.wb).length,on=new Set(S.m.on);
+  const ts=S.sessions.filter(s=>s.kind==='math'&&s.d===today()),tq=ts.reduce((a,s)=>a+s.items,0),tok=ts.reduce((a,s)=>a+s.ok,0);
+  const tile=s=>{const lv=mLevel(s.id),[t,c]=LV[lv],off=!on.has(s.id);
+    return`<button class="sk ${lv} ${off?'off':''} ${focus.includes(s.id)?'focus':''}" data-sk="${s.id}">${lv==='crown'?'<span class="cr">👑</span>':''}<b>${s.name}</b><span class="eg">${s.eg}</span>
+      <span class="pl">${off?'<span class="pill grey">家长没开</span>':`<span class="pill ${c}">${t}</span>`}${S.m.best[s.id]?` <span class="small muted">⚡${S.m.best[s.id]}</span>`:''}</span></button>`};
+  $('#main').innerHTML=`
+  <section class="card mgo">
+    <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><div><div class="eyebrow">每天 ${S.m.mins} 分钟口算</div><h2>${td?'今天练过啦 ✓':'今天的口算'}</h2>
+      ${tq?`<div class="small muted">今天做了 ${tq} 题，对了 ${tok} 题</div>`:''}</div><div class="bigemoji" style="font-size:52px">${td?'🏅':'🚀'}</div></div>
+    ${focus.length?`<div class="small" style="margin-top:6px">今天的重点：${focus.map(id=>`<span class="pill">${MSK[id].name}</span>`).join(' ')}</div>`:''}
+    <button class="big-btn" id="mDaily">${td?`再来 ${S.m.mins} 分钟`:`开始 ${S.m.mins} 分钟 →`}</button>
+  </section>
+  ${wbn?`<section class="card"><div class="row" style="justify-content:space-between"><div><b>📕 错题本里有 ${wbn} 道题</b><div class="small muted">再做对就能消灭它，每道 +1⭐</div></div><button class="btn pri" id="toWb">去消灭 →</button></div></section>`:''}
+  <section class="card">
+    <h3>🗺️ 题型关卡 <span class="pill ok" style="margin-left:auto">达标 ${doneCount()} / ${MS.length}</span></h3>
+    <p class="small muted">点一个题型：练 10 题、60 秒冲刺，或者挑战 Boss 👑。打败 Boss 就直接算达标。</p>
+    ${MG.map(([g,nm])=>`<div class="grp"><div class="eyebrow">${nm}</div><div class="sk-grid">${MS.filter(s=>s.g===g).map(tile).join('')}</div></div>`).join('')}
+  </section>`;
+  $('#mDaily').onclick=()=>mStart('daily');
+  if($('#toWb'))$('#toWb').onclick=()=>{view.mtab='wb';render()};
+  $$('[data-sk]').forEach(b=>b.onclick=()=>mSheet(b.dataset.sk));
+}
+function mSheet(id){const s=MSK[id],st=mStat(id),best=S.m.best[id]||0,lim=Math.round(s.t*15),lv=mLevel(id);
+  $('#modal').innerHTML=`<div class="modal" id="mbg"><div class="box" style="text-align:left">
+    <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><h2 style="margin:0">${s.name}</h2><button class="x" id="mx" aria-label="关闭">✕</button></div>
+    <div style="font-size:22px;font-weight:800;margin:4px 0;font-variant-numeric:tabular-nums">${s.eg}</div>
+    <div class="small muted"><span class="pill ${LV[lv][1]}">${LV[lv][0]}</span> ${st.n?`最近 ${st.n} 题对 ${Math.round(st.acc*100)}% · 每题 ${st.med.toFixed(1)} 秒（目标 ${s.t} 秒）`:'还没练过'}</div>
+    <div class="lvl"><div class="ic">✏️</div><div class="tx"><b>练 10 题</b><span>不限时，慢慢做对</span></div><button class="go" data-m="ten">开始</button></div>
+    <div class="lvl"><div class="ic">⚡</div><div class="tx"><b>60 秒冲刺</b><span>${best?`纪录 ${best} 题，跟影子赛车比一比`:'看 1 分钟能对几题'}</span></div><button class="go" data-m="sprint">开始</button></div>
+    <div class="lvl"><div class="ic">👑</div><div class="tx"><b>Boss 挑战</b><span>10 题对 9 题，${lim} 秒内完成${S.m.boss[id]?' · ✓ 已打败':''}</span></div><button class="go" data-m="boss">挑战</button></div>
+  </div></div>`;
+  const close=()=>$('#modal').innerHTML='';$('#mx').onclick=close;$('#mbg').onclick=e=>{if(e.target.id==='mbg')close()};
+  $$('[data-m]').forEach(b=>b.onclick=()=>mStart(b.dataset.m,id));
+}
+
+/* ---------- runner ---------- */
+let mclk;
+const MODE={daily:'今天的口算',ten:'练 10 题',sprint:'⚡ 60 秒冲刺',boss:'👑 Boss 挑战',retest:'📕 错题本'};
+function mStart(mode,sk,queue){$('#modal').innerHTML='';stopSpeak();
+  if(mode==='daily'&&!mOn().length)return toast('家长把题型都关掉了');
+  const R={mode,sk,items:[],log:[],cur:null,inp:'',t0:Date.now(),qt0:0,active:0,okN:0,combo:0,maxCombo:0,stars:0,cleared:0,seenQ:new Set(),total:Infinity,limit:0,phase:'play'};
+  if(mode==='daily'){R.focus=mFocus();R.limit=S.m.mins*60}
+  if(mode==='ten')R.total=10;
+  if(mode==='sprint'){R.phase='ready';R.best=S.m.best[sk]||0}
+  if(mode==='boss'){R.total=10;R.limit=Math.round(MSK[sk].t*15);R.phase='ready'}
+  if(mode==='retest'){R.queue=(queue||wbOrder()).filter(k=>S.m.wb[k]).slice(0,10);R.total=R.queue.length;if(!R.total)return toast('错题本是空的')}
+  view.mrun=R;dayBonus('m');save();clearInterval(mclk);mclk=setInterval(mTick,200);render()}
+function mNextDaily(R){const on=mOn(),done=on.filter(mDone),n=R.items.length;
+  if(n<2)return mGen(pick(done.length?done:[R.focus[0]||on[0]]));
+  const wbk=wbOrder().filter(k=>!R.seenQ.has(k)&&MSK[S.m.wb[k].sk]);
+  if(n%5===4&&wbk.length)return wbItem(pick(wbk.slice(0,6)));
+  if(done.length&&Math.random()<.2)return mGen(pick(done));
+  return mGen(pick(R.focus.length?R.focus:on))}
+function mNext(){const R=view.mrun;if(!R||R.done)return;
+  if(R.items.length>=R.total)return mFinish();
+  if(R.mode==='daily'&&R.active>=R.limit*1000)return mFinish();
+  if(R.mode==='sprint'&&Date.now()>=R.tEnd)return mFinish();
+  let it;
+  if(R.mode==='retest')it=wbItem(R.queue[R.items.length]);
+  else for(let i=0;i<12;i++){it=R.mode==='daily'?mNextDaily(R):mGen(R.sk);if(!R.seenQ.has(it.q))break}
+  R.seenQ.add(it.q);R.items.push(it);R.cur=it;R.inp='';R.lock=false;R.wait=null;R.qt0=performance.now();renderMRun()}
+const laneX=f=>`calc(54px + ${Math.max(0,Math.min(1,f)).toFixed(3)} * (100% - 96px))`;
+const mAct=R=>R.active+(R.lock||!R.cur?0:Math.min(performance.now()-R.qt0,30000));
+function mTick(){const R=view.mrun;if(!R||R.done||R.phase==='ready')return;const ck=$('#mclock'),bar=$('#mbar');
+  const setBar=f=>{if(!bar)return;const p=Math.max(0,Math.min(1,f))*100;bar.querySelector('i').style.width=p+'%';bar.querySelector('b').style.left=p+'%'};
+  if(R.mode==='daily'){const a=mAct(R),left=Math.max(0,R.limit*1000-a);setBar(a/(R.limit*1000));if(ck)ck.textContent=fmt(Math.ceil(left/1000));
+    if(left<=0&&!R.lastShown){R.lastShown=true;const m=$('#mcombo');if(m)m.textContent='⏰ 最后一题！'}}
+  else if(R.mode==='sprint'){const left=Math.max(0,R.tEnd-Date.now());setBar(1-left/60000);if(ck)ck.textContent=Math.ceil(left/1000)+'秒';
+    const g=$('#ghost');if(g&&R.best)g.style.left=laneX(R.best*(1-left/60000)/R.goal);
+    if(left<=0)return mFinish()}
+  else if(R.mode==='boss'){const a=mAct(R),left=R.limit*1000-a;if(ck)ck.textContent=fmt(Math.max(0,Math.ceil(left/1000)));
+    if(left<=0){R.timeout=true;return mFinish()}}
+  else if(ck)ck.textContent=fmt(((Date.now()-R.t0)/1000)|0)}
+function qHTML(it,inp,cls){const slot=`<span class="slot ${inp?'':'empty'} ${cls||''}" id="slot">${inp?esc(inp):it.cmp?'○':'?'}</span>`;
+  if(it.vert)return`<div class="vert"><span></span><span>${it.a}</span><span>${it.op}</span><span>${it.b}</span><div class="ln2">${slot}</div></div>`;
+  if(it.q.includes('□'))return it.q.replace('□',slot);
+  if(it.cmp)return it.q.replace('○',slot);
+  return`${it.q} = ${slot}`}
+function renderMRun(){const R=view.mrun,M=$('#main');if(R.done)return renderMDone();
+  const s=R.sk&&MSK[R.sk];
+  if(R.phase==='ready'){
+    M.innerHTML=`<section class="card"><div class="top"><button class="x" id="mq" aria-label="退出">✕</button><div style="flex:1"></div></div>
+      <div class="stage"><div class="bigemoji">${R.mode==='boss'?'👾':'🏎️'}</div><h2>${MODE[R.mode]}</h2><div class="label">${s.name} · ${s.eg}</div>
+      <p style="font-size:17px;margin-top:12px">${R.mode==='boss'?`10 道题，<b>对 9 道</b>，<b>${R.limit} 秒</b>内做完，就能打败 Boss！<br><span class="small muted">只算你做题的时间，看答案的时间不算。</span>`:R.best?`1 分钟里能对几题？<br>你的纪录是 <b>${R.best}</b> 题，👻 影子车会按纪录的速度跑。`:'1 分钟里能对几题？<br>第一次冲刺，定个纪录吧！'}</p>
+      <button class="big-btn" id="mgo">准备好了，开始！</button></div></section>`;
+    $('#mq').onclick=()=>mQuit();
+    $('#mgo').onclick=()=>{R.phase='play';R.t0=Date.now();if(R.mode==='sprint'){R.tEnd=Date.now()+60000;R.goal=Math.max(R.best+3,15)}mNext()};return}
+  if(!R.cur)return mNext();
+  const it=R.cur,isT=R.mode==='daily'||R.mode==='sprint';
+  const prog=isT?0:R.items.length-1;const pct=isT?0:prog/R.total*100;
+  const lane=R.mode==='sprint'?`<div class="lanes"><div class="lane"><small>你</small><span id="me" style="left:${laneX(R.okN/R.goal)}">🏎️</span><span class="fl">🏁</span></div>
+    ${R.best?`<div class="lane"><small>纪录 ${R.best}</small><span id="ghost" style="left:${laneX(0)};opacity:.55">👻</span><span class="fl">🏁</span></div>`:''}</div>`:'';
+  const sub=R.mode==='daily'||R.mode==='retest'?MSK[it.sk].name:s?s.name:'';
+  M.innerHTML=`<section class="card">
+    <div class="top"><button class="x" id="mq" aria-label="退出">✕</button><div class="mbar" id="mbar"><i style="width:${pct}%"></i><b style="left:${pct}%">${R.mode==='boss'?'🗡️':'🐯'}</b></div>
+      <span class="clock" id="mclock"></span><span class="pill ok">✓ ${R.okN}</span></div>
+    ${lane}
+    <div class="mtitle">${MODE[R.mode]}${isT?'':` · ${Math.min(R.items.length,R.total)}/${R.total}`} · ${esc(sub)}${it.fromWb&&R.mode!=='retest'?' · 📕 错题':''}</div>
+    <div class="mq">${qHTML(it,R.inp)}</div>
+    <div class="fix" id="mfix"></div>
+    <div class="combo2" id="mcombo">${R.combo>=3?`🔥 连对 ${R.combo}`:''}</div>
+    ${it.cmp?`<div class="kp cmp">${['>','=','<'].map(k=>`<button data-k="${k}">${k}</button>`).join('')}</div>`
+      :`<div class="kp">${[1,2,3,4,5,6,7,8,9].map(k=>`<button data-k="${k}">${k}</button>`).join('')}<button class="del" data-k="del" aria-label="删除">⌫</button><button data-k="0">0</button><button class="ok" data-k="ok" id="kok" aria-label="确定">✓</button></div>`}
+  </section>`;
+  $('#mq').onclick=()=>mQuit();
+  $$('.kp button').forEach(b=>b.onclick=()=>mKey(b.dataset.k));
+  mTick()}
+function mPaint(){const R=view.mrun,sl=$('#slot');if(!sl)return;sl.textContent=R.inp||(R.cur.cmp?'○':'?');sl.classList.toggle('empty',!R.inp)}
+function mKey(k){const R=view.mrun;if(!R||R.done||R.phase==='ready'||!R.cur)return;
+  if(R.lock){if(R.wait&&(k==='ok'||k==='go'))R.wait();return}
+  const it=R.cur;
+  if(it.cmp){if('<>='.includes(k)){R.inp=k;mPaint();mSubmit()}return}
+  if(k==='del'){R.inp=R.inp.slice(0,-1);return mPaint()}
+  if(k==='ok'){if(R.inp)mSubmit();return}
+  if(/^\d$/.test(k)&&R.inp.length<4){R.inp+=k;mPaint();
+    if(R.inp.length===it.ans.length){const snap=R.inp;setTimeout(()=>{if(view.mrun===R&&R.cur===it&&!R.lock&&R.inp===snap)mSubmit()},150)}}}
+document.addEventListener('keydown',e=>{const R=view.mrun;if(!R||R.done||e.metaKey||e.ctrlKey||e.altKey)return;const k=e.key;
+  if(/^\d$/.test(k))mKey(k);else if(k==='Backspace')mKey('del');else if(k==='Enter'||k===' ')mKey(R.phase==='ready'?'x':'ok');else if('<>='.includes(k))mKey(k);else return;e.preventDefault()});
+function mSubmit(){const R=view.mrun,it=R.cur;if(!R||R.lock)return;R.lock=true;
+  const ms=Math.round(performance.now()-R.qt0),ok=R.inp===it.ans,sk=MSK[it.sk],slow=ok&&R.log.length>0&&ms>sk.t*2000;
+  R.active+=Math.min(ms,30000);
+  const lg=S.m.log[it.sk]=S.m.log[it.sk]||[];lg.push([today(),ok?1:0,Math.min(ms,60000)]);if(lg.length>60)lg.splice(0,lg.length-60);
+  const cat=ok?(slow?'slow':null):diag(it,R.inp);
+  R.log.push({sk:it.sk,q:it.q,ans:it.ans,giv:R.inp,ok,ms,slow,cat});
+  const wb=S.m.wb,k=it.q,store=()=>{const{sk,q,ans,a,b,op,vert,inv,cmp}=it;return{sk,q,ans,a,b,op,vert,inv,cmp}};let clr=false;
+  if(!ok){wb[k]={...store(),w:((wb[k]||{}).w||0)+1,s:0,d:today(),cat,giv:R.inp};S.m.mis.unshift({d:today(),sk:it.sk,q:it.q,ans:it.ans,giv:R.inp,cat});if(S.m.mis.length>150)S.m.mis.length=150}
+  else if(slow){if(!wb[k])wb[k]={...store(),w:0,s:1,d:today(),cat:'slow'}}
+  else if(wb[k]){delete wb[k];S.m.cleared++;R.cleared++;clr=true}
+  const sl=$('#slot'),fx=$('#mfix'),cb=$('#mcombo');
+  if(ok){R.okN++;R.combo++;R.maxCombo=Math.max(R.maxCombo,R.combo);sfx('ok');sl&&sl.classList.add('ok');
+    const st=(R.okN%5===0?1:0)+(clr?1:0);if(st)addStars(st,sl);
+    if(cb)cb.textContent=clr?'🧽 消灭一道错题！':slow?'对了！再快一点就更好 🐢':R.combo>=3?`🔥 连对 ${R.combo}`:pick(['对！','好！','棒！','✓']);
+    const me=$('#me');if(me)me.style.left=laneX(R.okN/R.goal);
+    save();setTimeout(()=>{if(view.mrun===R&&R.cur===it)mAfter()},R.mode==='sprint'?220:400)}
+  else{R.combo=0;sfx('no');if(sl){sl.classList.add('no');shake(sl)}
+    if(fx)fx.innerHTML=`正确答案 <b>${esc(it.ans)}</b><br><button class="btn" id="mgo2" style="margin-top:4px">知道了 →</button>`;
+    if(cb)cb.textContent='';
+    const kk=$('#kok');if(kk)kk.textContent='→';
+    save();const go=()=>{if(view.mrun!==R||R.cur!==it)return;mAfter()};R.wait=go;
+    const g2=$('#mgo2');if(g2)g2.onclick=go;
+    R.waitT=setTimeout(go,R.mode==='sprint'?1200:2400)}}
+function mAfter(){const R=view.mrun;if(!R)return;clearTimeout(R.waitT);R.wait=null;
+  if(R.mode==='daily'&&R.active>=R.limit*1000)return mFinish();mNext()}
+function mQuit(){const R=view.mrun;if(!R)return;if(R.log.length)return mFinish(true);clearInterval(mclk);view.mrun=null;render()}
+function mFinish(quit){const R=view.mrun;if(!R||R.done)return;clearInterval(mclk);clearTimeout(R.waitT);R.done=true;R.quit=!!quit;R.secs=((Date.now()-R.t0)/1000)|0;
+  const g=R.log,okN=g.filter(x=>x.ok).length,res=R.res={};
+  if(R.mode==='daily'&&!quit&&!S.m.daily[today()]){S.m.daily[today()]=1;addStars(3,$('#sStar'));res.dailyBonus=true}
+  if(R.mode==='sprint'&&!quit){res.prev=R.best;if(okN>R.best){S.m.best[R.sk]=okN;res.record=true;if(R.best>0||okN>=5){addStars(3,$('#sStar'));res.recStars=true}}}
+  if(R.mode==='boss'&&!quit){res.win=g.length>=10&&okN>=9&&!R.timeout&&R.active<=R.limit*1000;
+    if(res.win){res.first=!S.m.boss[R.sk];S.m.boss[R.sk]=today();addStars(res.first?5:2,$('#sStar'));if(res.first)S.draws++}}
+  if(g.length){S.sessions.unshift({d:today(),kind:'math',mode:R.mode,sk:R.sk||'',n:0,types:['math'],items:g.length,ok:okN,secs:R.secs,act:Math.round(R.active/1000),stars:R.stars});S.sessions=S.sessions.slice(0,200)}
+  R.after=afterSession('math',0,g);if(res.first)R.after.draw=true;
+  save();renderMDone();
+  const good=(R.mode==='boss'&&res.win)||res.record||(!quit&&g.length>=5&&okN/g.length>=.8);if(good){confetti();sfx('fan')}
+  setTimeout(()=>showBadges(R.after.badges),900)}
+function renderMDone(){const R=view.mrun,g=R.log,res=R.res||{},okN=g.filter(x=>x.ok).length;paintScore();
+  if(!g.length){view.mrun=null;return render()}
+  const wr=g.filter(x=>!x.ok),sl=g.filter(x=>x.slow),okT=g.filter(x=>x.ok).map(x=>x.ms).sort((a,b)=>a-b),med=okT.length?okT[okT.length>>1]/1000:0;
+  let em='🎉',h='练完啦！',sub='';
+  if(R.mode==='daily'){h=R.quit?'今天先练到这儿':'今天的口算完成！';em=R.quit?'👍':'🏅';if(res.dailyBonus)sub='完成今天的口算 +3⭐'}
+  if(R.mode==='ten')h='10 题做完啦！';
+  if(R.mode==='retest'){h='错题本考完了！';em='🧽'}
+  if(R.mode==='sprint'){h=R.quit?'冲刺停下了':'时间到！';em='🏎️';if(res.record)sub=res.prev?`🏅 新纪录！比上次多 ${okN-res.prev} 题${res.recStars?' +3⭐':''}`:`第一次的纪录：${okN} 题${res.recStars?' +3⭐':''}`;else if(!R.quit)sub=`纪录是 ${res.prev} 题，差 ${res.prev-okN+1} 题就破纪录`}
+  if(R.mode==='boss'){if(res.win){em='👑';h='打败 Boss 啦！';sub=res.first?'第一次打败 +5⭐，再送一张贴纸！':'又赢了一次 +2⭐'}
+    else{em='👾';h=R.quit?'先撤退了':'差一点点！';sub=R.timeout?`时间到了（${R.limit} 秒），再快一点就能赢`:`对了 ${okN}/10 题，要对 9 题才行`}}
+  const mk=sk=>MSK[sk].name;
+  $('#main').innerHTML=`<section class="card"><div class="stage"><div class="bigemoji">${em}</div><h2>${h}</h2>
+    ${R.mode==='sprint'?`<div class="bigstar" style="font-size:56px">${okN}</div><div class="muted">1 分钟答对 ${okN} 题</div>`:''}
+    ${sub?`<div class="small" style="color:var(--gold);font-weight:800;margin-top:4px">${sub}</div>`:''}
+    <div class="earn">+${R.stars||0} ⭐</div>
+    <div class="muted" style="margin-top:6px">${g.length} 题 · 对 ${okN} 题（${Math.round(okN/g.length*100)}%）${med?` · 每题 ${med.toFixed(1)} 秒`:''}${R.maxCombo>=5?` · 最多连对 ${R.maxCombo}`:''}</div>
+    ${R.cleared?`<div class="small" style="margin-top:4px">🧽 消灭了 ${R.cleared} 道错题</div>`:''}</div>
+    ${wr.length?`<div class="hint"><b>📕 做错的题（记进了错题本）</b><table>${wr.slice(0,10).map(x=>`<tr><td style="font-weight:700;font-variant-numeric:tabular-nums">${esc(x.q.replace('□','('+x.ans+')').replace('○',x.ans))}${x.q.includes('□')||x.q.includes('○')?'':' = '+x.ans}</td><td class="small" style="color:var(--bad)">你写 ${esc(x.giv)}</td><td class="small muted">${ERR[x.cat][0]}</td></tr>`).join('')}</table></div>`:''}
+    ${sl.length?`<div class="hint">🐢 <b>${sl.length}</b> 道题对了但有点慢，也放进错题本了，下次快一点就能消灭。</div>`:''}
+    ${rewardBits(R.after)}
+    <div class="row" style="margin-top:14px">${wr.length?`<button class="btn pri grow" id="mre">错的马上再做一次</button>`:''}<button class="btn grow" id="magain">${R.mode==='boss'&&!res.win?'再挑战一次':'再来一次'}</button><button class="btn grow" id="mbk">回去</button></div></section>`;
+  bindReward();
+  if($('#mre'))$('#mre').onclick=()=>{view.mrun=null;mStart('retest',null,[...new Set(wr.map(x=>x.q))])};
+  $('#magain').onclick=()=>{const m=R.mode,k=R.sk;view.mrun=null;mStart(m,k)};
+  $('#mbk').onclick=()=>{view.mrun=null;view.mtab=R.mode==='retest'?'wb':'home';render()}}
+
+/* ---------- 错题本 ---------- */
+function renderMWrong(){const w=S.m.wb,keys=wbOrder(),by={};keys.forEach(k=>(by[w[k].sk]=by[w[k].sk]||[]).push(k));
+  const show=x=>x.q.includes('□')||x.q.includes('○')?x.q:`${x.q} = ?`;
+  $('#main').innerHTML=`<section class="card">
+    <h3>📕 错题本 <span class="pill ${keys.length?'':'ok'}">${keys.length} 道</span></h3>
+    <p class="muted small">做错的题，还有「做对了但太慢」的题 🐢，都会到这里。再做一次，又对又不慢，就消灭它（+1⭐）。每天的口算里也会混进几道。</p>
+    ${keys.length?`<button class="big-btn" id="mrt">重新考一下（${Math.min(10,keys.length)} 道）</button>
+      <table>${MS.filter(s=>by[s.id]).map(s=>`<tr><td colspan="3" class="small muted" style="padding-top:12px"><b>${s.name}</b></td></tr>`+by[s.id].map(k=>{const x=w[k];
+        return`<tr><td style="font-weight:800;font-size:18px;font-variant-numeric:tabular-nums">${esc(show(x))}</td><td class="small">${x.w?`错 ${x.w} 次`:'🐢 太慢'}</td><td class="small muted">${ERR[x.cat]?ERR[x.cat][0]:''}</td></tr>`}).join('')).join('')}</table>`
+      :'<div class="bigemoji" style="text-align:center;margin:16px 0 4px">🎉</div><p class="muted" style="text-align:center">错题本是空的！</p>'}
+  </section>
+  <section class="card"><h3>🧽 一共消灭了 ${S.m.cleared} 道错题</h3><p class="small muted">消灭 20 道拿「错题消灭者」徽章。</p></section>`;
+  if($('#mrt'))$('#mrt').onclick=()=>mStart('retest')}
+
+/* ---------- 家长：数学 ---------- */
+function renderMParent(){const on=new Set(S.m.on),mis=S.m.mis.slice(0,100),cats={};mis.forEach(x=>cats[x.cat]=(cats[x.cat]||0)+1);
+  const wbv=Object.values(S.m.wb),slowN=wbv.filter(x=>x.s&&!x.w).length;if(slowN)cats.slow=slowN;
+  const ce=Object.entries(cats).sort((a,b)=>b[1]-a[1]),cmax=Math.max(1,...ce.map(x=>x[1]));
+  const facts={};mis.filter(x=>['c1','c2','c3'].includes(x.sk)).forEach(x=>{const f=x.q.split(' × ').map(Number).sort((a,b)=>a-b).join(' × ');facts[f]=(facts[f]||0)+1});
+  const fe=Object.entries(facts).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const ms=S.sessions.filter(s=>s.kind==='math'),byDay={};ms.forEach(s=>{const d=byDay[s.d]=byDay[s.d]||{q:0,t:0};d.q+=s.items;d.t+=s.act||s.secs});
+  const d14=[];for(let i=13;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);d14.push(dstr(x))}
+  const MN={daily:'每日口算',ten:'练 10 题',sprint:'冲刺',boss:'Boss',retest:'错题本'};
+  $('#main').innerHTML=`
+  <section class="card">
+    <h3>⏱️ 每天练几分钟</h3>
+    <div class="seg" id="mins">${[3,5,8,10].map(m=>`<button data-v="${m}" class="${S.m.mins===m?'on':''}">${m} 分钟</button>`).join('')}</div>
+    <p class="small muted">「今天的口算」按做题时间算（看答案、走开的时间不算），到时间做完最后一题就结束。每天自动挑 3 个还没达标的题型当重点（每组各一个），再混一点已经达标的和错题本里的题。</p>
+    <div class="small">今天的重点：${mFocus().map(id=>`<span class="pill">${MSK[id].name}</span>`).join(' ')||'—'}</div>
+  </section>
+  <section class="card">
+    <h3>📅 最近 14 天</h3>
+    <div class="days14">${d14.map(d=>{const x=byDay[d];return`<span class="${x?(S.m.daily[d]?'h':'y'):''}"><b>${x?x.q:'·'}</b>${md(d)}</span>`}).join('')}</div>
+    <p class="small muted">数字是那天做的题数；深绿 = 完成了当天的口算。一共练了 ${mDaysCount()} 天。</p>
+  </section>
+  <section class="card">
+    <h3>📊 题型和难度</h3>
+    <p class="small muted">开关决定「今天的口算」出不出这个题型（孩子自己点题型练不受影响）。<b>达标</b> = 最近 20 题里对 90% 以上、中间速度在目标以内、而且是在两天以上做的；打败 Boss 也算达标。</p>
+    <table class="mtbl"><tr><th></th><th>题型</th><th>最近</th><th>速度</th><th>状态</th></tr>
+    ${MG.map(([g,nm])=>`<tr><td colspan="5" class="small muted" style="padding-top:12px"><b>${nm}</b></td></tr>`+MS.filter(s=>s.g===g).map(s=>{const st=mStat(s.id),lv=mLevel(s.id);
+      return`<tr><td style="width:44px"><button class="toggle ${on.has(s.id)?'on':''}" data-on="${s.id}" aria-label="开关"></button></td><td><b>${s.name}</b><div class="small muted eg2">${s.eg}</div></td>
+      <td class="num">${st.n?`${Math.round(st.acc*100)}%<div class="muted">${st.n} 题</div>`:'—'}</td>
+      <td class="num">${st.med?`<span style="color:${st.med<=s.t?'var(--ok)':'var(--warn)'}">${st.med.toFixed(1)}s</span>`:'—'}<div class="muted">目标 ${s.t}s</div></td>
+      <td><span class="pill ${LV[lv][1]}">${LV[lv][0]}</span>${S.m.best[s.id]?`<div class="small muted">⚡${S.m.best[s.id]}</div>`:''}</td></tr>`}).join('')).join('')}</table>
+    <p class="small muted">「两位数×一位数（进位）」默认关着（还没学），学了再打开。</p>
+  </section>
+  <section class="card">
+    <h3>🔍 薄弱点（最近 ${mis.length} 次做错）</h3>
+    ${ce.length?ce.map(([c,n])=>`<div class="errbar"><span>${ERR[c][0]}</span><i style="width:${Math.max(6,n/cmax*55)}%"></i><em>${n}</em></div>${ERR[c][1]?`<div class="tip">${ERR[c][1]}</div>`:''}`).join('')
+      :'<p class="muted">还没有错题 👍</p>'}
+    ${fe.length?`<div class="eyebrow" style="margin-top:14px">最常错的乘法口诀</div><div class="row" style="margin-top:6px;gap:6px">${fe.map(([f,n])=>`<span class="pill" style="font-size:14px">${f}${n>1?` ×${n}`:''}</span>`).join('')}</div>`:''}
+    ${wbv.length?`<button class="btn" style="width:100%;margin-top:12px" id="toMw">打开错题本（${wbv.length}）→</button>`:''}
+  </section>
+  <section class="card">
+    <h3>最近练习</h3>
+    ${ms.length?`<table><tr><th>日期</th><th>内容</th><th>结果</th></tr>${ms.slice(0,14).map(s=>`<tr><td>${md(s.d)}</td><td>${MN[s.mode]||''}${s.sk&&MSK[s.sk]?` · ${MSK[s.sk].name}`:''}</td><td>${s.ok}/${s.items} · ${fmt(s.act||s.secs)}${s.stars?` · +${s.stars}⭐`:''}</td></tr>`).join('')}</table>`:'<p class="muted">还没有记录。</p>'}
+  </section>
+  <section class="card">
+    <h3>数据</h3>
+    <p class="small muted">数学和中文的记录一起存在这台设备上，备份在中文「家长」页导出。</p>
+    <button class="btn bad" style="width:100%" id="mrst">清空数学记录</button>
+  </section>`;
+  $$('#mins button').forEach(b=>b.onclick=()=>{S.m.mins=+b.dataset.v;save();render()});
+  $$('[data-on]').forEach(b=>b.onclick=()=>{const id=b.dataset.on,i=S.m.on.indexOf(id);if(i>=0)S.m.on.splice(i,1);else S.m.on.push(id);save();render()});
+  if($('#toMw'))$('#toMw').onclick=()=>{view.mtab='wb';render()};
+  let armed=false;$('#mrst').onclick=()=>{if(!armed){armed=true;$('#mrst').textContent='再点一次确认清空数学记录';setTimeout(()=>{armed=false;const b=$('#mrst');if(b)b.textContent='清空数学记录'},3000);return}
+    const keep={on:S.m.on,mins:S.m.mins};S.m=null;mInit();Object.assign(S.m,keep);S.sessions=S.sessions.filter(s=>s.kind!=='math');save();toast('已清空数学记录');render()};
+}
+
 
 render();
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
