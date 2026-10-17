@@ -205,6 +205,14 @@ button .bi .en{opacity:.85}.rules{margin:6px 0 0;padding-left:18px}.rules li{mar
 .ctx em{font-style:normal;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:0 4px}
 .hint{background:var(--soft);border-radius:12px;padding:12px;margin-top:10px;text-align:left}
 .dn{font-size:66px;font-weight:800;color:var(--accent);line-height:1}
+.pads{display:flex;justify-content:center;gap:10px;margin:12px auto 4px;flex-wrap:wrap}
+.pad{position:relative;width:var(--ps,200px);height:var(--ps,200px);flex:none;background:#fffdf5 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cg stroke='%23d08a6a' stroke-opacity='.55' stroke-width='1' stroke-dasharray='4 3' vector-effect='non-scaling-stroke'%3E%3Cline x1='50' y1='0' x2='50' y2='100' vector-effect='non-scaling-stroke'/%3E%3Cline x1='0' y1='50' x2='100' y2='50' vector-effect='non-scaling-stroke'/%3E%3Cline x1='0' y1='0' x2='100' y2='100' vector-effect='non-scaling-stroke'/%3E%3Cline x1='100' y1='0' x2='0' y2='100' vector-effect='non-scaling-stroke'/%3E%3C/g%3E%3C/svg%3E") center/100% 100% no-repeat;border:2px solid #c9a46a;border-radius:10px}
+.pad canvas{position:absolute;inset:0;touch-action:none;cursor:crosshair}
+.pad.std span,.pad .ghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--ps,200px)*.78);line-height:1;font-family:var(--hz);color:#1f1a14}
+.pad .ghost{color:rgba(200,40,30,.28)}
+.cmp .plab{font-size:13px;color:var(--muted);margin-top:8px}
+.padtools{justify-content:center;gap:10px;margin-top:4px}.padtools .btn{padding:6px 12px;font-size:14px}
+.cmp.side{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
 .grid-rv{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;margin-top:12px}
 .rv{border-radius:14px;padding:8px 4px;background:var(--card);border:2px solid var(--line);text-align:center}
 .rv .n{font-size:12px;color:var(--muted)}.rv .c{font-family:var(--hz);font-size:32px;line-height:1.2}
@@ -464,7 +472,7 @@ const STICKERS=STK.flatMap(([page,list])=>list.map(([e,name,py,rare])=>({id:name
 
 /* ---------- storage ---------- */
 const KEY='zwzj.eric.v1';
-const DEF={cur:null,log:{},sessions:[],textRead:{},readDone:{},readSkip:{},review:{on:true,n:8},types:['pick','pyc','fill'],scope:'mix',
+const DEF={paper:false,cur:null,log:{},sessions:[],textRead:{},readDone:{},readSkip:{},review:{on:true,n:8},types:['pick','pyc','fill'],scope:'mix',
   rtypes:['pyc','pick'],rlessons:null,rn:8,stars:0,spent:0,days:[],badges:{},cleared:[],cnt:{},starDay:{},reward:{text:'',target:100},
   learnDone:{},best2:{},best3:{},moleBest:{},stickers:{},draws:0,drawDay:'',examBonus:{},sfx:true};
 let S={...DEF};
@@ -603,7 +611,8 @@ const TYPES={
   fill:{name:'课文填空',tip:'课文里的句子缺一个字',tag:'自动',min:3,k:6},
   poly:{name:'多音字',tip:'同一个字在这里读什么',tag:'自动',min:2,k:6},
   read:{name:'看字读一读',tip:'大声读，家长判对错',tag:'家长听',min:2,k:10},
-  dict:{name:'听写',tip:'写在纸上，写完一起对',tag:'纸笔',min:5,k:6},
+  dict:{name:'听写',tip:'听读音，在格子里写出这个字',tag:'手写',min:4,k:6},
+  pyw:{name:'看拼音写字',tip:'看拼音和提示，在格子里写字',tag:'手写',min:4,k:6},
   say:{name:'组词说句子',tip:'用字组词，再说一句话',tag:'家长听',min:2,k:3},
 };
 const TNAME={...Object.fromEntries(Object.entries(TYPES).map(([k,v])=>[k,v.name])),mole:'打地鼠'};
@@ -630,7 +639,8 @@ function pickItems(pool,k,n){const own=shuffle(pool.filter(c=>CH[c].n===n)),oth=
   const ko=Math.min(oth.length,Math.max(1,Math.round(k*oth.length/pool.length)));
   return shuffle([...own.slice(0,k-ko),...oth.slice(0,ko)])}
 function examSteps(n){const cs=shuffle(L[n].chars.map(x=>x[0])),pc=new Set(polyItems(cs).map(p=>p.c)),g={},base=['pick','pyc','fill'];let polyUsed=0;
-  cs.forEach((c,i)=>{let t=base[i%3];if(pc.has(c)&&polyUsed<2){t='poly';polyUsed++}(g[t]=g[t]||[]).push(c)});
+  const wr=new Set(cs.filter(c=>!pc.has(c)).slice(0,3));/* 每次通关考试有 3 个字要写（听写） */
+  cs.forEach((c,i)=>{let t=wr.has(c)?'dict':base[i%3];if(pc.has(c)&&polyUsed<2){t='poly';polyUsed++}(g[t]=g[t]||[]).push(c)});
   return ORDER.filter(t=>g[t]).map(t=>({type:t,items:t==='poly'?g.poly.map(c=>{const q=shuffle(polyItems([c]))[0];return{...q,opts:shuffle(q.reads)}}):mkItems(t,g[t])}))}
 
 /* ---------- shell ---------- */
@@ -710,6 +720,11 @@ function renderLesson(){
     <div style="margin:2px 0 0 60px">${bossCard(n)}<button class="btn ghost small" id="toArm" style="padding:6px 0">🛡️ 武器库（攻击力 ⚔️${atk()}）→</button></div>
   </section>
   <section class="card">
+    <h3>✍️ 写一写</h3>
+    <p class="muted small">${S.paper?'在纸上写':'在格子里写'}本课的 ${l.chars.length} 个字，写完和标准字对一对。写错的字会进错字本。</p>
+    <div class="row"><button class="btn grow" data-wr="dict">🔊 听写</button><button class="btn pri grow" data-wr="pyw">看拼音写字</button></div>
+  </section>
+  <section class="card">
     <h3>🔨 打地鼠</h3>
     <p class="muted small">听到哪个字，就敲哪只地鼠！${S.moleBest[n]?`挑战最高分：<b>${S.moleBest[n]}</b>`:''}</p>
     <div class="row"><button class="btn grow" data-mole="practice">🐢 慢慢打（不计时）</button><button class="btn pri grow" data-mole="challenge">⏱️ 挑战 60 秒</button></div>
@@ -723,6 +738,7 @@ function renderLesson(){
   $('#toArm').onclick=()=>{view.tab='badge';view.open=false;render();setTimeout(()=>{const a=$('#armory');if(a)a.scrollIntoView({block:'start'})},60)};
   $$('[data-go]').forEach(x=>x.onclick=()=>go(x.dataset.go));
   $$('[data-mole]').forEach(x=>x.onclick=()=>startGame(x.dataset.mole,L[n].chars.map(y=>y[0]),n));
+  $$('[data-wr]').forEach(x=>x.onclick=()=>{const ty=x.dataset.wr;startRun('write',[{type:ty,items:mkItems(ty,shuffle(L[n].chars.map(y=>y[0])))}],n)});
   $$('[data-sc]').forEach(x=>x.onclick=()=>{S.scope=x.dataset.sc;save();render();$('details.more').open=true});
   $$('[data-ty]').forEach(x=>x.onclick=()=>{const k=x.dataset.ty;S.types=S.types.includes(k)?S.types.filter(y=>y!==k):[...S.types,k];save();render();$('details.more').open=true});
   $$('[data-act]').forEach(x=>x.onclick=()=>{if(x.dataset.act==='skip')S.readSkip[n]=today();else delete S.readSkip[n];save();render()});
@@ -842,7 +858,7 @@ const isQ=t=>!!TYPES[t];
 const qCount=r=>r.steps.filter(s=>isQ(s.type)).reduce((a,s)=>a+s.items.length,0);
 const aCount=r=>r.steps.filter(s=>isQ(s.type)).reduce((a,s)=>a+s.ans.filter(Boolean).length,0);
 function answer(s,i,ok){if(s.ans[i])return;const it=s.items[i],r=view.run;s.ans[i]={ok};rec(it.c,ok,s.type);r.log.push({c:it.c,ok,type:s.type});
-  if(r.boss&&isQ(s.type)&&S.boss[r.boss.n].hp>0){if(!ok)view.afterTap=()=>{const bb=$('.bossbar');if(bb)bb.outerHTML=bossBar()};bossAnswer(ok)}
+  if(r.boss&&isQ(s.type)&&S.boss[r.boss.n].hp>0&&!view.tapping){if(!ok)view.afterTap=()=>{const bb=$('.bossbar');if(bb)bb.outerHTML=bossBar()};bossAnswer(ok)}
   if(ok){sfx('ok');if(r.kind==='retest'){addStars(2);S.cleared.push([it.c,today()])}else addStars(1);
     if(s.type==='poly')inc('poly');if(s.type==='say')inc('say')}
   else{sfx('no');shake(lastTap)}
@@ -850,7 +866,7 @@ function answer(s,i,ok){if(s.ans[i])return;const it=s.items[i],r=view.run;s.ans[
 function stepDone(s){return isQ(s.type)?s.ans.filter(Boolean).length===s.items.length:!!s.fin}
 function goStep(si,pos){stopSpeak();const r=view.run;r.si=si;if(pos!=null)r.steps[si].pos=pos;renderRun()}
 function advance(){if(view.tapping){view.afterTap=advance;return}const r=view.run;if(!r)return;const s=r.steps[r.si];stopSpeak();
-  const len=s.type==='dict'?s.items.length+1:(s.items||[0]).length;
+  const len=s.type==='dict'&&S.paper?s.items.length+1:(s.items||[0]).length;
   if(s.items&&s.pos<len-1){s.pos++;return renderRun()}
   if(!isQ(s.type))s.fin=true;
   if(r.si<r.steps.length-1){r.si++;const t=r.steps[r.si];if(isQ(t.type)){const u=t.items.findIndex((_,i)=>!t.ans[i]);t.pos=u<0?0:u}return renderRun()}
@@ -867,7 +883,7 @@ function renderRun(){
     ${r.steps.length>1?`<div class="stepnav">${r.steps.map((x,i)=>`<button class="${i===r.si?'on':''} ${stepDone(x)?'fin':''}" data-si="${i}">${stepDone(x)?'✓ ':''}${tname(x.type)}${isQ(x.type)?` ${x.ans.filter(Boolean).length}/${x.items.length}`:''}</button>`).join('')}</div>`:''}`;
   const card=b=>{M.innerHTML=`<section class="card">${top}${r.boss&&isQ(s.type)?bossBar():''}${b}</section>`;$('#quit').onclick=quit;if($('#fin'))$('#fin').onclick=()=>{r.confirm=false;tryFinish()};
     $$('[data-si]').forEach(b=>b.onclick=()=>goStep(+b.dataset.si));window.scrollTo(0,0)};
-  const l=L[r.n],kindTag={retest:' · 错字本',review:' · 复习',exam:' · 通关考试'}[r.kind]||'';
+  const l=L[r.n],kindTag={retest:' · 错字本',review:' · 复习',exam:' · 通关考试',write:' · 写一写'}[r.kind]||'';
   if(r.confirm){const left=qCount(r)-aCount(r);
     card(`<div class="stage" style="padding:20px 0"><div class="bigemoji">🤔</div><h2>还有 ${left} 题没做</h2><p class="muted">可以回去做完，也可以现在就结束。</p>
       <div class="row" style="margin-top:14px"><button class="btn grow" id="back">回去做</button><button class="btn pri grow" id="end">现在结束</button></div></div>`);
@@ -949,6 +965,28 @@ function renderRun(){
       ${a?'':`<div class="row" style="margin-top:14px"><button class="btn bad grow" id="no">再练练</button><button class="btn ok grow" id="yes">说得好 ✓</button></div>`}</div>${qnav()}`);
     $('#hint').onclick=()=>{$('#ans').hidden=!$('#ans').hidden};
     if(!a){$('#yes').onclick=()=>{answer(s,s.pos,true);setTimeout(advance,500)};$('#no').onclick=()=>{answer(s,s.pos,false);setTimeout(advance,500)}}bindNav();return}
+  if((s.type==='dict'&&!S.paper)||s.type==='pyw'){const c=it.c,pw=s.type==='pyw',paper=!!S.paper,shown=it.show||a,clue=CH[c].h.split(c).join('○');
+    it.st=it.st||[[]];const strokes=()=>it.st[0].length;
+    const pad=(mine,ghost)=>`<div class="pads"><div class="pad ${mine?'':'std'}">${mine?`${ghost?`<span class="ghost">${c}</span>`:''}<canvas data-i="0"></canvas>`:`<span>${c}</span>`}</div></div>`;
+    card(`${lab(head+(pw?'':' · 🔊 听一听'))}<div class="stage">
+      ${pw?`<div class="bigpy">${CH[c].py}</div><div class="ctx" style="font-size:24px">${esc(shown?CH[c].h:clue)}</div><div class="muted small">${paper?'在纸上写出 ○ 里的字':'在格子里写出 ○ 里的字'}</div>`
+        :`<button class="spk" id="spk">🔊</button><div class="muted">${paper?'听一听，在纸上写下来':'听一听，在格子里写下来'}</div>`}
+      ${paper?(shown?`<div class="hz">${c}</div><div class="py">${CH[c].py}</div>`:'')
+        :shown?`<div class="cmp"><div class="cmp side"><div><div class="plab">你写的</div>${pad(true,it.ovl)}</div><div><div class="plab">标准写法</div>${pad(false)}</div></div>${pw?'':`<div class="py">${CH[c].py} · ${esc(CH[c].h)}</div>`}
+          <button class="btn ghost" id="ovl" style="margin-top:4px">${it.ovl?'分开看':'叠在一起看'}</button></div>`
+        :`${pad(true)}<div class="row padtools"><button class="btn ghost" id="undo">↩︎ 撤销一笔</button><button class="btn ghost" id="clr">🧽 全部擦掉</button></div>`}
+      ${a?fb:it.show?`<p class="small muted" style="margin:8px 0 0">${paper?'对一对纸上写的字。':'一笔一画对一对：有没有少一笔、多一笔？'}</p><div class="row" style="margin-top:10px"><button class="btn bad grow" id="no">写错了</button><button class="btn ok grow" id="yes">写对了 ✓</button></div>`
+        :`<button class="btn pri" id="show" style="margin-top:10px;min-width:200px">${paper||strokes()?'写好了，看答案':'不会写，看答案'}</button>`}</div>${qnav()}`);
+    const say=()=>speak(sayChar(c));if($('#spk')){$('#spk').onclick=say;if(!shown)setTimeout(say,200)}
+    if(!paper)bindPads(it,!shown,()=>{const b=$('#show');if(b)b.textContent=strokes()?'写好了，看答案':'不会写，看答案'},shown?2:1);
+    if($('#undo'))$('#undo').onclick=()=>{if(it.st[0].length){it.st[0].pop();drawPads(it)}if(!strokes()&&$('#show'))$('#show').textContent='不会写，看答案'};
+    if($('#clr'))$('#clr').onclick=()=>{it.st=[[]];drawPads(it);if($('#show'))$('#show').textContent='不会写，看答案'};
+    if($('#ovl'))$('#ovl').onclick=()=>{it.ovl=!it.ovl;renderRun()};
+    const allDone=()=>{if(s.type==='dict'&&s.items.length>=4&&r.kind!=='retest'&&s.ans.filter(Boolean).length===s.items.length&&s.ans.every(x=>x&&x.ok))inc('dictFull')};
+    if($('#show'))$('#show').onclick=e=>{const blank=!paper&&!strokes();it.show=true;if(blank){lastTap=e.target;answer(s,s.pos,false);allDone()}renderRun()};
+    if($('#yes'))$('#yes').onclick=e=>{lastTap=e.target;answer(s,s.pos,true);allDone();renderRun();setTimeout(()=>{if(view.run===r&&r.steps[r.si]===s&&s.items[s.pos]===it&&!r.done)advance()},700)};
+    if($('#no'))$('#no').onclick=e=>{lastTap=e.target;answer(s,s.pos,false);allDone();renderRun()};
+    bindNav();return}
   if(s.type==='dict'){const n=s.items.length;
     if(s.pos<n){const c=it.c;
       card(`${lab(`听写 · ${s.pos+1}/${n} · 📝 拿出纸和笔，听一个写一个${kindTag}`)}<div class="stage"><div class="dn" style="margin-top:8px">${s.pos+1}</div>
@@ -967,6 +1005,22 @@ function renderRun(){
       $('#pv').onclick=()=>{s.pos=0;renderRun()};$('#nx2').onclick=advance}
     return}
 }
+/* ---------- 手写格（和哥哥的一样）：手指或 Apple Pencil 写；笔画存成 0–1 坐标，看答案时重画 ---------- */
+function padSize(k){const m=$('#main'),W=Math.min((m?m.clientWidth:360)-60,560);return Math.max(110,Math.min(k===2?200:300,k===2?Math.floor((W-14)/2):W))}
+function drawStrokes(cv,list){const s=cv._s,d=window.devicePixelRatio||1,g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,s,s);
+  g.lineCap='round';g.lineJoin='round';g.strokeStyle='#1f1a14';g.lineWidth=Math.max(4,s*.05);
+  list.forEach(p=>{if(!p.length)return;g.beginPath();g.moveTo(p[0][0]*s,p[0][1]*s);
+    if(p.length===1){g.lineTo(p[0][0]*s+.1,p[0][1]*s+.1)}else{for(let i=1;i<p.length-1;i++){const mx=(p[i][0]+p[i+1][0])/2*s,my=(p[i][1]+p[i+1][1])/2*s;g.quadraticCurveTo(p[i][0]*s,p[i][1]*s,mx,my)}const q=p[p.length-1];g.lineTo(q[0]*s,q[1]*s)}g.stroke()})}
+function drawPads(it){$$('.pad canvas').forEach(cv=>drawStrokes(cv,it.st[+cv.dataset.i]||[]))}
+function bindPads(it,live,onChange,k){const s=padSize(k||1),d=window.devicePixelRatio||1;$$('.pads').forEach(p=>p.style.setProperty('--ps',s+'px'));
+  const cvs=$$('.pad canvas');cvs.forEach(cv=>{cv._s=s;cv.width=s*d;cv.height=s*d;cv.style.width=cv.style.height=s+'px';drawStrokes(cv,it.st[+cv.dataset.i]||[])});
+  if(!live)return;const ready=Date.now()+350;
+  cvs.forEach(cv=>{const i=+cv.dataset.i;let cur=null;
+    const pt=e=>{const r=cv.getBoundingClientRect();return[Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),Math.min(1,Math.max(0,(e.clientY-r.top)/r.height))]};
+    cv.onpointerdown=e=>{if(Date.now()<ready)return;if(e.pointerType==='pen')it.pen=true;else if(it.pen&&e.pointerType==='touch')return;/* 用笔写时不理手掌 */
+      e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}cur=[pt(e)];it.st[i].push(cur);drawStrokes(cv,it.st[i])};
+    cv.onpointermove=e=>{if(!cur)return;e.preventDefault();(e.getCoalescedEvents?e.getCoalescedEvents():[e]).forEach(x=>cur.push(pt(x)));drawStrokes(cv,it.st[i])};
+    cv.onpointerup=cv.onpointercancel=()=>{if(!cur)return;cur=null;onChange&&onChange()}})}
 function tokens(line,li){return[...line].map((ch,j)=>/[一-鿿]/.test(ch)?`<span data-j="${j}" data-li="${li}">${ch}</span>`:ch).join('')}
 function tapWord(sp,lines){stopSpeak();const li=+sp.dataset.li,j=+sp.dataset.j,line=lines[li],ch=line[j],l=L[view.run.n];
   let w=null,k=j,p='';$$('.ln').forEach(x=>x.classList.remove('on'));
@@ -1009,7 +1063,7 @@ function renderDone(){
   const cs=Object.keys(by),cls=c=>by[c].every(Boolean)?'ok':by[c].some(Boolean)?'mid':'bad',wrong=cs.filter(c=>cls(c)!=='ok');
   const skipped=qCount(r)-aCount(r),acc=g.filter(x=>x.ok).length/g.length,lvlK=(r.kind==='practice'&&g.length>=6)||r.kind==='exam'?accStars(acc):null;
   $('#main').innerHTML=`<section class="card"><div class="stage"><div class="bigemoji">${acc>=.8?'🎉':'💪'}</div>
-    <h2>${{retest:'错字本考完了！',review:'复习完成！',exam:'通关考试结束！',practice:'练习完成！'}[r.kind]}</h2>
+    <h2>${{retest:'错字本考完了！',review:'复习完成！',exam:'通关考试结束！',practice:'练习完成！',write:'写字练完了！'}[r.kind]}</h2>
     ${lvlK!=null?`<div style="font-size:30px">${st3(lvlK)}</div><div class="small muted">${r.kind==='exam'?'第 3 关':'第 2 关'}${lvlK?'':' · 对 60% 以上才有星，再试一次！'}</div>`:''}
     ${earn}${r.boss?bossDone(r):''}${r.fullBonus?'<div class="small" style="color:var(--gold);font-weight:700">全对奖励 +5⭐</div>':''}
     <div class="muted" style="margin-top:6px">用时 ${fmt(r.secs)} · ${g.length} 题 · 对 ${g.filter(x=>x.ok).length} 题${skipped?` · 跳过 ${skipped} 题`:''}</div></div>
@@ -1119,7 +1173,7 @@ function renderParent(){
   </section>
   <section class="card">
     <h3>最近练习</h3>
-    ${S.sessions.some(s=>!NZ.has(s.kind))?`<table><tr><th>日期</th><th>内容</th><th>结果</th></tr>${S.sessions.filter(s=>!NZ.has(s.kind)).slice(0,14).map(s=>`<tr><td>${md(s.d)}</td><td>第${s.n}课 · ${({learn:'跟读',read:'阅读',review:'复习',retest:'错字本',exam:'通关考试',mole:'打地鼠'})[s.kind]||s.types.map(t=>TNAME[t]).filter(Boolean).join('、')}</td><td>${s.items?`${s.ok}/${s.items}`:'—'} · ${fmt(s.secs)}${s.stars?` · +${s.stars}⭐`:''}</td></tr>`).join('')}</table>`:'<p class="muted">还没有记录。</p>'}
+    ${S.sessions.some(s=>!NZ.has(s.kind))?`<table><tr><th>日期</th><th>内容</th><th>结果</th></tr>${S.sessions.filter(s=>!NZ.has(s.kind)).slice(0,14).map(s=>`<tr><td>${md(s.d)}</td><td>第${s.n}课 · ${({learn:'跟读',read:'阅读',review:'复习',retest:'错字本',exam:'通关考试',mole:'打地鼠',write:'写一写'})[s.kind]||s.types.map(t=>TNAME[t]).filter(Boolean).join('、')}</td><td>${s.items?`${s.ok}/${s.items}`:'—'} · ${fmt(s.secs)}${s.stars?` · +${s.stars}⭐`:''}</td></tr>`).join('')}</table>`:'<p class="muted">还没有记录。</p>'}
   </section>
   <section class="card">
     <h3>🎁 星星换奖励</h3>
@@ -1127,6 +1181,11 @@ function renderParent(){
     <input class="in" id="rwT" placeholder="比如：周末去吃冰淇淋" value="${esc(R.text)}">
     <div class="row" style="margin-top:8px"><span class="small">需要</span><input class="in" id="rwN" type="number" min="10" step="10" value="${R.target}" style="width:110px"><span class="small">⭐</span><button class="btn grow" id="rwS">保存</button></div>
     ${R.text?`<p class="small" style="margin-top:8px">现在攒了 ${S.stars-S.spent} / ${R.target} ⭐</p><button class="btn ${S.stars-S.spent>=R.target?'pri':''}" style="width:100%" id="rwX">已兑换，重新开始攒</button>`:''}
+  </section>
+  <section class="card">
+    <h3>✍️ 写字方式</h3>
+    <div class="switch"><span class="small">听写、看拼音写字在屏幕格子里写（关掉就是在纸上写）</span><button class="toggle ${S.paper?'':'on'}" id="padT"></button></div>
+    <p class="small muted">屏幕上写完，会和标准字放在一起对照（也可以叠在一起看），孩子自己点「写对了 / 写错了」。用 Apple Pencil 写时，手掌碰到屏幕不会画上去。</p>
   </section>
   <section class="card">
     <h3>声音</h3>
@@ -1145,6 +1204,7 @@ function renderParent(){
   if($('#toW'))$('#toW').onclick=()=>{view.tab='wrong';render()};
   $('#rwS').onclick=()=>{S.reward={text:$('#rwT').value.trim(),target:Math.max(10,+$('#rwN').value||100)};save();toast('保存好了');render()};
   if($('#rwX'))$('#rwX').onclick=()=>{S.spent=S.stars;save();toast('重新开始攒啦');render()};
+  $('#padT').onclick=()=>{S.paper=!S.paper;save();render()};
   $('#sfxT').onclick=()=>{S.sfx=!S.sfx;save();render();if(S.sfx)sfx('ok')};
   $('#tts').onclick=()=>{speak('你好，Eric！我们来学中文吧。');pickVoice();$('#vname').textContent=zh?`用的声音：${zh.name}`:'没找到中文声音，按上面的方法下载一个'};
   $('#exp').onclick=()=>{const b=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),a=document.createElement('a');
@@ -1184,7 +1244,8 @@ const BOSSES=[['饕餮','👹','青铜器上常见的怪兽脸。','Taotie','The
 const bossOf=n=>BOSSES[LN.indexOf(n)%BOSSES.length];
 /* 打第 i 座岛时预计的攻击力：大约每课能买一件，最多带两件 */
 const EXP_ATK=[3,4,6,6,8,8,10,10,12,13,13,13];
-function bInit(){S.boss=S.boss||{};S.arms=S.arms||[];S.armSpent=S.armSpent||0}
+function bInit(){S.boss=S.boss||{};S.arms=S.arms||[];S.armSpent=S.armSpent||0;
+  if(!S.wr1){S.wr1=1;if(S.types&&!S.types.includes('dict'))S.types.push('dict')}}/* v12：练习里默认加上听写（手写） */
 bInit();
 const wallet=()=>Math.max(0,S.stars-(S.armSpent||0));
 const atk=()=>1+ARMS.filter(a=>S.arms.includes(a[0])).reduce((t,a)=>t+a[2],0);
@@ -1334,7 +1395,7 @@ const FX={c:null,ctx:null,ps:[],raf:0,k:1,
 function bossBar(){const R=view.run.boss,B=S.boss[R.n],b=bossOf(R.n),dead=B.hp<=0;
   return`<div class="bossbar ${R.hitAt&&Date.now()-R.hitAt<700?'hit':''}"><span class="be">${dead?'💀':b[1]}</span><div class="grow"><div class="row" style="justify-content:space-between"><b>${esc(b[0])} <span class="small" style="opacity:.7">${esc(b[3])}</span></b><span class="small">${dead?'已击败 Defeated ✓':`${B.hp} / ${B.max}`} · ⚔️${atk()}</span></div>
     <div class="hp"><i style="width:${Math.max(0,B.hp/B.max*100).toFixed(1)}%"></i></div>${R.say?`<div class="say">${bi(esc(R.say[0]),esc(R.say[1]))}</div>`:''}</div></div>`}
-function bossAnswer(ok){const R=view.run.boss,B=S.boss[R.n];if(!B||B.hp<=0)return;R.started=true;const b=bossOf(R.n);
+function bossAnswer(ok){const R=view.run.boss,B=S.boss[R.n];if(!B||B.hp<=0||view.tapping)return;R.started=true;const b=bossOf(R.n);
   if(ok){R.say='';openTap()}else{R.hitAt=Date.now();R.say=[`${b[0]}反击了！这个字记进错字本。`,`${b[3]} strikes back! It goes into your mistake book.`];openCounter()}}
 
 /* 搭战斗画面（进攻和反击共用） */
