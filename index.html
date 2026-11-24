@@ -1271,12 +1271,18 @@ const bossOf=n=>BOSSES[LN.indexOf(n)%BOSSES.length];
 /* 打第 i 座岛时预计的攻击力：大约每课能买一件，最多带两件 */
 const EXP_ATK=[3,4,6,6,8,8,10,10,12,13,13,13];
 function bInit(){S.boss=S.boss||{};S.arms=S.arms||[];S.armSpent=S.armSpent||0;
+  if(S.arms.length>SLOTS)S.arms=S.arms.slice(-SLOTS);
+  if(!Array.isArray(S.armLog))S.armLog=[['init',S.arms.reduce((t,n)=>{const w=ARMS.find(a=>a[0]===n);return t+(w?w[3]:0)},0)]];/* v18：旧的 armSpent 同步时被重复加过，改成按现在带着的兵器重新记账 */
   if(!S.wr1){S.wr1=1;if(S.types&&!S.types.includes('dict'))S.types.push('dict')}}/* v12：练习里默认加上听写（手写） */
 bInit();
-const wallet=()=>Math.max(0,S.stars-(S.armSpent||0));
+/* 花在兵器上的星星记成一条条账（S.armLog），同步时按条合并，不会重复加 */
+const armCost=()=>(S.armLog||[]).reduce((t,x)=>t+(+x[1]||0),0);
+const wallet=()=>Math.max(0,S.stars-armCost());
+const armUid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const atk=()=>1+ARMS.filter(a=>S.arms.includes(a[0])).reduce((t,a)=>t+a[2],0);
 const kit=()=>[STICK,...ARMS.filter(a=>S.arms.includes(a[0]))];
-const stocked=()=>LN.filter(n=>{const v=levels(n);return v[0]>0&&v[1]>0}).length;
+/* 一课算「学完」：旧的第 1、2 关都有星，或者做完过这一课的 10 分钟冒险（有星） */
+const stocked=()=>LN.filter(n=>{const v=levels(n);return(v[0]>0&&v[1]>0)||(typeof abStars==='function'&&abStars(n)>0)}).length;
 const priceOf=name=>{const w=ARMS.find(a=>a[0]===name);return w?w[3]:0};
 /* 血量：Boss 题大约对 4/5、攻击力和预计差不多，一次就能打倒（每题暴击 ×10 + 3 秒连点约 10 下） */
 const EXP2=[1,2,3,4,5,6,7,8,9,10,11,12];
@@ -1286,7 +1292,7 @@ function bossSetup(r){const n=r.n,q=r.steps.filter(s=>s.bossQ).reduce((a,s)=>a+s
 function armHTML(){const c=view.armConfirm,full=S.arms.length>=SLOTS,maxBack=Math.max(0,...S.arms.map(n=>Math.floor(priceOf(n)/2))),w$=wallet();
   return`<div class="atk"><div><span class="small">${bi('攻击力','Attack')}</span><b>⚔️ ${atk()}</b></div><div class="kit">${kit().map(k=>`<span title="${esc(k[0])}">${k[1]}</span>`).join('')}<span class="slots">${S.arms.length}/${SLOTS}</span></div></div>
   <p class="small muted" style="margin:8px 0 0">${bi(`可以用的星星：⭐ ${w$}。木棍一直带着，另外最多带两件兵器。`,`Stars you can spend: ${w$}. The stick is always with you; carry up to 2 more weapons.`)}</p>
-  <p class="small muted" style="margin:4px 0 0">${bi('每学完一课（第 1、2 关都有星），武器库就多一件新兵器。买兵器不影响「攒星星换奖励」。','Finish a lesson (stars on levels 1 and 2) to unlock a new weapon.')}</p>
+  <p class="small muted" style="margin:4px 0 0">${bi('每完成一课的「10 分钟冒险」，武器库就多一件新兵器。买兵器不影响「攒星星换奖励」。','Finish the 10-minute adventure of a lesson to unlock a new weapon.')}</p>
   ${[STICK,...ARMS].map((w,i)=>{const own=!i||S.arms.includes(w[0]),inStock=i<=stocked()+1,can=inStock&&(full?w$+maxBack>=w[3]:w$>=w[3]);
     const name=`<b>${esc(w[0])}</b> <span class="small muted">${esc(w[6])}</span><div class="small muted">${esc(w[4])} · 攻击 +${w[2]}${i?` · ⭐${w[3]}`:''}</div>`;
     if(!own&&!inStock){const k=i-1-stocked();return`<div class="arm lock"><span class="ic">🔒</span><div>${name}<div class="f">${bi(`再学完 ${k} 课就能买`,`Unlocks after ${k} more ${k>1?'lessons':'lesson'}`)}</div></div></div>`}
@@ -1300,9 +1306,9 @@ function bindArm(again){
   $$('[data-w]').forEach(b=>b.onclick=()=>{const i=+b.dataset.w,w=ARMS[i-1];if(!w||S.arms.includes(w[0]))return;
     if(S.arms.length>=SLOTS){view.armSwap=i;view.armConfirm=null;return again()}
     if(wallet()<w[3])return;if(view.armConfirm!==i){view.armConfirm=i;return again()}
-    view.armConfirm=null;S.armSpent=(S.armSpent||0)+w[3];S.arms.push(w[0]);gotWeapon(w);again()});
+    view.armConfirm=null;S.armLog.push([armUid(),w[3]]);S.arms.push(w[0]);gotWeapon(w);again()});
   $$('[data-sw]').forEach(b=>b.onclick=()=>{const w=ARMS[+b.dataset.for-1],old=b.dataset.sw,back=Math.floor(priceOf(old)/2);if(!w||wallet()+back<w[3])return;
-    S.armSpent=(S.armSpent||0)-back+w[3];S.arms=S.arms.filter(n=>n!==old);S.arms.push(w[0]);view.armSwap=null;gotWeapon(w);again()});
+    S.armLog.push([armUid(),w[3]-back]);S.arms=S.arms.filter(n=>n!==old);S.arms.push(w[0]);view.armSwap=null;gotWeapon(w);again()});
   $$('[data-swx]').forEach(b=>b.onclick=()=>{view.armSwap=null;again()})}
 function bossCard(n){const b=bossOf(n),B=S.boss[n];
   return`<div class="row" style="gap:12px;flex-wrap:nowrap;margin-top:8px"><svg viewBox="196 56 200 190" style="width:84px;flex:none">${bossSVG(b)}</svg>
@@ -2219,6 +2225,7 @@ const J=x=>JSON.stringify(x);
 // 三方合并：b=上次同步时的版本，l=这台设备，s=云端。星星这类计数两边的增量相加，最好成绩取大，其他以这台设备为准
 const COUNTERS=new Set(['stars','spent','draws','m.cleared','armSpent']),MAXK=/^(best2|best3|moleBest|m\.best|ab\.\d+\.[ABC])/;
 function m3(b,l,s,path){
+  if(J(l)===J(s))return l;/* 两边一样就不用合并（以前基准缺这一项时，计数会被加两遍） */
   if(J(l)===J(b))return s;if(J(s)===J(b))return l;
   if(typeof l==='number'&&typeof s==='number'){if(COUNTERS.has(path)||path.startsWith('cnt.'))return s+l-(typeof b==='number'?b:0);if(MAXK.test(path))return Math.max(l,s);if(/^boss\.[^.]+\.hp$/.test(path))return Math.min(l,s);return l}
   if(Array.isArray(l)&&Array.isArray(s)){const seen=new Set(s.map(J)),out=[...s];l.forEach(x=>{const k=J(x);if(!seen.has(k)){seen.add(k);out.push(x)}});
