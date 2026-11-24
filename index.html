@@ -1284,8 +1284,8 @@ const kit=()=>[STICK,...ARMS.filter(a=>S.arms.includes(a[0]))];
 /* 一课算「学完」：旧的第 1、2 关都有星，或者做完过这一课的 10 分钟冒险（有星） */
 const stocked=()=>LN.filter(n=>{const v=levels(n);return(v[0]>0&&v[1]>0)||(typeof abStars==='function'&&abStars(n)>0)}).length;
 const priceOf=name=>{const w=ARMS.find(a=>a[0]===name);return w?w[3]:0};
-/* 血量：Boss 题大约对 4/5、攻击力和预计差不多，一次就能打倒（每题暴击 ×10 + 3 秒连点约 10 下） */
-const EXP2=[1,2,3,4,5,6,7,8,9,10,11,12];
+/* 血量：Boss 题大约对 3/4、攻击力达到「建议攻击力」，一次就能打倒（每题暴击 ×10 + 3 秒连点约 10 下） */
+const EXP2=[3,5,7,9,11,13,15,17,19,20,21,22];/* v19：越往后怪兽越难打，第 12 课正好要带满最强的两件兵器（木棍1＋越王剑12＋突火枪9＝22） */
 function bossSetup(r){const n=r.n,q=r.steps.filter(s=>s.bossQ).reduce((a,s)=>a+s.items.length,0),i=LN.indexOf(n);
   const max=Math.max(30,Math.round(q*.75*18*EXP2[Math.min(i,EXP2.length-1)]/10)*10);let B=S.boss[n],re=false;
   if(!B)B=S.boss[n]={max,hp:max};else if(B.beat){B.hp=B.max;re=true}r.boss={n,re,start:B.hp};save()}
